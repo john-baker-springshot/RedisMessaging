@@ -1,14 +1,7 @@
-﻿using MessageQueue.Contracts.ConnectionBase;
-using MessageQueue.Contracts.Consumer;
-using RedisMessaging.ConnectionBase;
-using StackExchange.Redis;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using MessageQueue.Contracts;
 
-namespace RedisMessaging.Consumer
+namespace RedisMessaging
 {
   public class RedisContainer : IContainer
   {

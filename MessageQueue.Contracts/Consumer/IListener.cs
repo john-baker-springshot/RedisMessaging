@@ -28,6 +28,6 @@ namespace MessageQueue.Contracts.Consumer
     /// Async process that passes the message to the appropriate MessageHandler
     /// </summary>
     /// <param name="m">Message</param>
-    void InternalHander(object m);
+    void InternalHandler(object m);
   }
 }

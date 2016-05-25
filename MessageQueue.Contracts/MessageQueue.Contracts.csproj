@@ -41,22 +41,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
-    <Compile Include="ConnectionBase\IConnection.cs" />
-    <Compile Include="ConnectionBase\IQueue.cs" />
-    <Compile Include="ConnectionBase\IServer.cs" />
-    <Compile Include="Consumer\IChannel.cs" />
-    <Compile Include="Consumer\IContainer.cs" />
+    <Compile Include="IConnection.cs" />
+    <Compile Include="IQueue.cs" />
+    <Compile Include="IChannel.cs" />
+    <Compile Include="IContainer.cs" />
     <Compile Include="Consumer\IListener.cs" />
     <Compile Include="Consumer\IMessageHandler.cs" />
-    <Compile Include="Consumer\ITypeMap.cs" />
-    <Compile Include="Errors\IAdvice.cs" />
-    <Compile Include="Errors\IErrorHandler.cs" />
-    <Compile Include="Errors\ITimedRetryAdvice.cs" />
-    <Compile Include="Errors\IRetryRequeueAdvice.cs" />
+    <Compile Include="ITypeMap.cs" />
+    <Compile Include="Advices\IAdvice.cs" />
+    <Compile Include="IErrorHandler.cs" />
+    <Compile Include="Advices\ITimedRetryAdvice.cs" />
+    <Compile Include="Advices\IRetryRequeueAdvice.cs" />
+    <Compile Include="ITypeMapper.cs" />
     <Compile Include="Producer\IProducer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,10 +1,6 @@
 ﻿using MessageQueue.Contracts.Producer;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MessageQueue.Contracts.ConnectionBase;
+using MessageQueue.Contracts;
 using StackExchange.Redis;
 
 namespace RedisMessaging.Producer
@@ -15,7 +11,7 @@ namespace RedisMessaging.Producer
 
     public IQueue MessageQueue { get; set; }
 
-    protected IConnectionMultiplexer _redis;
+    private readonly IConnectionMultiplexer _redis;
 
     public RedisProducer(IConnection connection)
     {
@@ -28,41 +24,22 @@ namespace RedisMessaging.Producer
       MessageQueue = queue;
     }
 
-    public void Init()
+    public virtual void Publish(string message)
     {
-      //take the connection
-      var connStrings = "";
-      //itterate through servers
-      for (int i = 0; i < Connection.Servers.Count; i++)
-      {
-        if (i == Connection.Servers.Count - 1)
-        {
-          connStrings += Connection.Servers[i].Endpoint;
-          continue;
-        }
-        connStrings += Connection.Servers[i].Endpoint + ",";
-      }
-
-      //create the multiplexer connection
-      _redis = ConnectionMultiplexer.Connect(connStrings);
-    }
-
-    public void Publish(string message)
-    {
-      if (MessageQueue == null || MessageQueue.Name == null || MessageQueue.Name.Length < 1)
+      if (string.IsNullOrEmpty(MessageQueue?.Name))
         throw new Exception("MessageQueue not initialized");
 
       _redis.GetDatabase().ListLeftPush(MessageQueue.Name, message);
     }
 
-    public void Publish(string queue, string message)
+    public virtual void Publish(string queue, string message)
     {
       _redis.GetDatabase().ListLeftPush(queue, message);
     }
 
-    public void Publish(IQueue queue, string message)
+    public virtual void Publish(IQueue queue, string message)
     {
-      if (queue == null || queue.Name == null || queue.Name.Length < 1)
+      if (string.IsNullOrEmpty(queue?.Name))
         throw new Exception("Queue parameter not initialized");
 
       _redis.GetDatabase().ListLeftPush(queue.Name, message);

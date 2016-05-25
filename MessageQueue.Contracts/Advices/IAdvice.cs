@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MessageQueue.Contracts.Errors
+namespace MessageQueue.Contracts.Advices
 {
-  public interface IAdvice<T> where T : Exception
+  public interface IAdvice<out T> where T : Exception
   {
     /// <summary>
     /// Boolean flag for retrying message execution on a specific exception occurence

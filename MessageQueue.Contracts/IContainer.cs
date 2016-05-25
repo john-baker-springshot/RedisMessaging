@@ -1,11 +1,6 @@
-﻿using MessageQueue.Contracts.ConnectionBase;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace MessageQueue.Contracts.Consumer
+namespace MessageQueue.Contracts
 {
   public interface IContainer
   {

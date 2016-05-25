@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MessageQueue.Contracts;
 
 namespace RedisMessaging.Consumer
 {
@@ -17,7 +18,7 @@ namespace RedisMessaging.Consumer
 
     public Type TypeKey { get; set; }
 
-    public void InternalHander(object m)
+    public void InternalHandler(object m)
     {
       //send item to message handler
       MessageHandler.HandleMessage(m);

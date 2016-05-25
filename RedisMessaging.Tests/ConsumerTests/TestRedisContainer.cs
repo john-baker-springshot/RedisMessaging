@@ -1,14 +1,9 @@
-﻿using MessageQueue.Contracts.Consumer;
+﻿using MessageQueue.Contracts;
+using MessageQueue.Contracts.Consumer;
 using NUnit.Framework;
-using RedisMessaging.ConnectionBase;
 using RedisMessaging.Consumer;
 using Spring.Context;
 using Spring.Context.Support;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RedisMessaging.Tests.ConsumerTests
 {
@@ -36,13 +31,11 @@ namespace RedisMessaging.Tests.ConsumerTests
     [Test]
     public void RedisContainer_CtorTest()
     {
-      const string endpoint = "localhost";
-      RedisConnection conn = new RedisConnection();
-      conn.AddServer(new RedisServer(endpoint));
-      RedisContainer container = new RedisContainer(conn);
+      const string endpoint = "localhost:6379";
+      var conn = new RedisConnection(endpoint);
+      var container = new RedisContainer(conn);
+
       Assert.That(container.Connection, Is.EqualTo(conn));
-      Assert.That(container.Connection.Servers.Count, Is.EqualTo(1));
-      Assert.That(container.Connection.Servers[0].Endpoint, Is.EqualTo(endpoint));
     }
 
 

@@ -1,12 +1,9 @@
-﻿using MessageQueue.Contracts.ConnectionBase;
-using MessageQueue.Contracts.Errors;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MessageQueue.Contracts.Advices;
+using MessageQueue.Contracts.Consumer;
 
-namespace MessageQueue.Contracts.Consumer
+namespace MessageQueue.Contracts
 {
   public interface IChannel
   {
@@ -30,10 +27,12 @@ namespace MessageQueue.Contracts.Consumer
     /// Queue on which to place errored messages we do not wish to retry/requeue
     /// </summary>
     IQueue DeadLetterQueue { get; set; }
+
     /// <summary>
-    /// Type map list used to store the "types" of messages this Channel is meant to process
+    /// Type mapper used to store the "types" of messages this Channel is meant to process
     /// </summary>
-    IList<ITypeMap> TypeMaps { get; set; }
+    ITypeMapper TypeMapper { get; set; }
+
     /// <summary>
     /// List of Listeners subscribed to this Channel
     /// </summary>

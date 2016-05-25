@@ -1,20 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MessageQueue.Contracts.Errors
+namespace MessageQueue.Contracts.Advices
 {
+  //TODO: Should this inherit as IAdvice<T> instead?
   public interface ITimedRetryAdvice : IAdvice<Exception>
   {
     /// <summary>
     /// Maximum number of retries allowed before auto-failure
     /// </summary>
-    int RetryCount { get; set; }
+    int RetryCount { get; }
+
     /// <summary>
     /// Amount of time (in ms) before the Message will attempt to be reprocessed
     /// </summary>
-    int RetryInterval { get; set; }
+    int RetryInterval { get; }
   }
 }

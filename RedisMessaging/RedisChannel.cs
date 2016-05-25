@@ -1,30 +1,41 @@
-﻿using MessageQueue.Contracts.ConnectionBase;
-using MessageQueue.Contracts.Consumer;
-using MessageQueue.Contracts.Errors;
-using Newtonsoft.Json;
-using RedisMessaging.ConnectionBase;
-using RedisMessaging.Util;
-using StackExchange.Redis;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MessageQueue.Contracts;
+using MessageQueue.Contracts.Advices;
+using MessageQueue.Contracts.Consumer;
+using Newtonsoft.Json;
+using RedisMessaging.Util;
+using StackExchange.Redis;
 
-namespace RedisMessaging.Consumer
+namespace RedisMessaging
 {
   public class RedisChannel : IChannel
   {
     public IQueue DeadLetterQueue { get; set; }
+
     public IErrorHandler DefaultErrorHandler { get; set; }
+
     public IList<IAdvice<Exception>> ErrorAdvice { get; set; }
+
     public string Id { get; set; }
+
     public bool IsSubscribed { get; set; }
+
     public IList<IListener> Listeners { get; set; }
+
     public IQueue MessageQueue { get; set; }
+
     public IQueue ProcessingQueue { get; set; }
+
     public IQueue PoisonQueue { get; set; }
-    public IList<ITypeMap> TypeMaps { get; set; }
+
+    public ITypeMapper TypeMapper { get; set; }
+
     public IContainer Container { get; set; }
+
     protected IConnectionMultiplexer _redis;
+
     private Dictionary<IListener, Queue<IListener>> rr = new Dictionary<IListener, Queue<IListener>>();
 
     public void Connect(RedisConnection conn)
@@ -37,10 +48,14 @@ namespace RedisMessaging.Consumer
       if (IsSubscribed)
         return;
 
-      _redis = (IConnectionMultiplexer)Container.Connection.GetConnection();
+      var redisConnection = (RedisConnection) Container.Connection;
+      _redis = redisConnection.Multiplexer;
+
       ConnectListeners();
+
       //start a new thread so we dont get trapped in it
-      new Task(() => Poll(), new System.Threading.CancellationToken(), TaskCreationOptions.LongRunning).Start();
+      new Task(Poll, new System.Threading.CancellationToken(), TaskCreationOptions.LongRunning).Start();
+
       IsSubscribed = true;
     }
 
@@ -70,14 +85,11 @@ namespace RedisMessaging.Consumer
         //continuously poll the queue
         if (Container.Connection.IsConnected)
         {
-          string job = null;
           do
           {
-            job = _redis.GetDatabase().ListRightPopLeftPush(MessageQueue.Name, ProcessingQueue.Name);
-            if(job!=null)
-              HandleMessage(job);
-          }
-          while (job != null);
+            string job = _redis.GetDatabase().ListRightPopLeftPush(MessageQueue.Name, ProcessingQueue.Name);
+            HandleMessage(job);
+          } while (true);
 
           //send job to typemapper, then to appropriate IListener
         }
@@ -98,7 +110,7 @@ namespace RedisMessaging.Consumer
         var message = JsonConvert.DeserializeObject<KeyValuePair<string, object>>(value);
 
         //need to figure this out programatically, not hard coded this way...
-        var key = GetType(message.Key.Split(':')[0]);
+        var key = TypeMapper.GetTypeForKey(message.Key.Split(':')[0]);
 
         //get the type of the key
         var listenerType = ServiceLocator.GetService<IListener>(key);
@@ -112,15 +124,19 @@ namespace RedisMessaging.Consumer
         }
 
         //get the next key in RR
-        Queue<IListener> queue = new Queue<IListener>();
+        Queue<IListener> queue;
 
         rr.TryGetValue(listenerType, out queue);
 
         //pop first listener, then push to the pack of the queue
-        var listener = queue.Dequeue();
-        queue.Enqueue(listener);
-        //Call on the internal handler
-        listener.InternalHander(value);
+        if (queue != null)
+        {
+          var listener = queue.Dequeue();
+          queue.Enqueue(listener);
+          //Call on the internal handler
+          //TODO: This should be async
+          listener.InternalHandler(value);
+        }
       }
       catch (Exception)
       {
@@ -130,16 +146,6 @@ namespace RedisMessaging.Consumer
         _redis.GetDatabase().ListRemove(ProcessingQueue.Name, value);
       }
       
-    }
-
-    private Type GetType(string key)
-    {
-      foreach(ITypeMap tmap in TypeMaps)
-      {
-        if (tmap.Key.ToLower().Equals(key.ToLower()))
-          return tmap.Type;
-      }
-      return null;
     }
 
     private void PubSub()

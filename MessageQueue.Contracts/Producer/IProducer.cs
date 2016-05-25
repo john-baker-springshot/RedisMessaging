@@ -1,11 +1,4 @@
-﻿using MessageQueue.Contracts.ConnectionBase;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MessageQueue.Contracts.Producer
+﻿namespace MessageQueue.Contracts.Producer
 {
   public interface IProducer
   {

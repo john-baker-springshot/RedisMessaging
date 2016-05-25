@@ -1,13 +1,7 @@
-﻿using MessageQueue.Contracts.ConnectionBase;
-using NUnit.Framework;
-using RedisMessaging.ConnectionBase;
+﻿using NUnit.Framework;
 using Spring.Context;
 using Spring.Context.Support;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MessageQueue.Contracts;
 
 namespace RedisMessaging.Tests.ConnectionTests
 {

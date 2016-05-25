@@ -1,11 +1,6 @@
-﻿using MessageQueue.Contracts.ConnectionBase;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MessageQueue.Contracts;
 
-namespace RedisMessaging.ConnectionBase
+namespace RedisMessaging
 {
   public class RedisQueue : IQueue
   {

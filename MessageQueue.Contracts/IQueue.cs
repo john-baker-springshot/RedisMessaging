@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MessageQueue.Contracts.ConnectionBase
+﻿namespace MessageQueue.Contracts
 {
   public interface IQueue
   {
@@ -12,6 +6,7 @@ namespace MessageQueue.Contracts.ConnectionBase
     /// Name of the Queue
     /// </summary>
     string Name { get; set; }
+
     /// <summary>
     /// Time to live of the Messages within the Queue
     /// </summary>
