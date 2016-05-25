@@ -23,7 +23,7 @@ namespace MessageQueue.Contracts.Consumer
     /// <summary>
     /// References Container this Listener is part of
     /// </summary>
-    IContainer Container { get; }
+    IChannel Channel { get; }
     /// <summary>
     /// Async process that passes the message to the appropriate MessageHandler
     /// </summary>

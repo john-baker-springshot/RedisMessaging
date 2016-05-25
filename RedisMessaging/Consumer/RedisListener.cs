@@ -6,7 +6,7 @@ namespace RedisMessaging.Consumer
 {
   public class RedisListener : IListener
   {
-    public IContainer Container { get; }
+    public IChannel Channel { get; }
 
     public int Count { get; set; }
 
