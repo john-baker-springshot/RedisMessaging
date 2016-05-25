@@ -1,9 +1,5 @@
 ﻿using MessageQueue.Contracts.Consumer;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MessageQueue.Contracts;
 
 namespace RedisMessaging.Consumer
@@ -18,7 +14,7 @@ namespace RedisMessaging.Consumer
 
     public Type TypeKey { get; set; }
 
-    public void InternalHandler(object m)
+    public async void InternalHandlerAsync(object m)
     {
       //send item to message handler
       MessageHandler.HandleMessage(m);

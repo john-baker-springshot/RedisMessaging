@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using MessageQueue.Contracts;
 
-namespace RedisMessaging
+namespace MessageQueue.Contracts
 {
-  public class RedisTypeMapper : ITypeMapper
+  public class TypeMapper : ITypeMapper
   {
     private readonly IList<ITypeMap> _typeMaps;
 
-    public RedisTypeMapper()
+    public TypeMapper()
     {
       _typeMaps = new List<ITypeMap>();
-    } 
+    }
 
     #region Implementation of ITypeMapper
 
@@ -20,9 +19,10 @@ namespace RedisMessaging
 
     public virtual Type GetTypeForKey(string key)
     {
-      return (from tmap in TypeMaps where tmap.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase) select  Type.GetType(tmap.TypeName)).FirstOrDefault();
+      return (from tmap in TypeMaps where tmap.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase) select Type.GetType(tmap.TypeName)).FirstOrDefault();
     }
 
     #endregion
+
   }
 }

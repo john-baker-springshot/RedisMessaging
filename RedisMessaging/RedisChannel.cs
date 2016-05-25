@@ -135,7 +135,7 @@ namespace RedisMessaging
           queue.Enqueue(listener);
           //Call on the internal handler
           //TODO: This should be async
-          listener.InternalHandler(value);
+          listener.InternalHandlerAsync(value);
         }
       }
       catch (Exception)

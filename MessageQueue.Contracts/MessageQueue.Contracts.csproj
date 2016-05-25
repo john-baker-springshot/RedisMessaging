@@ -55,6 +55,7 @@
     <Compile Include="ITypeMapper.cs" />
     <Compile Include="Producer\IProducer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TypeMapper.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
