@@ -18,14 +18,9 @@ namespace RedisMessaging
 
     public virtual IEnumerable<ITypeMap> TypeMaps => _typeMaps;
 
-    public void AddTypeMap(ITypeMap typeMap)
-    {
-      _typeMaps.Add(typeMap);
-    }
-
     public virtual Type GetTypeForKey(string key)
     {
-      return (from tmap in TypeMaps where tmap.Key.ToLower().Equals(key.ToLower()) select tmap.Type).FirstOrDefault();
+      return (from tmap in TypeMaps where tmap.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase) select  Type.GetType(tmap.TypeName)).FirstOrDefault();
     }
 
     #endregion

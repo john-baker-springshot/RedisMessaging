@@ -8,8 +8,6 @@ namespace MessageQueue.Contracts
   {
     IEnumerable<ITypeMap> TypeMaps { get; }
 
-    void AddTypeMap(ITypeMap typeMap);
-
     Type GetTypeForKey(string key);
   }
 }
