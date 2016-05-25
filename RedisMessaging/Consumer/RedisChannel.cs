@@ -74,9 +74,11 @@ namespace RedisMessaging.Consumer
           do
           {
             job = _redis.GetDatabase().ListRightPopLeftPush(MessageQueue.Name, ProcessingQueue.Name);
+            if(job!=null)
+              HandleMessage(job);
           }
-          while (job == null);
-          HandleMessage(job);
+          while (job != null);
+
           //send job to typemapper, then to appropriate IListener
         }
         else
