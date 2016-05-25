@@ -22,7 +22,13 @@ namespace RedisMessaging
     /// <summary>
     /// Username to connect to the Enpoint
     /// </summary>
-    public virtual string User { get; private set; }
+    public virtual string User
+    {
+      get
+      {
+        throw new NotSupportedException("Redis doesn't use usernames for authentication.");
+      }
+    }
 
     /// <summary>
     /// Password to connect to the Endpoint
@@ -31,7 +37,7 @@ namespace RedisMessaging
 
     public bool IsConnected { get; private set; }
 
-    public IConnectionMultiplexer Multiplexer { get; private set; }
+    internal IConnectionMultiplexer Multiplexer { get; private set; }
 
     public void Connect()
     {
