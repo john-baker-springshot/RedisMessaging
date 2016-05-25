@@ -12,36 +12,31 @@ namespace RedisMessaging
 {
   public class RedisChannel : IChannel
   {
-    public IQueue DeadLetterQueue { get; set; }
+    public IQueue DeadLetterQueue { get; }
 
-    public IErrorHandler DefaultErrorHandler { get; set; }
+    public IErrorHandler DefaultErrorHandler { get; }
 
-    public IList<IAdvice<Exception>> ErrorAdvice { get; set; }
+    public IEnumerable<IAdvice<Exception>> ErrorAdvice { get; }
 
-    public string Id { get; set; }
+    public string Id { get; }
 
-    public bool IsSubscribed { get; set; }
+    public bool IsSubscribed { get; private set; }
 
-    public IList<IListener> Listeners { get; set; }
+    public IEnumerable<IListener> Listeners { get; }
 
-    public IQueue MessageQueue { get; set; }
+    public IQueue MessageQueue { get; }
 
-    public IQueue ProcessingQueue { get; set; }
+    public IQueue ProcessingQueue { get; }
 
-    public IQueue PoisonQueue { get; set; }
+    public IQueue PoisonQueue { get; }
 
-    public ITypeMapper TypeMapper { get; set; }
+    public ITypeMapper TypeMapper { get; }
 
-    public IContainer Container { get; set; }
+    public IContainer Container { get; }
 
     protected IConnectionMultiplexer _redis;
 
     private Dictionary<IListener, Queue<IListener>> rr = new Dictionary<IListener, Queue<IListener>>();
-
-    public void Connect(RedisConnection conn)
-    {
-
-    }
 
     public void Subscribe()
     {

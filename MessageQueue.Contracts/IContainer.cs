@@ -7,11 +7,11 @@ namespace MessageQueue.Contracts
     /// <summary>
     /// Connection of the Container
     /// </summary>
-    IConnection Connection { get; set; }
+    IConnection Connection { get; }
     /// <summary>
     /// List of Channels accessible by the Container
     /// </summary>
-    IList<IChannel> Channels { get; set; }
+    IEnumerable<IChannel> Channels { get; }
     /// <summary>
     /// Initializes all Connections and Channels
     /// </summary>

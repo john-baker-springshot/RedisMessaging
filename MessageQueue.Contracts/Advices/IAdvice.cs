@@ -7,7 +7,7 @@ namespace MessageQueue.Contracts.Advices
     /// <summary>
     /// Boolean flag for retrying message execution on a specific exception occurence
     /// </summary>
-    bool RetryOnFail { get; set; }
+    bool RetryOnFail { get; }
     /// <summary>
     /// Returns the Type of the IAdvice Exception
     /// </summary>

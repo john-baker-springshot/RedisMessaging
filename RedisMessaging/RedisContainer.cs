@@ -5,9 +5,9 @@ namespace RedisMessaging
 {
   public class RedisContainer : IContainer
   {
-    public IList<IChannel> Channels { get; set; }
+    public IEnumerable<IChannel> Channels { get; }
 
-    public IConnection Connection { get; set; }
+    public IConnection Connection { get; }
 
     public RedisContainer(IConnection connection)
     {
@@ -15,12 +15,6 @@ namespace RedisMessaging
       connection.Connect();
 
       Channels = new List<IChannel>();
-    }
-
-    public void AddChannel(params IChannel[] channels)
-    {
-      foreach (IChannel channel in channels)
-        Channels.Add(channel);
     }
 
     //need this to init() all channels under it

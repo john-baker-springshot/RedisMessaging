@@ -10,33 +10,33 @@ namespace MessageQueue.Contracts
     /// <summary>
     /// Unique Identifier of the Channel
     /// </summary>
-    string Id { get; set; }
+    string Id { get; }
     /// <summary>
     /// Default case of error handling for the Channel
     /// </summary>
-    IErrorHandler DefaultErrorHandler { get; set; }
+    IErrorHandler DefaultErrorHandler { get; }
     /// <summary>
     /// Queue on which to receive messages from
     /// </summary>
-    IQueue MessageQueue { get; set; }
+    IQueue MessageQueue { get; }
     /// <summary>
     /// Queue on which to place messages not intended for this Channel
     /// </summary>
-    IQueue PoisonQueue { get; set; }
+    IQueue PoisonQueue { get; }
     /// <summary>
     /// Queue on which to place errored messages we do not wish to retry/requeue
     /// </summary>
-    IQueue DeadLetterQueue { get; set; }
+    IQueue DeadLetterQueue { get; }
 
     /// <summary>
     /// Type mapper used to store the "types" of messages this Channel is meant to process
     /// </summary>
-    ITypeMapper TypeMapper { get; set; }
+    ITypeMapper TypeMapper { get; }
 
     /// <summary>
     /// List of Listeners subscribed to this Channel
     /// </summary>
-    IList<IListener> Listeners { get; set; }
+    IEnumerable<IListener> Listeners { get; }
     /// <summary>
     /// Generic method for listening/subscribing to the MessageQueue
     /// </summary>
@@ -45,10 +45,10 @@ namespace MessageQueue.Contracts
     /// <summary>
     /// Returns true if currently subscribed to MessageQueue
     /// </summary>
-    bool IsSubscribed { get; set; }
+    bool IsSubscribed { get; }
     /// <summary>
     /// List of Advice error handlers for determining specific error handling scenarios
     /// </summary>
-    IList<IAdvice<Exception>> ErrorAdvice { get; set; }
+    IEnumerable<IAdvice<Exception>> ErrorAdvice { get; }
   }
 }

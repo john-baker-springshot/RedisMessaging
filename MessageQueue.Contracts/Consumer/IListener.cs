@@ -11,19 +11,19 @@ namespace MessageQueue.Contracts.Consumer
     /// <summary>
     /// Number of instances that should be spawned of this Listener type
     /// </summary>
-    int Count { get; set; }
+    int Count { get; }
     /// <summary>
     /// MessageHandlers designated for this Listener
     /// </summary>
-    IMessageHandler MessageHandler { get; set; }
+    IMessageHandler MessageHandler { get; }
     /// <summary>
     /// TypeKey representing the Type of messages this Listener should handle
     /// </summary>
-    Type TypeKey { get; set; }
+    Type TypeKey { get; }
     /// <summary>
     /// References Container this Listener is part of
     /// </summary>
-    IContainer Container { get; set; }
+    IContainer Container { get; }
     /// <summary>
     /// Async process that passes the message to the appropriate MessageHandler
     /// </summary>

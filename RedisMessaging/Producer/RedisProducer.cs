@@ -7,9 +7,9 @@ namespace RedisMessaging.Producer
 {
   public class RedisProducer : IProducer
   {
-    public IConnection Connection { get; set; }
+    public IConnection Connection { get; }
 
-    public IQueue MessageQueue { get; set; }
+    public IQueue MessageQueue { get; }
 
     private readonly IConnectionMultiplexer _redis;
 
@@ -21,6 +21,7 @@ namespace RedisMessaging.Producer
     public RedisProducer(IConnection connection, IQueue queue)
     {
       Connection = connection;
+
       MessageQueue = queue;
     }
 

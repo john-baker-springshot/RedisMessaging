@@ -6,12 +6,7 @@ namespace MessageQueue.Contracts
 {
   public class TypeMapper : ITypeMapper
   {
-    private readonly IList<ITypeMap> _typeMaps;
-
-    public TypeMapper()
-    {
-      _typeMaps = new List<ITypeMap>();
-    }
+    private readonly IEnumerable<ITypeMap> _typeMaps;
 
     #region Implementation of ITypeMapper
 

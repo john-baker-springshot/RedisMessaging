@@ -7,7 +7,7 @@ namespace MessageQueue.Contracts
     /// <summary>
     /// String Key representing the Type of the TypeMap
     /// </summary>
-    string Key { get; set; }
+    string Key { get; }
 
     /// <summary>
     /// 
@@ -17,6 +17,6 @@ namespace MessageQueue.Contracts
     /// <summary>
     /// Type of the TypeMap
     /// </summary>
-    Type Type { get; set; }
+    Type Type { get;}
   }
 }

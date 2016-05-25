@@ -6,13 +6,13 @@ namespace RedisMessaging.Consumer
 {
   public class RedisListener : IListener
   {
-    public IContainer Container { get; set; }
+    public IContainer Container { get; }
 
     public int Count { get; set; }
 
-    public IMessageHandler MessageHandler { get; set; }
+    public IMessageHandler MessageHandler { get; }
 
-    public Type TypeKey { get; set; }
+    public Type TypeKey { get; }
 
     public async void InternalHandlerAsync(object m)
     {

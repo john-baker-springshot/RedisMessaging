@@ -22,10 +22,10 @@
     /// <summary>
     /// Connection of the Producer
     /// </summary>
-    IConnection Connection { get; set; }
+    IConnection Connection { get; }
     /// <summary>
     /// Default MessageQueue used by the Producer
     /// </summary>
-    IQueue MessageQueue { get; set; }
+    IQueue MessageQueue { get; }
   }
 }
