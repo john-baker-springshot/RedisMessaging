@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<objects xmlns="http://www.springframework.net"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://www.springframework.net http://www.springframework.net/schema/objects/spring-objects-1.1.xsd"
+     default-lazy-init="true">
+
+  <object id="IConnection"
+        type="RedisMessaging.ConnectionBase.RedisConnection, RedisMessaging"
+        singleton="true" />
+
+  <object id="IServer"
+        type="RedisMessaging.ConnectionBase.RedisServer, RedisMessaging"
+        singleton="true">
+    <constructor-arg name="endpoint" value="localhost"/>    
+  </object>
+
+  <object id="IQueue"
+      type="RedisMessaging.ConnectionBase.RedisQueue, RedisMessaging"
+      singleton="true">
+    <constructor-arg name="Name" value="defaultQueue"/>
+    <constructor-arg name="TTL" value="0"/>
+  </object>
+
+  <object id="IContainer"
+      type="RedisMessaging.Consumer.RedisContainer, RedisMessaging"
+      singleton="true">
+    <constructor-arg name="connection" ref="IConnection"/>
+  </object>
+
+  <object id="IChannel"
+      type="RedisMessaging.Consumer.RedisChannel, RedisMessaging"
+      singleton="true" />
+
+  <object id="IListener"
+    type="RedisMessaging.Consumer.RedisListener, RedisMessaging"
+    singleton="true" />
+  
+</objects>
