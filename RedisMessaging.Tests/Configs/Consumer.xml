@@ -5,34 +5,48 @@
      default-lazy-init="true">
 
   <object id="IConnection"
-        type="RedisMessaging.ConnectionBase.RedisConnection, RedisMessaging"
-        singleton="true" />
-
-  <object id="IServer"
-        type="RedisMessaging.ConnectionBase.RedisServer, RedisMessaging"
+        type="RedisMessaging.RedisConnection, RedisMessaging"
         singleton="true">
-    <constructor-arg name="endpoint" value="localhost"/>    
+    <constructor-arg name="connectionString" value="localhost:6379"/>
   </object>
-
+  
   <object id="IQueue"
-      type="RedisMessaging.ConnectionBase.RedisQueue, RedisMessaging"
-      singleton="true">
+      type="RedisMessaging.RedisQueue, RedisMessaging">
     <constructor-arg name="Name" value="defaultQueue"/>
     <constructor-arg name="TTL" value="0"/>
   </object>
 
+  
   <object id="IContainer"
-      type="RedisMessaging.Consumer.RedisContainer, RedisMessaging"
+      type="RedisMessaging.RedisContainer, RedisMessaging"
       singleton="true">
     <constructor-arg name="connection" ref="IConnection"/>
+    <property name ="Channels">
+      <list>
+        <ref object="IChannel"/>
+      </list>
+    </property>
   </object>
 
+
+
   <object id="IChannel"
-      type="RedisMessaging.Consumer.RedisChannel, RedisMessaging"
-      singleton="true" />
+      type="RedisMessaging.RedisChannel, RedisMessaging"
+      singleton="true">
+    <property name="Container" ref="IContainer"/>
+    <property name="MessageQueue" ref="IQueue"/>
+    <property name="ProcessingQueue" ref="IQueue"/>
+    <property name="Listeners">
+      <list>
+        <ref object ="IListener"/>
+      </list>
+    </property>
+  </object>
 
   <object id="IListener"
-    type="RedisMessaging.Consumer.RedisListener, RedisMessaging"
-    singleton="true" />
+    type="RedisMessaging.Consumer.RedisListener, RedisMessaging" >
+    <property name="Channel" ref="IChannel"/>
+    <property name="Count" value="5"/>
+  </object>
   
 </objects>

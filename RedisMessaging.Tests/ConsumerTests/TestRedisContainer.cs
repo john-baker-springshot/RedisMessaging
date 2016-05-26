@@ -4,6 +4,7 @@ using NUnit.Framework;
 using RedisMessaging.Consumer;
 using Spring.Context;
 using Spring.Context.Support;
+using System.Linq;
 
 namespace RedisMessaging.Tests.ConsumerTests
 {
@@ -26,6 +27,7 @@ namespace RedisMessaging.Tests.ConsumerTests
       Assert.IsNotNull(testObject);
       Assert.That(testObject.GetType(), Is.EqualTo(typeof(RedisContainer)));
       Assert.That(testObject.Connection.GetType(), Is.EqualTo(typeof(RedisConnection)));
+      Assert.That(testObject.Channels.First().GetType(), Is.EqualTo(typeof(RedisChannel)));
     }
 
     [Test]
@@ -38,28 +40,15 @@ namespace RedisMessaging.Tests.ConsumerTests
       Assert.That(container.Connection, Is.EqualTo(conn));
     }
 
-
-    [Test]
-    public void RedisContainer_AddChannelTest()
-    {
-      //RedisConnection conn = new RedisConnection();
-      //RedisContainer container = new RedisContainer(conn);
-      //RedisChannel channel = new RedisChannel();
-
-      //container.AddChannel(channel);
-      //Assert.IsTrue(container.Channels.Contains(channel));
-    }
-
     [Test]
     public void RedisContainer_InitTest()
     {
-      //RedisConnection conn = new RedisConnection();
-      //RedisContainer container = new RedisContainer(conn);
-      //RedisChannel channel = new RedisChannel();
-      //container.AddChannel(channel);
-      ////this isnt ready to be tested, especially on a blank channel
-      ////TODO: container.Init();
-      //Assert.IsTrue(1 == 1);
+      var testObject = _container.GetObject<IContainer>() as RedisContainer;
+      testObject.Init();
+      Assert.IsTrue(testObject.Connection.IsConnected);
+      Assert.IsTrue(testObject.Channels.First().IsSubscribed);
+      var conn = testObject.Connection as RedisConnection;
+      conn.Disconnect();
     }
 
   }

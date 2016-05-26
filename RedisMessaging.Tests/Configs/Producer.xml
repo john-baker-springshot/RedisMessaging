@@ -3,4 +3,17 @@
 		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 xsi:schemaLocation="http://www.springframework.net http://www.springframework.net/schema/objects/spring-objects-1.1.xsd"
      default-lazy-init="true">
+
+
+
+  <object id="IProducer"
+        type="RedisMessaging.Producer.RedisProducer, RedisMessaging"
+        singleton="true">
+    <constructor-arg name="connection" ref="IConnection"/>
+    <constructor-arg name="queue" ref="IQueue"/>
+  </object>
+
+
+
+  
 </objects>

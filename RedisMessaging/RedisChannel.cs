@@ -7,32 +7,33 @@ using MessageQueue.Contracts.Consumer;
 using Newtonsoft.Json;
 using RedisMessaging.Util;
 using StackExchange.Redis;
+using RedisMessaging.Consumer;
 
 namespace RedisMessaging
 {
   public class RedisChannel : IChannel
   {
-    public IQueue DeadLetterQueue { get; }
+    public IQueue DeadLetterQueue { get; private set; }
 
-    public IErrorHandler DefaultErrorHandler { get; }
+    public IErrorHandler DefaultErrorHandler { get; private set; }
 
-    public IEnumerable<IAdvice<Exception>> ErrorAdvice { get; }
+    public IEnumerable<IAdvice<Exception>> ErrorAdvice { get; private set; }
 
     public string Id { get; }
 
     public bool IsSubscribed { get; private set; }
 
-    public IEnumerable<IListener> Listeners { get; }
+    public IEnumerable<IListener> Listeners { get; private set; }
 
-    public IQueue MessageQueue { get; }
+    public IQueue MessageQueue { get; private set; }
 
-    public IQueue ProcessingQueue { get; }
+    public IQueue ProcessingQueue { get; private set; }
 
-    public IQueue PoisonQueue { get; }
+    public IQueue PoisonQueue { get; private set; }
 
-    public ITypeMapper TypeMapper { get; }
+    public ITypeMapper TypeMapper { get; private set; }
 
-    public IContainer Container { get; }
+    public IContainer Container { get; private set; }
 
     protected IConnectionMultiplexer _redis;
 
@@ -56,14 +57,17 @@ namespace RedisMessaging
 
     public void ConnectListeners()
     {
+      if (IsSubscribed)
+        return;
+
       //set up listener instances
-      foreach (IListener listener in Listeners)
+      foreach (RedisListener listener in Listeners)
       {
         Queue<IListener> listenerQueue = new Queue<IListener>();
 
         for (int i = 0; i < listener.Count; i++)
         {
-          listenerQueue.Enqueue((IListener)Activator.CreateInstance(listener.GetType()));
+          listenerQueue.Enqueue(listener.CreateInstance());
         }
         rr.Add(listener, listenerQueue);
       }
@@ -71,30 +75,27 @@ namespace RedisMessaging
 
     private void Poll()
     {
-      for(;;)
+      //5 seconds
+      int interval = 5000;
+      //polling subscribe pattern
+      //continuously poll the queue
+      if (Container.Connection.IsConnected)
       {
-        //5 seconds
-        int interval = 5000;
-        System.Threading.Thread.Sleep(interval);
-        //polling subscribe pattern
-        //continuously poll the queue
-        if (Container.Connection.IsConnected)
+        do
         {
-          do
-          {
-            string job = _redis.GetDatabase().ListRightPopLeftPush(MessageQueue.Name, ProcessingQueue.Name);
+          var job = _redis.GetDatabase().ListRightPopLeftPush(MessageQueue.Name, ProcessingQueue.Name);
+          if(!job.IsNullOrEmpty)
             HandleMessage(job);
-          } while (true);
+          else
+            System.Threading.Thread.Sleep(interval);
+        } while (true);
 
-          //send job to typemapper, then to appropriate IListener
-        }
-        else
-        {
-          IsSubscribed = false;
-          break;
-        }
+        //send job to typemapper, then to appropriate IListener
       }
-      
+      else
+      {
+        IsSubscribed = false;
+      }
     }
 
     private void HandleMessage(RedisValue value)

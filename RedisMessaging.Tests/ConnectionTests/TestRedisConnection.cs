@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using Spring.Context;
 using Spring.Context.Support;
+using System;
 
 namespace RedisMessaging.Tests.ConnectionTests
 {
@@ -24,5 +25,29 @@ namespace RedisMessaging.Tests.ConnectionTests
       Assert.IsNotNull(testObject);
       Assert.That(testObject.GetType(), Is.EqualTo(typeof(RedisConnection)));
     }
+
+    [Test]
+    public void RedisConnection_ConnectionTest()
+    {
+      const string connString = "localhost:6379";
+      RedisConnection connection = new RedisConnection(connString);
+      connection.Connect();
+      Assert.IsTrue(connection.IsConnected);
+      connection.Disconnect();
+      Assert.IsFalse(connection.IsConnected);
+    }
+
+    [Test]
+    public void RedisConnection_BadConnectionTest()
+    {
+      const string connString = "bad endpoint";
+      RedisConnection connection = new RedisConnection(connString);
+      Assert.That(() => connection.Connect(), Throws.Exception);
+    }
+
+
+
+
+
   }
 }

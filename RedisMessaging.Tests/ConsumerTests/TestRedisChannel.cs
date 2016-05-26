@@ -33,12 +33,6 @@ namespace RedisMessaging.Tests.ConsumerTests
     }
 
     [Test]
-    public void RedisChannel_InitTest()
-    {
-      //TODO
-    }
-
-    [Test]
     public void RedisChannel_SubscribeTest()
     {
       //TODO

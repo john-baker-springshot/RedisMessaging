@@ -55,5 +55,13 @@ namespace RedisMessaging
         throw new Exception("multiplexer cannot connect to endpoint");
       }
     }
+
+    public void Disconnect()
+    {
+      if (!IsConnected)
+        return;
+      Multiplexer.Dispose();
+      IsConnected = false;
+    }
   }
 }
