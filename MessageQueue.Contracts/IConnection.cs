@@ -1,6 +1,8 @@
-﻿namespace MessageQueue.Contracts
+﻿using System;
+
+namespace MessageQueue.Contracts
 {
-  public interface IConnection
+  public interface IConnection: IDisposable
   {
     /// <summary>
     /// Endpoint of the backend storage option

@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace MessageQueue.Contracts
 {
-  public interface IContainer
+  public interface IContainer: IDisposable
   {
     /// <summary>
     /// Connection of the Container

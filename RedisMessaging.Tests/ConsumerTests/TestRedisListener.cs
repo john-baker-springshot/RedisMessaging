@@ -28,7 +28,7 @@ namespace RedisMessaging.Tests.ConsumerTests
     [Test]
     public void RedisListener_DITest()
     {
-      var testObject = _container.GetObject<IListener>("MyListener");
+      var testObject = _container.GetObject<IListener>("MyTestListener");
       Assert.IsNotNull(testObject);
       Assert.That(testObject.GetType(), Is.EqualTo(typeof(RedisListener)));
     }
@@ -36,9 +36,8 @@ namespace RedisMessaging.Tests.ConsumerTests
     [Test]
     public void RedisListener_InternalHandlerTest()
     {
-      var listener = _container.GetObject<IListener>("MyListener") as RedisListener;
-      listener.MessageHandler = new TestMessageHandler();
-      Assert.That(listener.MessageHandler.GetType(), Is.EqualTo(typeof(TestMessageHandler)));
+      var listener = _container.GetObject<IListener>("MyTestListener") as RedisListener;
+      //Assert.That(listener.MessageHandler.GetType(), Is.EqualTo(typeof(TestMessageHandler)));
       listener.InternalHandlerAsync("handle it!");
       //need to sleep for async thread to catch up
       //System.Threading.Thread.Sleep(3000);
@@ -51,7 +50,7 @@ namespace RedisMessaging.Tests.ConsumerTests
     }
   }
 
-  public class TestMessageHandler : IMessageHandler
+  public class TestMessageHandler
   {
     public void HandleMessage(object m)
     {

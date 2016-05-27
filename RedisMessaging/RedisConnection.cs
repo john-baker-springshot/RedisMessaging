@@ -56,10 +56,14 @@ namespace RedisMessaging
       }
     }
 
-    public void Disconnect()
+    public void Dispose()
     {
-      if (!IsConnected)
-        return;
+      Dispose(true);
+      GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
       Multiplexer.Dispose();
       IsConnected = false;
     }
