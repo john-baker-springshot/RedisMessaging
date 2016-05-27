@@ -30,23 +30,19 @@ namespace RedisMessaging.Consumer
 
         //create instance of handler class
         ConstructorInfo constructor = HandlerType.GetType().GetConstructor(Type.EmptyTypes);
+
         object handlerClass = constructor.Invoke(new object[] { });
 
         if(handlerClass==null)
           throw new Exception("HandlerType class not found");
 
-
         MethodInfo handlerMethod = HandlerType.GetType().GetMethod(HandlerMethod);
         await Task.Run(() =>handlerMethod.Invoke(handlerClass, new object[] { m }));
-
-        //check for completion
-        //if complete, remove from processing queue        
-        redisChannel.RemoveFromProcessingQueue((RedisValue)m);
       }
       catch (Exception)
       {
-        redisChannel.SendToDeadLetterQueue((RedisValue)m);
-        //redisChannelRemoveFromProcessingQueue((RedisValue)m);
+        //re-package the message object with a key before we send back to DeadLetterQueue
+        redisChannel.SendToDeadLetterQueue((RedisValue)m.ToString());
       }
     }
 

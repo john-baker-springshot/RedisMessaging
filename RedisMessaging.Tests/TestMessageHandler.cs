@@ -11,7 +11,7 @@ namespace RedisMessaging.Tests
   {
     public void HandleMessage(BasicMessage m)
     {
-      Task.Delay(5000);
+      //Task.Delay(5000);
       Console.WriteLine(m.Message);
     }
   }

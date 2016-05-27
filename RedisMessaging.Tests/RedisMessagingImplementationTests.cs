@@ -49,7 +49,7 @@ namespace RedisMessaging.Tests
     [Test]
     public void RedisMessaging_LoadTest()
     {
-      const int maxMessage = 5000;
+      const int maxMessage = 100000;
       _producer.Connection.Connect();
       for (int i = 0; i < maxMessage; i++)
       {
@@ -72,7 +72,7 @@ namespace RedisMessaging.Tests
 
     public static string CreateBasicMessage(int number, string message)
     {
-      KeyValuePair<string, object> kvp = new KeyValuePair<string, object>("Basic:"+number, message);
+      KeyValuePair<string, BasicMessage> kvp = new KeyValuePair<string, BasicMessage>("Basic:"+number, new BasicMessage(message));
       return JsonConvert.SerializeObject(kvp);
     }
 

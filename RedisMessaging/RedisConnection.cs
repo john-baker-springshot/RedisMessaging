@@ -44,7 +44,13 @@ namespace RedisMessaging
       if (IsConnected)
         return;
 
-      Multiplexer = ConnectionMultiplexer.Connect(_connectionString);
+      var connString = _connectionString;
+
+      if (!String.IsNullOrEmpty(Pass))
+        connString =connString + ",password=" + Pass;
+
+      Multiplexer = ConnectionMultiplexer.Connect(connString);
+
 
       if (Multiplexer.IsConnected)
       {

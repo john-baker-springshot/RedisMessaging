@@ -117,7 +117,9 @@ namespace RedisMessaging
         var messageObject = MessageConverter.Convert(value, out key);
 
         //get the type of the key
-        var listenerType = (from l in Listeners where l.TypeKey.Equals(key, StringComparison.InvariantCultureIgnoreCase) select l).FirstOrDefault();
+        var listenerType =
+          (from l in Listeners where l.TypeKey.Equals(key, StringComparison.InvariantCultureIgnoreCase) select l)
+            .FirstOrDefault();
 
         if (listenerType == null)
         {
@@ -125,7 +127,6 @@ namespace RedisMessaging
           if (PoisonQueue != null)
           {
             SendToPoisonQueue(value);
-            RemoveFromProcessingQueue(value);
           }
           //else, send to HandleException to see how to handle
           else
@@ -152,12 +153,15 @@ namespace RedisMessaging
           listener.InternalHandlerAsync(messageObject);
         }
       }
-      catch(Exception)
+      catch (Exception)
       {
         SendToDeadLetterQueue(value);
+        
+      }
+      finally
+      {
         RemoveFromProcessingQueue(value);
       }
-   
     }
 
     public void HandleException(Exception e, object m)

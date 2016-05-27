@@ -11,5 +11,10 @@ namespace RedisMessaging
 
     public string Message { get; set; }
 
+    public BasicMessage(string message)
+    {
+      Message = message;
+    }
+
   }
 }
