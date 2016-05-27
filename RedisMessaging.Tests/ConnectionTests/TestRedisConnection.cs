@@ -21,7 +21,7 @@ namespace RedisMessaging.Tests.ConnectionTests
     [Test]
     public void RedisConnection_DI_Test()
     {
-      var testObject = _container.GetObject<IConnection>();
+      var testObject = _container.GetObject<IConnection>("MyConnection");
       Assert.IsNotNull(testObject);
       Assert.That(testObject.GetType(), Is.EqualTo(typeof(RedisConnection)));
     }

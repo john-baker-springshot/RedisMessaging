@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<objects xmlns="http://www.springframework.net"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://www.springframework.net http://www.springframework.net/schema/objects/spring-objects-1.1.xsd"
+     default-lazy-init="true">
+
+  <description>
+    This xml file is used for testing a fully wired up Spring xml config for RedisMessaging service
+  </description>
+
+  <!--Basic Configuration-->
+  <object name="MyConnection"
+      type="RedisMessaging.RedisConnection, RedisMessaging">
+    <constructor-arg name="connectionString" value="localhost:6379"/>
+  </object>
+
+  <object name="MyMessageQueue"
+      type="RedisMessaging.RedisQueue, RedisMessaging">
+    <constructor-arg name="Name" value="MessageQueue"/>
+    <constructor-arg name="TTL" value="0"/>
+  </object>
+
+  <!--Producer Configuration-->
+  <object name="MyProducer"
+    type="RedisMessaging.Producer.RedisProducer, RedisMessaging">
+    <constructor-arg name="connection" ref="MyConnection"/>
+    <property name="MessageQueue" ref="MyMessageQueue"/>
+  </object>
+
+  <!--Consumer Configuration-->
+  <object name="MyContainer"
+      type="RedisMessaging.RedisContainer, RedisMessaging">
+    <constructor-arg name="connection" ref="MyConnection"/>
+    <property name ="Channels">
+      <list>
+        <ref object="MyChannel"/>
+      </list>
+    </property>
+  </object>  
+
+  <object name="MyChannel"
+      type="RedisMessaging.RedisChannel, RedisMessaging">
+    <property name="Container" ref="MyContainer"/>
+    <property name="MessageQueue" ref="MyMessageQueue"/>
+    <property name="ProcessingQueue" ref="MyProcessingQueue"/>
+    <property name="DeadLetterQueue" ref="MyDeadLetterQueue"/>
+    <property name="PoisonQueue" ref="MyPoisonQueue"/>
+    <property name="TypeMapper" ref="MyTypeMapper"/>
+    <property name="Listeners">
+      <list>
+        <ref object ="MyListener"/>
+      </list>
+    </property>
+  </object>
+  
+  <object name="MyListener"
+    type="RedisMessaging.Consumer.RedisListener, RedisMessaging" >
+    <property name="Channel" ref="MyChannel"/>
+    <property name="Count" value="100"/>
+    <property name="TypeKey" value="Basic"/>
+    <property name="MessageHandler" ref="MyMessageHandler"/>
+  </object>
+
+
+  <object name="MyProcessingQueue"
+      type="RedisMessaging.RedisQueue, RedisMessaging">
+    <constructor-arg name="Name" value="ProcessingQueue"/>
+    <constructor-arg name="TTL" value="0"/>
+  </object>
+
+  <object name="MyDeadLetterQueue"
+        type="RedisMessaging.RedisQueue, RedisMessaging">
+    <constructor-arg name="Name" value="DeadLetterQueue"/>
+    <constructor-arg name="TTL" value="0"/>
+  </object>
+
+<object name="MyPoisonQueue"
+      type="RedisMessaging.RedisQueue, RedisMessaging">
+    <constructor-arg name="Name" value="PoisonQueue"/>
+    <constructor-arg name="TTL" value="0"/>
+  </object>
+
+  <object name="MyTypeMapper"
+     type="MessageQueue.Contracts.TypeMapper, MessageQueue.Contracts" >
+    <property name="_typeMaps">
+      <list>
+        <ref object="MyTypeMap"/>
+      </list>
+    </property>
+  </object>
+
+  <object name="MyTypeMap"
+     type="MessageQueue.Contracts.TypeMap, MessageQueue.Contracts" >
+    <property name="Key" value="Basic"/>
+    <property name="TypeName" value="RedisMessaging.BasicMessage, RedisMessaging"/>
+  </object>
+
+  <object name="MyMessageHandler"
+     type="RedisMessaging.Tests.TestMessageHandler, RedisMessaging.Tests" >
+  </object>
+
+</objects>

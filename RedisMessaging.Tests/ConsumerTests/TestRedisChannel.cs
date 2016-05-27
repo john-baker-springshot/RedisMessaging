@@ -27,7 +27,7 @@ namespace RedisMessaging.Tests.ConsumerTests
     [Test]
     public void RedisChannel_DITest()
     {
-      var testObject = _container.GetObject<IChannel>();
+      var testObject = _container.GetObject<IChannel>("MyChannel");
       Assert.IsNotNull(testObject);
       Assert.That(testObject.GetType(), Is.EqualTo(typeof(RedisChannel)));
     }

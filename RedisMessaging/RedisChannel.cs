@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using RedisMessaging.Util;
 using StackExchange.Redis;
 using RedisMessaging.Consumer;
+using System.Linq;
 
 namespace RedisMessaging
 {
@@ -106,16 +107,30 @@ namespace RedisMessaging
         var message = JsonConvert.DeserializeObject<KeyValuePair<string, object>>(value);
 
         //need to figure this out programatically, not hard coded this way...
-        var key = TypeMapper.GetTypeForKey(message.Key.Split(':')[0]);
+        string key = "";
+        if (message.Key.Contains(':'))
+          key = message.Key.Split(':')[0];
+        else
+          key = message.Key;
+
+
 
         //get the type of the key
-        var listenerType = ServiceLocator.GetService<IListener>(key);
+        var listenerType = (from l in Listeners where l.TypeKey.Equals(key, StringComparison.InvariantCultureIgnoreCase) select l).FirstOrDefault();
 
-        if(listenerType==null)
+        if (listenerType == null)
         {
-          //need to check to make sure poison queue is set up
-          _redis.GetDatabase().ListLeftPush(PoisonQueue.Name, value);
-          _redis.GetDatabase().ListRemove(ProcessingQueue.Name, value);
+          //default functionality is to send to poison queue listener is not found
+          if (PoisonQueue != null)
+          {
+            SendToPoisonQueue(value);
+            RemoveFromProcessingQueue(value);
+          }
+          //else, send to HandleException to see how to handle
+          else
+          {
+            HandleException(new Exception("Listener for message not found"), value);
+          }
           return;
         }
 
@@ -130,18 +145,71 @@ namespace RedisMessaging
           var listener = queue.Dequeue();
           queue.Enqueue(listener);
           //Call on the internal handler
-          //TODO: This should be async
+          //any exceptions when calling this will go back to HandleException
+          //because this is an async void, this thread will keep moving and ignore any errors
           listener.InternalHandlerAsync(value);
         }
       }
-      catch (Exception)
+      catch(Exception)
       {
-        //need to handle exceptions first through advice chain
-        //need to check to make sure dead letter queue is set up
-        _redis.GetDatabase().ListLeftPush(DeadLetterQueue.Name, value);
-        _redis.GetDatabase().ListRemove(ProcessingQueue.Name, value);
+        SendToDeadLetterQueue(value);
+        RemoveFromProcessingQueue(value);
       }
-      
+   
+    }
+
+    public void HandleException(Exception e, object m)
+    {
+      var advice = (from adv in ErrorAdvice where adv.GetType().Equals(e.GetType()) select adv).FirstOrDefault();
+      //if nothing in advice chain matches use default error handler
+      if (advice == null)
+        DefaultErrorHandler.HandleError(e, m);
+
+      if(advice.RetryOnFail)
+      {
+        //need to determine type of retry
+        var retryAdvice = advice as ITimedRetryAdvice;
+        if(retryAdvice != null)
+        {
+          //after programmed delay, send directly to handle message
+          Task.Delay(retryAdvice.RetryInterval);
+          HandleMessage((RedisValue)m);
+
+          return;
+        }
+        var retryRequeueAdvice = advice as IRetryRequeueAdvice;
+        if(retryRequeueAdvice!=null)
+        {
+          //remove from processing queue and reque
+          
+          SendToMessageQueue((RedisValue)m);
+          return;
+        }
+      }
+      //if its not retry on fail then...idk, send to default error handler? i guess?
+      //en whats the point of advice that doesn't have a retry?
+      DefaultErrorHandler.HandleError(e, m);
+
+    }
+
+    public void SendToPoisonQueue(RedisValue value)
+    {
+      _redis.GetDatabase().ListLeftPush(PoisonQueue.Name, value);
+    }
+
+    public void SendToMessageQueue(RedisValue value)
+    {
+      _redis.GetDatabase().ListLeftPush(MessageQueue.Name, value);
+    }
+
+    public void SendToDeadLetterQueue(RedisValue value)
+    {
+      _redis.GetDatabase().ListLeftPush(DeadLetterQueue.Name, value);
+    }
+
+    public void RemoveFromProcessingQueue(RedisValue value)
+    {
+      _redis.GetDatabase().ListRemove(ProcessingQueue.Name, value);
     }
 
     private void PubSub()

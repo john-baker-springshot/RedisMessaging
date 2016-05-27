@@ -7,9 +7,9 @@ namespace RedisMessaging.Producer
 {
   public class RedisProducer : IProducer
   {
-    public IConnection Connection { get; }
+    public IConnection Connection { get; private set; }
 
-    public IQueue MessageQueue { get; }
+    public IQueue MessageQueue { get; private set; }
 
     private readonly IConnectionMultiplexer _redis;
 
@@ -38,7 +38,6 @@ namespace RedisMessaging.Producer
         Connection.Connect();
       if (string.IsNullOrEmpty(MessageQueue?.Name))
         throw new Exception("MessageQueue not initialized");
-
 
       _redis.GetDatabase().ListLeftPush(MessageQueue.Name, message);
     }

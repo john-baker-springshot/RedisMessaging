@@ -7,7 +7,7 @@ namespace RedisMessaging
   {
     public IEnumerable<IChannel> Channels { get; private set; }
 
-    public IConnection Connection { get; }
+    public IConnection Connection { get; private set; }
 
     public RedisContainer(IConnection connection)
     {

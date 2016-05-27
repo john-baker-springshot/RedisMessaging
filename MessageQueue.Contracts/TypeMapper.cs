@@ -6,7 +6,7 @@ namespace MessageQueue.Contracts
 {
   public class TypeMapper : ITypeMapper
   {
-    private readonly IEnumerable<ITypeMap> _typeMaps;
+    private IEnumerable<ITypeMap> _typeMaps;
 
     #region Implementation of ITypeMapper
 
@@ -14,7 +14,14 @@ namespace MessageQueue.Contracts
 
     public virtual Type GetTypeForKey(string key)
     {
-      return (from tmap in TypeMaps where tmap.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase) select Type.GetType(tmap.TypeName)).FirstOrDefault();
+      foreach (ITypeMap tmap in TypeMaps)
+      {
+        if (tmap.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase))
+          return Type.GetType(tmap.TypeName);
+      }
+      return null;
+      //var res = (from tmap in TypeMaps where tmap.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase) select Type.GetType(tmap.TypeName)).FirstOrDefault();
+      //return res;
     }
 
     #endregion

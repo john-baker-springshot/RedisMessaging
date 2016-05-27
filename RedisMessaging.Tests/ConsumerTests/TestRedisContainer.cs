@@ -23,7 +23,7 @@ namespace RedisMessaging.Tests.ConsumerTests
     [Test]
     public void RedisContainer_DITest()
     {
-      var testObject = _container.GetObject<IContainer>();
+      var testObject = _container.GetObject<IContainer>("MyContainer");
       Assert.IsNotNull(testObject);
       Assert.That(testObject.GetType(), Is.EqualTo(typeof(RedisContainer)));
       Assert.That(testObject.Connection.GetType(), Is.EqualTo(typeof(RedisConnection)));
@@ -43,7 +43,7 @@ namespace RedisMessaging.Tests.ConsumerTests
     [Test]
     public void RedisContainer_InitTest()
     {
-      var testObject = _container.GetObject<IContainer>() as RedisContainer;
+      var testObject = _container.GetObject<IContainer>("MyContainer") as RedisContainer;
       testObject.Init();
       Assert.IsTrue(testObject.Connection.IsConnected);
       Assert.IsTrue(testObject.Channels.First().IsSubscribed);

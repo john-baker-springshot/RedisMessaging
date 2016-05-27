@@ -26,7 +26,7 @@ namespace RedisMessaging.Tests.ProducerTests
     [Test]
     public void RedisProducer_DITest()
     {
-      var testObject = _container.GetObject<IProducer>();
+      var testObject = _container.GetObject<IProducer>("MyProducer");
       Assert.IsNotNull(testObject);
       Assert.That(testObject.GetType(), Is.EqualTo(typeof(RedisProducer)));
       Assert.That(testObject.MessageQueue.GetType(), Is.EqualTo(typeof(RedisQueue)));
@@ -37,7 +37,7 @@ namespace RedisMessaging.Tests.ProducerTests
     public void RedisProducer_PublishToDefaultQueueTest()
     {
       const string message = "hey hey hey";
-      var producer = _container.GetObject<IProducer>();
+      var producer = _container.GetObject<IProducer>("MyProducer");
       producer.Publish(message);
       //Assert.IsTrue(1 == 1);
       var connection = (RedisConnection)producer.Connection;
@@ -50,7 +50,7 @@ namespace RedisMessaging.Tests.ProducerTests
     {
       const string message = "ho ho ho";
       const string queue = "notARealQueue";
-      var producer = _container.GetObject<IProducer>();
+      var producer = _container.GetObject<IProducer>("MyProducer");
       producer.Publish(queue, message);
       var connection = (RedisConnection)producer.Connection;
       var actualMessage = connection.Multiplexer.GetDatabase().ListLeftPop(queue);
@@ -62,7 +62,7 @@ namespace RedisMessaging.Tests.ProducerTests
     {
       const string message = "hee hee hee";
       RedisQueue queue = new RedisQueue("againNotARealQueue", 0);
-      var producer = _container.GetObject<IProducer>();
+      var producer = _container.GetObject<IProducer>("MyProducer");
       producer.Publish(queue, message);
       var connection = (RedisConnection)producer.Connection;
       var actualMessage = connection.Multiplexer.GetDatabase().ListLeftPop(queue.Name);

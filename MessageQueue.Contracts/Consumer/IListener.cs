@@ -19,7 +19,7 @@ namespace MessageQueue.Contracts.Consumer
     /// <summary>
     /// TypeKey representing the Type of messages this Listener should handle
     /// </summary>
-    Type TypeKey { get; }
+    string TypeKey { get; }
     /// <summary>
     /// References Container this Listener is part of
     /// </summary>

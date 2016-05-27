@@ -19,9 +19,9 @@ namespace RedisMessaging.Tests.ConnectionTests
     [Test]
     public void RedisQueue_DI_Test()
     {
-      const string name = "defaultQueue";
+      const string name = "MessageQueue";
       const int ttl = 0;
-      var testObject = _container.GetObject<IQueue>();
+      var testObject = _container.GetObject<IQueue>("MyMessageQueue");
       Assert.IsNotNull(testObject);
       Assert.That(testObject.GetType(), Is.EqualTo(typeof(RedisQueue)));
       Assert.That(testObject.Name, Is.EqualTo(name));

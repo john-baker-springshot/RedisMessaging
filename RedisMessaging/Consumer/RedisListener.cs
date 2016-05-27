@@ -2,6 +2,7 @@
 using System;
 using MessageQueue.Contracts;
 using System.Threading.Tasks;
+using StackExchange.Redis;
 
 namespace RedisMessaging.Consumer
 {
@@ -11,17 +12,27 @@ namespace RedisMessaging.Consumer
 
     public int Count { get; private set; }
 
-    public IMessageHandler MessageHandler { get; private set; }
+    public IMessageHandler MessageHandler { get; protected internal set; }
 
-    public Type TypeKey { get; private set; }
+    public string TypeKey { get; set; }
 
     public async void InternalHandlerAsync(object m)
     {
-      //send item to message handler
-      await new Task(() =>MessageHandler.HandleMessage(m));
-      //check for completion
-      //if complete, remove from processing queue
-      //else throw the message up the chain
+      var redisChannel = (RedisChannel)Channel;
+      try
+      {
+        //send item to message handler
+        await Task.Run(()=> MessageHandler.HandleMessage(m));
+        //check for completion
+        //if complete, remove from processing queue
+        
+        redisChannel.RemoveFromProcessingQueue((RedisValue)m);
+      }
+      catch (Exception)
+      {
+        redisChannel.SendToDeadLetterQueue((RedisValue)m);
+        //redisChannelRemoveFromProcessingQueue((RedisValue)m);
+      }
     }
 
     public RedisListener CreateInstance()

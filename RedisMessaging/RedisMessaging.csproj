@@ -60,6 +60,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BasicMessage.cs" />
     <Compile Include="RedisConnection.cs" />
     <Compile Include="RedisQueue.cs" />
     <Compile Include="RedisChannel.cs" />
