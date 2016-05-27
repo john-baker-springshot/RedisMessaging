@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace RedisMessaging.Tests
 {
-  public class TestMessageHandler : IMessageHandler
+  public class TestMessageHandler
   {
-    public void HandleMessage(object m)
+    public void HandleMessage(BasicMessage m)
     {
       Task.Delay(5000);
-      Console.WriteLine(m.ToString());
+      Console.WriteLine(m.Message);
     }
   }
 }

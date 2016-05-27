@@ -42,11 +42,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IConnection.cs" />
+    <Compile Include="IMessageConverter.cs" />
     <Compile Include="IQueue.cs" />
     <Compile Include="IChannel.cs" />
     <Compile Include="IContainer.cs" />
     <Compile Include="Consumer\IListener.cs" />
-    <Compile Include="Consumer\IMessageHandler.cs" />
     <Compile Include="ITypeMap.cs" />
     <Compile Include="Advices\IAdvice.cs" />
     <Compile Include="IErrorHandler.cs" />

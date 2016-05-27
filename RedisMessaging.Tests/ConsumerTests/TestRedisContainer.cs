@@ -43,12 +43,12 @@ namespace RedisMessaging.Tests.ConsumerTests
     [Test]
     public void RedisContainer_InitTest()
     {
-      var testObject = _container.GetObject<IContainer>("MyContainer") as RedisContainer;
+      var testObject = _container.GetObject<IContainer>("MyContainer");
       testObject.Init();
       Assert.IsTrue(testObject.Connection.IsConnected);
       Assert.IsTrue(testObject.Channels.First().IsSubscribed);
-      var conn = testObject.Connection as RedisConnection;
-      conn.Disconnect();
+      testObject.Dispose();
+      
     }
 
   }

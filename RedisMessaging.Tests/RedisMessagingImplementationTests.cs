@@ -33,10 +33,8 @@ namespace RedisMessaging.Tests
     [TearDown]
     public void Dispose()
     {
-      var connection = (RedisConnection)_producer.Connection;
-      connection.Disconnect();
-      connection = (RedisConnection)_consumer.Connection;
-      connection.Disconnect();
+      _consumer.Connection.Dispose();
+      _consumer.Dispose();
     }
 
     [Test]

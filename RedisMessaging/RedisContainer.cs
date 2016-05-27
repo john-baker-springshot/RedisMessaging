@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using MessageQueue.Contracts;
 
 namespace RedisMessaging
@@ -24,6 +25,20 @@ namespace RedisMessaging
       foreach (IChannel channel in Channels)
       {
         channel.Subscribe();
+      }
+    }
+
+    public void Dispose()
+    {
+      Dispose(true);
+      GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+      foreach (IChannel channel in Channels)
+      {
+        channel.Dispose();
       }
     }
   }

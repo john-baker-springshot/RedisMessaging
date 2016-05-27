@@ -33,7 +33,7 @@ namespace RedisMessaging.Tests.ConnectionTests
       RedisConnection connection = new RedisConnection(connString);
       connection.Connect();
       Assert.IsTrue(connection.IsConnected);
-      connection.Disconnect();
+      connection.Dispose();
       Assert.IsFalse(connection.IsConnected);
     }
 

@@ -6,16 +6,20 @@ using System.Threading.Tasks;
 
 namespace MessageQueue.Contracts.Consumer
 {
-  public interface IListener
+  public interface IListener: ICloneable
   {
     /// <summary>
     /// Number of instances that should be spawned of this Listener type
     /// </summary>
     int Count { get; }
     /// <summary>
-    /// MessageHandlers designated for this Listener
+    /// Concrete type of class that will handle messages recieved by this listener
     /// </summary>
-    IMessageHandler MessageHandler { get; }
+    object HandlerType { get; }
+    /// <summary>
+    /// String method name of the concrete HandlerType used to handle the message
+    /// </summary>
+    string HandlerMethod { get; }
     /// <summary>
     /// TypeKey representing the Type of messages this Listener should handle
     /// </summary>

@@ -42,10 +42,9 @@
       type="RedisMessaging.RedisChannel, RedisMessaging">
     <property name="Container" ref="MyContainer"/>
     <property name="MessageQueue" ref="MyMessageQueue"/>
-    <property name="ProcessingQueue" ref="MyProcessingQueue"/>
     <property name="DeadLetterQueue" ref="MyDeadLetterQueue"/>
     <property name="PoisonQueue" ref="MyPoisonQueue"/>
-    <property name="TypeMapper" ref="MyTypeMapper"/>
+    <property name="MessageConverter" ref="JsonMessageConverter"/>
     <property name="Listeners">
       <list>
         <ref object ="MyListener"/>
@@ -58,14 +57,17 @@
     <property name="Channel" ref="MyChannel"/>
     <property name="Count" value="100"/>
     <property name="TypeKey" value="Basic"/>
-    <property name="MessageHandler" ref="MyMessageHandler"/>
+    <property name="HandlerType" ref="MyMessageHandler"/>
+    <property name="HandlerMethod" value="HandleMessage"/>
   </object>
 
-
-  <object name="MyProcessingQueue"
-      type="RedisMessaging.RedisQueue, RedisMessaging">
-    <constructor-arg name="Name" value="ProcessingQueue"/>
-    <constructor-arg name="TTL" value="0"/>
+  <object name="MyTestListener"
+    type="RedisMessaging.Consumer.RedisListener, RedisMessaging" >
+    <property name="Channel" ref="MyChannel"/>
+    <property name="Count" value="100"/>
+    <property name="TypeKey" value="Basic"/>
+    <property name="HandlerType" ref="ListenerTestMessageHandler"/>
+    <property name="HandlerMethod" value="HandleMessage"/>
   </object>
 
   <object name="MyDeadLetterQueue"
@@ -74,7 +76,12 @@
     <constructor-arg name="TTL" value="0"/>
   </object>
 
-<object name="MyPoisonQueue"
+  <object name="JsonMessageConverter"
+        type="RedisMessaging.JsonMessageConverter, RedisMessaging">
+    <property name="TypeMapper" ref="MyTypeMapper"/>
+  </object>
+
+  <object name="MyPoisonQueue"
       type="RedisMessaging.RedisQueue, RedisMessaging">
     <constructor-arg name="Name" value="PoisonQueue"/>
     <constructor-arg name="TTL" value="0"/>
@@ -99,4 +106,8 @@
      type="RedisMessaging.Tests.TestMessageHandler, RedisMessaging.Tests" >
   </object>
 
+  <object name="ListenerTestMessageHandler"
+     type="RedisMessaging.Tests.ConsumerTests.TestMessageHandler, RedisMessaging.Tests" >
+  </object>
+  
 </objects>

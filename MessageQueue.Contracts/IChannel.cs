@@ -5,7 +5,7 @@ using MessageQueue.Contracts.Consumer;
 
 namespace MessageQueue.Contracts
 {
-  public interface IChannel
+  public interface IChannel: IDisposable
   {
     /// <summary>
     /// Unique Identifier of the Channel
@@ -29,9 +29,9 @@ namespace MessageQueue.Contracts
     IQueue DeadLetterQueue { get; }
 
     /// <summary>
-    /// Type mapper used to store the "types" of messages this Channel is meant to process
+    /// Message converter to convert the message to the appropriate type
     /// </summary>
-    ITypeMapper TypeMapper { get; }
+    IMessageConverter MessageConverter { get; }
 
     /// <summary>
     /// List of Listeners subscribed to this Channel
