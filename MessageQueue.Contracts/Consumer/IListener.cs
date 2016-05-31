@@ -28,10 +28,6 @@ namespace MessageQueue.Contracts.Consumer
     /// References Container this Listener is part of
     /// </summary>
     IChannel Channel { get; }
-    /// <summary>
-    /// Async process that passes the message to the appropriate MessageHandler
-    /// </summary>
-    /// <param name="m">Message</param>
-    void InternalHandlerAsync(object m);
+
   }
 }

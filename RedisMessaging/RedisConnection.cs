@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Runtime.InteropServices;
+using System.Runtime.Remoting.Messaging;
 using MessageQueue.Contracts;
 using StackExchange.Redis;
 
@@ -8,9 +10,18 @@ namespace RedisMessaging
   {
     private readonly string _connectionString;
 
+    private static Lazy<ConnectionMultiplexer> _lazyConnection;
+
     public RedisConnection(string connectionString)
     {
       _connectionString = connectionString;
+      IsConnected = true;
+       _lazyConnection = new Lazy<ConnectionMultiplexer>(
+      () =>
+      {
+        return ConnectionMultiplexer.Connect(_connectionString);
+      });
+
     }
 
     //need a way to turn this on/off
@@ -37,29 +48,30 @@ namespace RedisMessaging
 
     public bool IsConnected { get; private set; }
 
-    internal IConnectionMultiplexer Multiplexer { get; private set; }
+    internal IConnectionMultiplexer Multiplexer { get { return _lazyConnection.Value; } }
 
     public void Connect()
     {
       if (IsConnected)
         return;
 
-      var connString = _connectionString;
+      IsConnected = true;
+      //var connString = _connectionString;
 
-      if (!String.IsNullOrEmpty(Pass))
-        connString =connString + ",password=" + Pass;
+      //if (!String.IsNullOrEmpty(Pass))
+      //  connString =connString + ",password=" + Pass;
 
-      Multiplexer = ConnectionMultiplexer.Connect(connString);
+      //Multiplexer = ConnectionMultiplexer.Connect(connString);
 
 
-      if (Multiplexer.IsConnected)
-      {
-        IsConnected = true;
-      }
-      else
-      {
-        throw new Exception("multiplexer cannot connect to endpoint");
-      }
+      //if (Multiplexer.IsConnected)
+      //{
+      //  IsConnected = true;
+      //}
+      //else
+      //{
+      //  throw new Exception("multiplexer cannot connect to endpoint");
+      //}
     }
 
     public void Dispose()

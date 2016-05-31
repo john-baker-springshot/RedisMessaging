@@ -17,33 +17,30 @@ namespace RedisMessaging.Consumer
     public string TypeKey { get; private set; }
 
     public object HandlerType { get; private set; }
-    
+
     public string HandlerMethod { get; private set; }
-    
 
-    public async void InternalHandlerAsync(object m)
+    private MethodInfo _handlerMethod;
+
+    private object _handlerClass;
+
+    public async Task<bool> InternalHandlerAsync(object m)
     {
-      var redisChannel = (RedisChannel)Channel;
-      try
-      {
-        //send item to message handler
+      //send item to message handler  
+      await Task.Run(() => _handlerMethod.Invoke(_handlerClass, new object[] { m }));
+      return true;
+    }
 
-        //create instance of handler class
-        ConstructorInfo constructor = HandlerType.GetType().GetConstructor(Type.EmptyTypes);
+    public void RegisterListener()
+    {
+      ConstructorInfo constructor = HandlerType.GetType().GetConstructor(Type.EmptyTypes);
+      //create instance of handler class
+      _handlerClass = constructor.Invoke(new object[] { });
 
-        object handlerClass = constructor.Invoke(new object[] { });
+      if (_handlerClass == null)
+        throw new Exception("HandlerType class not found");
 
-        if(handlerClass==null)
-          throw new Exception("HandlerType class not found");
-
-        MethodInfo handlerMethod = HandlerType.GetType().GetMethod(HandlerMethod);
-        await Task.Run(() =>handlerMethod.Invoke(handlerClass, new object[] { m }));
-      }
-      catch (Exception)
-      {
-        //re-package the message object with a key before we send back to DeadLetterQueue
-        redisChannel.SendToDeadLetterQueue((RedisValue)m.ToString());
-      }
+      _handlerMethod = HandlerType.GetType().GetMethod(HandlerMethod);
     }
 
     //public RedisListener CreateInstance()
@@ -60,7 +57,19 @@ namespace RedisMessaging.Consumer
 
     public object Clone()
     {
-      return this.MemberwiseClone();
+
+      RedisListener l = new RedisListener
+      {
+        Channel = Channel,
+        Count = Count,
+        TypeKey = TypeKey,
+        HandlerType = HandlerType,
+        HandlerMethod = HandlerMethod
+      };
+
+      l.RegisterListener();
+
+      return l;
     }
   }
 }

@@ -28,6 +28,7 @@ namespace MessageQueue.Contracts
     /// </summary>
     IQueue DeadLetterQueue { get; }
 
+    event EventHandler OnWorkCompleted;
     /// <summary>
     /// Message converter to convert the message to the appropriate type
     /// </summary>

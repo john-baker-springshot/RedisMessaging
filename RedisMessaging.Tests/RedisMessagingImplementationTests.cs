@@ -33,7 +33,6 @@ namespace RedisMessaging.Tests
     [TearDown]
     public void Dispose()
     {
-      _consumer.Connection.Dispose();
       _consumer.Dispose();
     }
 
@@ -46,7 +45,7 @@ namespace RedisMessaging.Tests
       Assert.IsTrue(_consumer.Connection.IsConnected);
     }
 
-    [Test]
+    [Test, MaxTime(10000)]
     public void RedisMessaging_LoadTest()
     {
       const int maxMessage = 100000;
@@ -55,10 +54,18 @@ namespace RedisMessaging.Tests
       {
         _producer.Publish(CreateBasicMessage(i, "hey hey hey"));
       }
-      Assert.IsTrue(1 == 1);
+
+      //_consumer.Init();
+      //var conn = (RedisConnection)_consumer.Connection;
+      //while (conn.Multiplexer.GetDatabase().ListLength("MessageQueue") > 0)
+      //{
+      //  //do nothing
+      //}
+      //Assert.IsTrue(1 == 1);
+      //Assert.IsTrue(1 == 1);
     }
 
-    [Test]
+    [Test, MaxTime(280000)]
     public void RedisMessaging_UnloadTest()
     {
       _consumer.Init();
@@ -67,7 +74,7 @@ namespace RedisMessaging.Tests
       {
         //do nothing
       }
-      Assert.IsTrue(1 == 1);
+      //Assert.IsTrue(1 == 1);
     }
 
     public static string CreateBasicMessage(int number, string message)

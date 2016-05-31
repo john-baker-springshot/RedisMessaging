@@ -9,7 +9,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageQueue.Contracts", "M
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedisMessaging.Tests", "RedisMessaging.Tests\RedisMessaging.Tests.csproj", "{3730259A-1426-4E0D-95A8-EEA8B24AA011}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "TestApp\TestApp.csproj", "{992EEBF3-D7AC-4B0F-ADA5-ABCCB31141FF}"
+EndProject
 Global
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -27,6 +32,10 @@ Global
 		{3730259A-1426-4E0D-95A8-EEA8B24AA011}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3730259A-1426-4E0D-95A8-EEA8B24AA011}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3730259A-1426-4E0D-95A8-EEA8B24AA011}.Release|Any CPU.Build.0 = Release|Any CPU
+		{992EEBF3-D7AC-4B0F-ADA5-ABCCB31141FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{992EEBF3-D7AC-4B0F-ADA5-ABCCB31141FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{992EEBF3-D7AC-4B0F-ADA5-ABCCB31141FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{992EEBF3-D7AC-4B0F-ADA5-ABCCB31141FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

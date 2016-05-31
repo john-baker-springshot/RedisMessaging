@@ -64,7 +64,7 @@
   <object name="MyTestListener"
     type="RedisMessaging.Consumer.RedisListener, RedisMessaging" >
     <property name="Channel" ref="MyChannel"/>
-    <property name="Count" value="1"/>
+    <property name="Count" value="100"/>
     <property name="TypeKey" value="Basic"/>
     <property name="HandlerType" ref="ListenerTestMessageHandler"/>
     <property name="HandlerMethod" value="HandleMessage"/>
@@ -103,11 +103,11 @@
   </object>
 
   <object name="MyMessageHandler"
-     type="RedisMessaging.Tests.TestMessageHandler, RedisMessaging.Tests" >
+     type="TestApp.TestMessageHandler, TestApp" >
   </object>
 
   <object name="ListenerTestMessageHandler"
-     type="RedisMessaging.Tests.ConsumerTests.TestMessageHandler, RedisMessaging.Tests" >
+     type="TestApp.TestMessageHandler, TestApp" >
   </object>
   
 </objects>

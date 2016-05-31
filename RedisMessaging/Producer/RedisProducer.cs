@@ -33,14 +33,14 @@ namespace RedisMessaging.Producer
       if (string.IsNullOrEmpty(MessageQueue?.Name))
         throw new Exception("MessageQueue not initialized");
 
-      _redis.GetDatabase().ListLeftPush(MessageQueue.Name, message);
+      _redis.GetDatabase().ListLeftPushAsync(MessageQueue.Name, message);
     }
 
     public virtual void Publish(string queue, string message)
     {
       Connect();
 
-      _redis.GetDatabase().ListLeftPush(queue, message);
+      _redis.GetDatabase().ListLeftPushAsync(queue, message);
     }
 
     public virtual void Publish(IQueue queue, string message)
@@ -50,7 +50,7 @@ namespace RedisMessaging.Producer
       if (string.IsNullOrEmpty(queue?.Name))
         throw new Exception("Queue parameter not initialized");
 
-      _redis.GetDatabase().ListLeftPush(queue.Name, message);
+      _redis.GetDatabase().ListLeftPushAsync(queue.Name, message);
     }
 
     private void Connect()

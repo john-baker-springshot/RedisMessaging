@@ -9,10 +9,10 @@ namespace RedisMessaging.Tests
 {
   public class TestMessageHandler
   {
-    public void HandleMessage(BasicMessage m)
+    public void HandleMessage(object m)
     {
       //Task.Delay(5000);
-      Console.WriteLine(m.Message);
+      Console.WriteLine(m.ToString());
     }
   }
 }

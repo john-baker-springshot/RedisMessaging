@@ -40,6 +40,9 @@ namespace RedisMessaging
 
     private Dictionary<IListener, Queue<IListener>> rr = new Dictionary<IListener, Queue<IListener>>();
 
+    public event EventHandler OnWorkCompleted;
+
+
     public void Subscribe()
     {
       if (IsSubscribed)
@@ -60,23 +63,32 @@ namespace RedisMessaging
 
       ConnectListeners();
 
+      IsSubscribed = true;
+
       //start a new thread so we dont get trapped in it
       new Task(Poll, new System.Threading.CancellationToken(), TaskCreationOptions.LongRunning).Start();
 
-      IsSubscribed = true;
+
     }
 
     public void ConnectListeners()
     {
+
+
       if (IsSubscribed)
         return;
+
+
 
       //set up listener instances
       foreach (RedisListener listener in Listeners)
       {
-        Queue<IListener> listenerQueue = new Queue<IListener>();
+        listener.RegisterListener();
 
-        for (int i = 0; i < listener.Count; i++)
+        Queue<IListener> listenerQueue = new Queue<IListener>();
+        
+        listenerQueue.Enqueue(listener);
+        for (int i = 1; i < listener.Count; i++)
         {
           listenerQueue.Enqueue((RedisListener)listener.Clone());
         }
@@ -86,8 +98,8 @@ namespace RedisMessaging
 
     private void Poll()
     {
-      //5 seconds
-      int interval = 5000;
+      //.5 seconds
+      int interval = 500;
       //polling subscribe pattern
       //continuously poll the queue
       if (Container.Connection.IsConnected)
@@ -95,11 +107,16 @@ namespace RedisMessaging
         do
         {
           var job = _redis.GetDatabase().ListRightPopLeftPush(MessageQueue.Name, ProcessingQueue.Name);
-          if(!job.IsNullOrEmpty)
+          if (!job.IsNullOrEmpty)
             HandleMessage(job);
           else
+          {
+            //if (OnWorkCompleted != null)
+            //  OnWorkCompleted(this, null);
             System.Threading.Thread.Sleep(interval);
-        } while (true);
+          }
+            
+        } while (IsSubscribed);
 
         //send job to typemapper, then to appropriate IListener
       }
@@ -109,7 +126,7 @@ namespace RedisMessaging
       }
     }
 
-    private void HandleMessage(RedisValue value)
+    private async void HandleMessage(RedisValue value)
     {
       try
       {
@@ -117,9 +134,7 @@ namespace RedisMessaging
         var messageObject = MessageConverter.Convert(value, out key);
 
         //get the type of the key
-        var listenerType =
-          (from l in Listeners where l.TypeKey.Equals(key, StringComparison.InvariantCultureIgnoreCase) select l)
-            .FirstOrDefault();
+        var listenerType = (from l in Listeners where l.TypeKey.Equals(key, StringComparison.InvariantCultureIgnoreCase) select l).FirstOrDefault() as RedisListener;
 
         if (listenerType == null)
         {
@@ -137,6 +152,8 @@ namespace RedisMessaging
           return;
         }
 
+       
+
         //get the next key in RR
         Queue<IListener> queue;
 
@@ -147,16 +164,13 @@ namespace RedisMessaging
         {
           var listener = queue.Dequeue();
           queue.Enqueue(listener);
-          //Call on the internal handler
-          //any exceptions when calling this will go back to HandleException
-          //because this is an async void, this thread will keep moving and ignore any errors
-          listener.InternalHandlerAsync(messageObject);
+          await ((RedisListener)listener).InternalHandlerAsync(messageObject);
+           //new Task(async()=> await ((RedisListener)listener).InternalHandlerAsync(messageObject)).Start();
         }
       }
       catch (Exception)
       {
         SendToDeadLetterQueue(value);
-        
       }
       finally
       {
@@ -226,8 +240,9 @@ namespace RedisMessaging
 
     protected virtual void Dispose(bool disposing)
     {
-      //if (_redis.IsConnected)
-      //  _redis.Dispose();
+      if (_redis!=null && _redis.IsConnected)
+        _redis.Dispose();
+      IsSubscribed = false;
     }
   }
 }
