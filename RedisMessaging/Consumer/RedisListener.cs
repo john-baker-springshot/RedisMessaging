@@ -27,7 +27,7 @@ namespace RedisMessaging.Consumer
     public async Task<bool> InternalHandlerAsync(object m)
     {
       //send item to message handler  
-      await Task.Run(() => _handlerMethod.Invoke(_handlerClass, new object[] { m }));
+      await Task.Run(() => _handlerMethod.Invoke(_handlerClass, new [] { m }));
       return true;
     }
 
@@ -40,7 +40,9 @@ namespace RedisMessaging.Consumer
       if (_handlerClass == null)
         throw new Exception("HandlerType class not found");
 
-      _handlerMethod = HandlerType.GetType().GetMethod(HandlerMethod);
+      var t = Channel.MessageConverter.TypeMapper.GetTypeForKey(TypeKey);
+
+      _handlerMethod = HandlerType.GetType().GetMethod(HandlerMethod, new [] {t});
     }
 
     //public RedisListener CreateInstance()

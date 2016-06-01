@@ -27,8 +27,6 @@ namespace MessageQueue.Contracts
     /// Queue on which to place errored messages we do not wish to retry/requeue
     /// </summary>
     IQueue DeadLetterQueue { get; }
-
-    event EventHandler OnWorkCompleted;
     /// <summary>
     /// Message converter to convert the message to the appropriate type
     /// </summary>

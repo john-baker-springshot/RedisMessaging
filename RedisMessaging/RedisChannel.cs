@@ -38,9 +38,9 @@ namespace RedisMessaging
 
     protected IConnectionMultiplexer _redis;
 
-    private Dictionary<IListener, Queue<IListener>> rr = new Dictionary<IListener, Queue<IListener>>();
+    //private Dictionary<IListener, Queue<IListener>> rr = new Dictionary<IListener, Queue<IListener>>();
 
-    public event EventHandler OnWorkCompleted;
+    //public event EventHandler OnWorkCompleted;
 
 
     public void Subscribe()
@@ -85,14 +85,14 @@ namespace RedisMessaging
       {
         listener.RegisterListener();
 
-        Queue<IListener> listenerQueue = new Queue<IListener>();
+        //Queue<IListener> listenerQueue = new Queue<IListener>();
         
-        listenerQueue.Enqueue(listener);
-        for (int i = 1; i < listener.Count; i++)
-        {
-          listenerQueue.Enqueue((RedisListener)listener.Clone());
-        }
-        rr.Add(listener, listenerQueue);
+        //listenerQueue.Enqueue(listener);
+        //for (int i = 1; i < listener.Count; i++)
+        //{
+        //  listenerQueue.Enqueue((RedisListener)listener.Clone());
+        //}
+        //rr.Add(listener, listenerQueue);
       }
     }
 
@@ -152,24 +152,25 @@ namespace RedisMessaging
           return;
         }
 
-       
+        await listenerType.InternalHandlerAsync(messageObject);
 
         //get the next key in RR
-        Queue<IListener> queue;
+        //Queue<IListener> queue;
 
-        rr.TryGetValue(listenerType, out queue);
+        //rr.TryGetValue(listenerType, out queue);
 
-        //pop first listener, then push to the pack of the queue
-        if (queue != null)
-        {
-          var listener = queue.Dequeue();
-          queue.Enqueue(listener);
-          await ((RedisListener)listener).InternalHandlerAsync(messageObject);
-           //new Task(async()=> await ((RedisListener)listener).InternalHandlerAsync(messageObject)).Start();
-        }
+        ////pop first listener, then push to the pack of the queue
+        //if (queue != null)
+        //{
+        //  var listener = queue.Dequeue();
+        //  queue.Enqueue(listener);
+        //  await ((RedisListener)listener).InternalHandlerAsync(messageObject);
+        //   //new Task(async()=> await ((RedisListener)listener).InternalHandlerAsync(messageObject)).Start();
+        //}
       }
-      catch (Exception)
+      catch (Exception e)
       {
+        Console.WriteLine(e.Message);
         SendToDeadLetterQueue(value);
       }
       finally
