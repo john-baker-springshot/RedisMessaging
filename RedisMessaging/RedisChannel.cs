@@ -21,7 +21,7 @@ namespace RedisMessaging
 
     public IEnumerable<IAdvice<Exception>> ErrorAdvice { get; private set; }
 
-    public string Id { get; }
+    public string Id { get; private set; }
 
     public bool IsSubscribed { get; private set; }
 
@@ -37,7 +37,7 @@ namespace RedisMessaging
 
     public IMessageConverter MessageConverter { get; private set; }
 
-    protected IConnectionMultiplexer _redis;
+    private IConnectionMultiplexer _redis;
 
     private readonly Dictionary<object, int> _errorDictionary = new Dictionary<object, int>();
 
@@ -52,7 +52,11 @@ namespace RedisMessaging
       _redis = redisConnection.Multiplexer;
 
       //needs to be more unique per instance
-      ProcessingQueue = new RedisQueue(MessageQueue.Name+":Processing", 0);
+      //i think i just need to use the "Id" field to do this
+      //i cant think of a way to make a unique, persistent naming convention for a transient queue
+      if (Id == null)
+        Id = "NA";
+      ProcessingQueue = new RedisQueue(MessageQueue.Name+":"+Id+"-Processing", 0);
       
       while(_redis.GetDatabase().ListLength(ProcessingQueue.Name)>0)
       {

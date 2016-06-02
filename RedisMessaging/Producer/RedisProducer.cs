@@ -18,8 +18,6 @@ namespace RedisMessaging.Producer
 
     private readonly IConnectionMultiplexer _redis;
 
-
-
     public RedisProducer(IConnection connection) : this(connection, null) { }
     
     public RedisProducer(IConnection connection, IQueue queue)
