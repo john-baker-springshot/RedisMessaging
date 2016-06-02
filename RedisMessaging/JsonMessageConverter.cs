@@ -27,8 +27,5 @@ namespace RedisMessaging
       var concreteMessage = JsonConvert.DeserializeObject(kvpMessage.Value.ToString(), messageType);
       return concreteMessage;
     }
-
-
-
   }
 }

@@ -57,11 +57,7 @@ namespace RedisMessaging.Tests.ConsumerTests
       Assert.That(_channel.GetType(), Is.EqualTo(typeof(RedisChannel)));
     }
 
-    [Test]
-    public void RedisChannel_SubscribeTest()
-    {
-      //TODO
-    }
+
 
     [Test]
     public void RedisChannel_HandleErrorDefaultErrorTest()
@@ -114,7 +110,8 @@ namespace RedisMessaging.Tests.ConsumerTests
 
 
       _channel.HandleException(e, m);
-
+      //need to wait the same amount of time as the retry internval of the exception or it will the tests
+      System.Threading.Thread.Sleep(10000);
 
       //message will error due to key not being found, after which i expect to see it on the dead letter queue
       Assert.That(_redis.GetDatabase().ListGetByIndex("DeadLetterQueue", _redis.GetDatabase().ListLength("DeadLetterQueue") - 1).ToString(), Is.EqualTo(m.ToString()));

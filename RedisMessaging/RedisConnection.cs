@@ -15,7 +15,6 @@ namespace RedisMessaging
     public RedisConnection(string connectionString)
     {
       _connectionString = connectionString;
-      IsConnected = true;
        _lazyConnection = new Lazy<ConnectionMultiplexer>(
       () =>
       {
@@ -57,6 +56,9 @@ namespace RedisMessaging
 
       if(Multiplexer.IsConnected)
         IsConnected = true;
+
+      if(Multiplexer.GetDatabase()==null)
+        throw new Exception("Database not reachable");
            
     }
 

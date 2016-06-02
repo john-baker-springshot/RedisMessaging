@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using MessageQueue.Contracts;
 using System.Threading.Tasks;
+using Common.Logging;
 using StackExchange.Redis;
 
 namespace RedisMessaging.Consumer
@@ -26,6 +27,8 @@ namespace RedisMessaging.Consumer
 
     public bool isRegistered { get; private set; }
 
+    private static readonly ILog Log = LogManager.GetLogger(typeof(RedisListener));
+
     public async Task<bool> InternalHandlerAsync(object m)
     {
       if(!isRegistered)
@@ -47,6 +50,7 @@ namespace RedisMessaging.Consumer
       var t = Channel.MessageConverter.TypeMapper.GetTypeForKey(TypeKey);
 
       _handlerMethod = HandlerType.GetType().GetMethod(HandlerMethod, new [] {t});
+      Log.Info("Listener Type "+TypeKey+" Registered");
     }
   }
 }

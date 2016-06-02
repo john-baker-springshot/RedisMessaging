@@ -22,7 +22,7 @@ namespace RedisMessaging.Tests
       for (int i = 0; i < messages; i++)
       {
         var message = RedisMessagingImplementationTests.CreateBasicMessage(i, "test");
-        var key = message.Substring(message.IndexOf("\"Key:\"") + 5, message.IndexOf("\"Value:\"") - 2);
+        var key = message.Substring(message.IndexOf("\"Key\":") + 5, message.IndexOf("\"Value\":") - 2);
         var kvpMessage = JsonConvert.DeserializeObject<KeyValuePair<string, object>>(message);
         var concreteMessage = JsonConvert.DeserializeObject<BasicMessage>(kvpMessage.Value.ToString());
       }

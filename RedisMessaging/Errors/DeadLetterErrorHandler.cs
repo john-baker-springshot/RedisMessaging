@@ -12,11 +12,12 @@ namespace RedisMessaging.Errors
   {
     public RedisChannel Channel { get; private set; }
 
+    private static readonly ILog Log = LogManager.GetLogger(typeof(DeadLetterErrorHandler));
+
     public void HandleError(Exception exception, object m)
     {
       //log the exception
-      var logger = LogManager.GetLogger("Error");
-      logger.Error("DefaultErrorHandler reached on message "+m, exception);
+      Log.Error("DefaultErrorHandler reached on message "+m, exception);
       //send object to the dead letter queue
       Channel.SendToDeadLetterQueue(m.ToString());
     }

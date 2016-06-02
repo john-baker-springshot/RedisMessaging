@@ -46,9 +46,7 @@ namespace RedisMessaging.Tests.ConsumerTests
       var testObject = _container.GetObject<IContainer>("MyContainer");
       testObject.Init();
       Assert.IsTrue(testObject.Connection.IsConnected);
-      Assert.IsTrue(testObject.Channels.First().IsSubscribed);
-      testObject.Dispose();
-      
+      Assert.IsTrue(testObject.Channels.First().IsSubscribed);     
     }
 
   }

@@ -18,16 +18,14 @@ namespace RedisMessaging.Tests
   public class RedisMessagingImplementationTests
   {
 
-    //private IApplicationContext _container;
-    private IProducer _producer;
-    private IContainer _consumer;
+    private IApplicationContext _container;
+
+
 
     [SetUp]
     public void Init()
     {
-      //_container = ContextRegistry.GetContext();
-      _producer = ServiceLocator.GetService<IProducer>("MyProducer");
-      _consumer = ServiceLocator.GetService<IContainer>("MyContainer");
+      _container = ContextRegistry.GetContext();
     }
 
     [TearDown]
@@ -38,6 +36,8 @@ namespace RedisMessaging.Tests
     [Test]
     public void RedisMessaging_DIInitTest()
     {
+      var _producer = ServiceLocator.GetService<IProducer>("MyProducer");
+      var _consumer = ServiceLocator.GetService<IContainer>("MyContainer");
       _producer.Connection.Connect();
       _consumer.Init();
       Assert.IsTrue(_producer.Connection.IsConnected);
@@ -48,6 +48,7 @@ namespace RedisMessaging.Tests
     public void RedisMessaging_LoadTest()
     {
       const int maxMessage = 100000;
+      var _producer = ServiceLocator.GetService<IProducer>("MyProducer");
       _producer.Connection.Connect();
       for (int i = 0; i < maxMessage; i++)
       {
@@ -67,6 +68,7 @@ namespace RedisMessaging.Tests
     [Test, MaxTime(280000)]
     public void RedisMessaging_UnloadTest()
     {
+      var _consumer = ServiceLocator.GetService<IContainer>("MyContainer");
       _consumer.Init();
       var conn = (RedisConnection)_consumer.Connection;
       while (conn.Multiplexer.GetDatabase().ListLength("MessageQueue") > 0)

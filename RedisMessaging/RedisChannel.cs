@@ -9,6 +9,7 @@ using RedisMessaging.Util;
 using StackExchange.Redis;
 using RedisMessaging.Consumer;
 using System.Linq;
+using Common.Logging;
 
 namespace RedisMessaging
 {
@@ -38,8 +39,9 @@ namespace RedisMessaging
 
     protected IConnectionMultiplexer _redis;
 
-    private readonly Dictionary<object, int> _errorDictionary = new Dictionary<object, int>();   
-    
+    private readonly Dictionary<object, int> _errorDictionary = new Dictionary<object, int>();
+
+    private static readonly ILog Log = LogManager.GetLogger(typeof(RedisChannel));
 
     public void Subscribe()
     {
@@ -65,6 +67,7 @@ namespace RedisMessaging
 
       //start a new thread so we dont get trapped in it
       new Task(Poll, new System.Threading.CancellationToken(), TaskCreationOptions.LongRunning).Start();
+      Log.Info("Redis Channel subscribed");
     }
 
     public void ConnectListeners()
@@ -133,7 +136,7 @@ namespace RedisMessaging
       }
       catch (Exception e)
       {
-        Console.WriteLine(e.Message);
+        Log.Error("Error handling message "+value.ToString()+": "+e.Message);
         HandleException(e, value);
       }
       finally
@@ -142,47 +145,56 @@ namespace RedisMessaging
       }
     }
 
-    internal void HandleException(Exception e, object m)
+    internal async void HandleException(Exception e, object m)
     {
-      var advice = (from adv in ErrorAdvice where adv.GetType()==e.GetType() select adv).FirstOrDefault();
-      //if nothing in advice chain matches use default error handler
-      if (advice == null)
+      try
       {
-        DefaultErrorHandler.HandleError(e, m);
-        return;
-      }
-
-      if(advice.RetryOnFail)
-      {
-        //need to determine type of retry
-        var retryAdvice = advice as ITimedRetryAdvice<Exception>;
-        if(retryAdvice != null)
+        var advice = (from adv in ErrorAdvice where adv.GetType() == e.GetType() select adv).FirstOrDefault();
+        //if nothing in advice chain matches use default error handler
+        if (advice == null)
         {
-          var errorCount = 0;
-           _errorDictionary.TryGetValue(m, out errorCount);
-          if(errorCount == 0)
-            _errorDictionary.Add(m, 0);
-          else if (errorCount >= retryAdvice.RetryCount)
+          DefaultErrorHandler.HandleError(e, m);
+          return;
+        }
+
+        if (advice.RetryOnFail)
+        {
+          //need to determine type of retry
+          var retryAdvice = advice as ITimedRetryAdvice<Exception>;
+          if (retryAdvice != null)
           {
-            SendToDeadLetterQueue(m.ToString());
+            var errorCount = 0;
+            _errorDictionary.TryGetValue(m, out errorCount);
+            if (errorCount == 0)
+              _errorDictionary.Add(m, 0);
+            else if (errorCount >= retryAdvice.RetryCount)
+            {
+              SendToDeadLetterQueue(m.ToString());
+              return;
+            }
+
+            _errorDictionary[m] = errorCount + 1;
+            await Task.Delay((retryAdvice.RetryInterval*1000));
+            HandleMessage(m.ToString());
+
             return;
           }
-          
-          _errorDictionary[m] = errorCount + 1;
-          Task.Delay((retryAdvice.RetryInterval*1000));
-          HandleMessage(m.ToString());
-          
-          return;
+          var retryRequeueAdvice = advice as IRetryRequeueAdvice<Exception>;
+          if (retryRequeueAdvice != null)
+          {
+            SendToMessageQueue(m.ToString());
+            return;
+          }
         }
-        var retryRequeueAdvice = advice as IRetryRequeueAdvice<Exception>;
-        if(retryRequeueAdvice!=null)
-        { 
-          SendToMessageQueue(m.ToString());
-          return;
-        }
+        DefaultErrorHandler.HandleError(e, m);
       }
-      DefaultErrorHandler.HandleError(e, m);
+      catch (Exception ex)
+      {
+        Log.Error("Error handling exception for" + m.ToString() + ": " + ex.Message);
+        DefaultErrorHandler.HandleError(ex, m);
+      }
     }
+
 
     internal void SendToPoisonQueue(RedisValue value)
     {

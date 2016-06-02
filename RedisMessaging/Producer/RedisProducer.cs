@@ -1,5 +1,6 @@
 ﻿using MessageQueue.Contracts.Producer;
 using System;
+using Common.Logging;
 using MessageQueue.Contracts;
 using StackExchange.Redis;
 
