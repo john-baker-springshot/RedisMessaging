@@ -13,8 +13,6 @@ namespace RedisMessaging.Consumer
   {
     public IChannel Channel { get; private set; }
 
-    public int Count { get; private set; }
-
     public string TypeKey { get; private set; }
 
     public object HandlerType { get; private set; }

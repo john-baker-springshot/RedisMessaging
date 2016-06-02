@@ -75,7 +75,6 @@
     <Compile Include="Util\ServiceLocator.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Consumer.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -77,10 +77,6 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-    <EmbeddedResource Include="Configs\Consumer.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Configs\Producer.xml" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

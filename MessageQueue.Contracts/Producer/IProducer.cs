@@ -27,5 +27,9 @@
     /// Default MessageQueue used by the Producer
     /// </summary>
     IQueue MessageQueue { get; }
+    /// <summary>
+    /// Boolean value to determine if the Producer should create the key for the message or if is should accept the message as is
+    /// </summary>
+    bool CreateKey { get; }
   }
 }

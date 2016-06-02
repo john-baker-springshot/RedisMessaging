@@ -9,10 +9,6 @@ namespace MessageQueue.Contracts.Consumer
   public interface IListener
   {
     /// <summary>
-    /// Number of instances that should be spawned of this Listener type
-    /// </summary>
-    int Count { get; }
-    /// <summary>
     /// Concrete type of class that will handle messages recieved by this listener
     /// </summary>
     object HandlerType { get; }
