@@ -28,7 +28,7 @@ namespace RedisMessaging
 
     public IQueue MessageQueue { get; private set; }
 
-    private IQueue ProcessingQueue { get; set; }
+    public IQueue ProcessingQueue { get; set; }
 
     public IQueue PoisonQueue { get; private set; }
 
@@ -38,25 +38,23 @@ namespace RedisMessaging
 
     protected IConnectionMultiplexer _redis;
 
-    //private Dictionary<IListener, Queue<IListener>> rr = new Dictionary<IListener, Queue<IListener>>();
-
-    //public event EventHandler OnWorkCompleted;
-
+    private readonly Dictionary<object, int> _errorDictionary = new Dictionary<object, int>();   
+    
 
     public void Subscribe()
     {
       if (IsSubscribed)
         return;
 
-      var redisConnection = (RedisConnection) Container.Connection;
+      var redisConnection = (RedisConnection)Container.Connection;
       _redis = redisConnection.Multiplexer;
 
       //needs to be more unique per instance
       ProcessingQueue = new RedisQueue(MessageQueue.Name+":Processing", 0);
-
-      for (int i = 0; i<_redis.GetDatabase().ListLength(ProcessingQueue.Name); i++)
+      
+      while(_redis.GetDatabase().ListLength(ProcessingQueue.Name)>0)
       {
-        var job = _redis.GetDatabase().ListGetByIndex(ProcessingQueue.Name, i);
+        var job = _redis.GetDatabase().ListRange(ProcessingQueue.Name, 0, 0).First();
         if (!job.IsNullOrEmpty)
           HandleMessage(job);
       }
@@ -67,32 +65,17 @@ namespace RedisMessaging
 
       //start a new thread so we dont get trapped in it
       new Task(Poll, new System.Threading.CancellationToken(), TaskCreationOptions.LongRunning).Start();
-
-
     }
 
     public void ConnectListeners()
     {
-
-
       if (IsSubscribed)
         return;
-
-
 
       //set up listener instances
       foreach (RedisListener listener in Listeners)
       {
         listener.RegisterListener();
-
-        //Queue<IListener> listenerQueue = new Queue<IListener>();
-        
-        //listenerQueue.Enqueue(listener);
-        //for (int i = 1; i < listener.Count; i++)
-        //{
-        //  listenerQueue.Enqueue((RedisListener)listener.Clone());
-        //}
-        //rr.Add(listener, listenerQueue);
       }
     }
 
@@ -111,14 +94,10 @@ namespace RedisMessaging
             HandleMessage(job);
           else
           {
-            //if (OnWorkCompleted != null)
-            //  OnWorkCompleted(this, null);
             System.Threading.Thread.Sleep(interval);
           }
             
         } while (IsSubscribed);
-
-        //send job to typemapper, then to appropriate IListener
       }
       else
       {
@@ -143,35 +122,19 @@ namespace RedisMessaging
           {
             SendToPoisonQueue(value);
           }
-          //else, send to HandleException to see how to handle
           else
           {
             throw new Exception("Listener for message not found");
-            //HandleException(new Exception("Listener for message not found"), value);
           }
           return;
         }
 
         await listenerType.InternalHandlerAsync(messageObject);
-
-        //get the next key in RR
-        //Queue<IListener> queue;
-
-        //rr.TryGetValue(listenerType, out queue);
-
-        ////pop first listener, then push to the pack of the queue
-        //if (queue != null)
-        //{
-        //  var listener = queue.Dequeue();
-        //  queue.Enqueue(listener);
-        //  await ((RedisListener)listener).InternalHandlerAsync(messageObject);
-        //   //new Task(async()=> await ((RedisListener)listener).InternalHandlerAsync(messageObject)).Start();
-        //}
       }
       catch (Exception e)
       {
         Console.WriteLine(e.Message);
-        SendToDeadLetterQueue(value);
+        HandleException(e, value);
       }
       finally
       {
@@ -179,57 +142,85 @@ namespace RedisMessaging
       }
     }
 
-    public void HandleException(Exception e, object m)
+    internal void HandleException(Exception e, object m)
     {
-      var advice = (from adv in ErrorAdvice where adv.GetType().Equals(e.GetType()) select adv).FirstOrDefault();
+      var advice = (from adv in ErrorAdvice where adv.GetType()==e.GetType() select adv).FirstOrDefault();
       //if nothing in advice chain matches use default error handler
       if (advice == null)
+      {
         DefaultErrorHandler.HandleError(e, m);
+        return;
+      }
 
       if(advice.RetryOnFail)
       {
         //need to determine type of retry
-        var retryAdvice = advice as ITimedRetryAdvice;
+        var retryAdvice = advice as ITimedRetryAdvice<Exception>;
         if(retryAdvice != null)
         {
-          //after programmed delay, send directly to handle message
-          Task.Delay(retryAdvice.RetryInterval);
-          HandleMessage((RedisValue)m);
-
+          var errorCount = 0;
+           _errorDictionary.TryGetValue(m, out errorCount);
+          if(errorCount == 0)
+            _errorDictionary.Add(m, 0);
+          else if (errorCount >= retryAdvice.RetryCount)
+          {
+            SendToDeadLetterQueue(m.ToString());
+            return;
+          }
+          
+          _errorDictionary[m] = errorCount + 1;
+          Task.Delay((retryAdvice.RetryInterval*1000));
+          HandleMessage(m.ToString());
+          
           return;
         }
-        var retryRequeueAdvice = advice as IRetryRequeueAdvice;
+        var retryRequeueAdvice = advice as IRetryRequeueAdvice<Exception>;
         if(retryRequeueAdvice!=null)
-        {
-          //remove from processing queue and reque
-          
-          SendToMessageQueue((RedisValue)m);
+        { 
+          SendToMessageQueue(m.ToString());
           return;
         }
       }
-      //if its not retry on fail then...idk, send to default error handler? i guess?
-      //en whats the point of advice that doesn't have a retry?
       DefaultErrorHandler.HandleError(e, m);
-
     }
 
     internal void SendToPoisonQueue(RedisValue value)
     {
+      if (_redis == null)
+      {
+        var redisConnection = (RedisConnection)Container.Connection;
+        _redis = redisConnection.Multiplexer;
+      }
       _redis.GetDatabase().ListLeftPush(PoisonQueue.Name, value);
     }
 
     internal void SendToMessageQueue(RedisValue value)
     {
+      if (_redis == null)
+      {
+        var redisConnection = (RedisConnection)Container.Connection;
+        _redis = redisConnection.Multiplexer;
+      }
       _redis.GetDatabase().ListLeftPush(MessageQueue.Name, value);
     }
 
     internal void SendToDeadLetterQueue(RedisValue value)
     {
+      if (_redis == null)
+      {
+        var redisConnection = (RedisConnection)Container.Connection;
+        _redis = redisConnection.Multiplexer;
+      }
       _redis.GetDatabase().ListLeftPush(DeadLetterQueue.Name, value);
     }
 
     internal void RemoveFromProcessingQueue(RedisValue value)
     {
+      if (_redis == null)
+      {
+        var redisConnection = (RedisConnection)Container.Connection;
+        _redis = redisConnection.Multiplexer;
+      }
       _redis.GetDatabase().ListRemove(ProcessingQueue.Name, value);
     }
 
@@ -246,4 +237,5 @@ namespace RedisMessaging
       IsSubscribed = false;
     }
   }
+
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MessageQueue.Contracts.Consumer
 {
-  public interface IListener: ICloneable
+  public interface IListener
   {
     /// <summary>
     /// Number of instances that should be spawned of this Listener type

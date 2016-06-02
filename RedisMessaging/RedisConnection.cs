@@ -55,23 +55,9 @@ namespace RedisMessaging
       if (IsConnected)
         return;
 
-      IsConnected = true;
-      //var connString = _connectionString;
-
-      //if (!String.IsNullOrEmpty(Pass))
-      //  connString =connString + ",password=" + Pass;
-
-      //Multiplexer = ConnectionMultiplexer.Connect(connString);
-
-
-      //if (Multiplexer.IsConnected)
-      //{
-      //  IsConnected = true;
-      //}
-      //else
-      //{
-      //  throw new Exception("multiplexer cannot connect to endpoint");
-      //}
+      if(Multiplexer.IsConnected)
+        IsConnected = true;
+           
     }
 
     public void Dispose()

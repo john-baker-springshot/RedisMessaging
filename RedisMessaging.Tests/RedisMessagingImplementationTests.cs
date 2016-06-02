@@ -33,7 +33,6 @@ namespace RedisMessaging.Tests
     [TearDown]
     public void Dispose()
     {
-      _consumer.Dispose();
     }
 
     [Test]
@@ -74,6 +73,7 @@ namespace RedisMessaging.Tests
       {
         //do nothing
       }
+      System.Threading.Thread.Sleep(5000);
       //Assert.IsTrue(1 == 1);
     }
 

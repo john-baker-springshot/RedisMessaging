@@ -24,8 +24,12 @@ namespace RedisMessaging.Consumer
 
     private object _handlerClass;
 
+    public bool isRegistered { get; private set; }
+
     public async Task<bool> InternalHandlerAsync(object m)
     {
+      if(!isRegistered)
+        RegisterListener();
       //send item to message handler  
       await Task.Run(() => _handlerMethod.Invoke(_handlerClass, new [] { m }));
       return true;
@@ -43,35 +47,6 @@ namespace RedisMessaging.Consumer
       var t = Channel.MessageConverter.TypeMapper.GetTypeForKey(TypeKey);
 
       _handlerMethod = HandlerType.GetType().GetMethod(HandlerMethod, new [] {t});
-    }
-
-    //public RedisListener CreateInstance()
-    //{
-    //  return new RedisListener
-    //  {
-    //    Channel = Channel,
-    //    Count = Count,
-    //    HandlerType = HandlerType,
-    //    HandlerMethod = HandlerMethod,
-    //    TypeKey = TypeKey
-    //  };
-    //}
-
-    public object Clone()
-    {
-
-      RedisListener l = new RedisListener
-      {
-        Channel = Channel,
-        Count = Count,
-        TypeKey = TypeKey,
-        HandlerType = HandlerType,
-        HandlerMethod = HandlerMethod
-      };
-
-      l.RegisterListener();
-
-      return l;
     }
   }
 }

@@ -12,6 +12,6 @@ namespace MessageQueue.Contracts.Advices
     /// Returns the Type of the IAdvice Exception
     /// </summary>
     /// <returns></returns>
-    T GetType();
+    Type GetType();
   }
 }

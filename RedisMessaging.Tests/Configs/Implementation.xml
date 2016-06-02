@@ -45,9 +45,16 @@
     <property name="DeadLetterQueue" ref="MyDeadLetterQueue"/>
     <property name="PoisonQueue" ref="MyPoisonQueue"/>
     <property name="MessageConverter" ref="JsonMessageConverter"/>
+    <property name="DefaultErrorHandler" ref="DefaultErrorHandler"/>
     <property name="Listeners">
       <list>
         <ref object ="MyListener"/>
+      </list>
+    </property>
+    <property name="ErrorAdvice">
+      <list>
+        <ref object ="TimeoutException"/>
+        <ref object="TestTimedRetryException"/>
       </list>
     </property>
   </object>
@@ -109,5 +116,19 @@
   <object name="ListenerTestMessageHandler"
      type="RedisMessaging.Tests.ConsumerTests.TestMessageHandler, RedisMessaging.Tests" >
   </object>
-  
+
+  <object name ="DefaultErrorHandler" type ="RedisMessaging.Errors.DeadLetterErrorHandler, RedisMessaging">
+    <property name ="Channel" ref="MyChannel"/>
+  </object>
+
+  <object name="TimeoutException" type ="RedisMessaging.Errors.RetryTimeoutException, RedisMessaging">
+    <property name="RetryOnFail" value="true"/>
+  </object>
+
+  <object name="TestTimedRetryException" type ="RedisMessaging.Tests.ConsumerTests.RetryException, RedisMessaging.Tests">
+    <property name="RetryOnFail" value="true"/>
+    <property name="RetryCount" value="1"/>
+    <property name="RetryInterval" value="5"/>
+  </object>
+
 </objects>
