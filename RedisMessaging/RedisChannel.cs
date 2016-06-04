@@ -10,6 +10,7 @@ using StackExchange.Redis;
 using RedisMessaging.Consumer;
 using System.Linq;
 using Common.Logging;
+using RedisMessaging.Producer;
 
 namespace RedisMessaging
 {
@@ -37,11 +38,15 @@ namespace RedisMessaging
 
     public IMessageConverter MessageConverter { get; private set; }
 
+    public int Count { get; private set; }
+
     private IConnectionMultiplexer _redis;
 
     private readonly Dictionary<object, int> _errorDictionary = new Dictionary<object, int>();
 
     private static readonly ILog Log = LogManager.GetLogger(typeof(RedisChannel));
+
+    public RedisProducer _publisher { get; private set; }
 
     public void Subscribe()
     {
@@ -51,16 +56,20 @@ namespace RedisMessaging
       var redisConnection = (RedisConnection)Container.Connection;
       _redis = redisConnection.Multiplexer;
 
-      //needs to be more unique per instance
-      //i think i just need to use the "Id" field to do this
-      //i cant think of a way to make a unique, persistent naming convention for a transient queue
+      _publisher = new RedisProducer(redisConnection, MessageQueue);
+
+      //need to be able to add in the instance id here...
       if (Id == null)
         Id = "NA";
-      ProcessingQueue = new RedisQueue(MessageQueue.Name+":"+Id+"-Processing", 0);
-      
-      while(_redis.GetDatabase().ListLength(ProcessingQueue.Name)>0)
+      var processingQueueName = MessageQueue.Name;
+      processingQueueName += ":" + Id + "-" + Environment.MachineName+"-Processing";
+
+      ProcessingQueue = new RedisQueue(processingQueueName, 0);
+
+      //TODO: Retest this
+      while (_redis.GetDatabase().ListLength(ProcessingQueue.Name)>0)
       {
-        var job = _redis.GetDatabase().ListRange(ProcessingQueue.Name, 0, 0).First();
+        var job = _redis.GetDatabase().ListRange(ProcessingQueue.Name, 0, 0).FirstOrDefault();
         if (!job.IsNullOrEmpty)
           HandleMessage(job);
       }
@@ -88,8 +97,8 @@ namespace RedisMessaging
 
     private void Poll()
     {
-      //.5 seconds
-      int interval = 500;
+      //.1 seconds
+      int interval = 100;
       //polling subscribe pattern
       //continuously poll the queue
       if (Container.Connection.IsConnected)
@@ -116,17 +125,19 @@ namespace RedisMessaging
     {
       try
       {
+        Log.Debug("Handling Message "+value);
         string key = "";
         var messageObject = MessageConverter.Convert(value, out key);
 
         //get the type of the key
         var listenerType = (from l in Listeners where l.TypeKey.Equals(key, StringComparison.InvariantCultureIgnoreCase) select l).FirstOrDefault() as RedisListener;
-
+        
         if (listenerType == null)
         {
           //default functionality is to send to poison queue listener is not found
           if (PoisonQueue != null)
           {
+            Log.Warn("Listener type not found for message "+value);
             SendToPoisonQueue(value);
           }
           else
@@ -135,12 +146,12 @@ namespace RedisMessaging
           }
           return;
         }
-
+        Log.Debug("Listener found for message "+value+" of type "+listenerType.TypeKey);
         await listenerType.InternalHandlerAsync(messageObject);
       }
       catch (Exception e)
       {
-        Log.Error("Error handling message "+value.ToString()+": "+e.Message);
+        Log.Error("Error handling message "+value.ToString(), e);
         HandleException(e, value);
       }
       finally
@@ -176,7 +187,7 @@ namespace RedisMessaging
               SendToDeadLetterQueue(m.ToString());
               return;
             }
-
+            Log.Warn("TimedRetryAdvice found for message "+m+", retrying Handle Message");
             _errorDictionary[m] = errorCount + 1;
             await Task.Delay((retryAdvice.RetryInterval*1000));
             HandleMessage(m.ToString());
@@ -186,10 +197,12 @@ namespace RedisMessaging
           var retryRequeueAdvice = advice as IRetryRequeueAdvice<Exception>;
           if (retryRequeueAdvice != null)
           {
+            Log.Warn("RetryRequeue Advice found for message " + m + ", requeing message");
             SendToMessageQueue(m.ToString());
             return;
           }
         }
+        //just in case measure
         DefaultErrorHandler.HandleError(e, m);
       }
       catch (Exception ex)
@@ -202,32 +215,34 @@ namespace RedisMessaging
 
     internal void SendToPoisonQueue(RedisValue value)
     {
-      if (_redis == null)
+      if (_publisher == null)
       {
         var redisConnection = (RedisConnection)Container.Connection;
-        _redis = redisConnection.Multiplexer;
+        _publisher = new RedisProducer(redisConnection);
       }
-      _redis.GetDatabase().ListLeftPush(PoisonQueue.Name, value);
+      Log.Warn("Sending message " + value + " to poison letter queue " + PoisonQueue.Name);
+      _publisher.Publish(PoisonQueue.Name, value);
     }
 
     internal void SendToMessageQueue(RedisValue value)
     {
-      if (_redis == null)
+      if (_publisher == null)
       {
         var redisConnection = (RedisConnection)Container.Connection;
-        _redis = redisConnection.Multiplexer;
+        _publisher = new RedisProducer(redisConnection);
       }
-      _redis.GetDatabase().ListLeftPush(MessageQueue.Name, value);
+      _publisher.Publish(MessageQueue.Name, value);
     }
 
     internal void SendToDeadLetterQueue(RedisValue value)
     {
-      if (_redis == null)
+      if (_publisher == null)
       {
         var redisConnection = (RedisConnection)Container.Connection;
-        _redis = redisConnection.Multiplexer;
+        _publisher = new RedisProducer(redisConnection);
       }
-      _redis.GetDatabase().ListLeftPush(DeadLetterQueue.Name, value);
+      Log.Warn("Sending message " + value + " to dead letter queue " + DeadLetterQueue.Name);
+      _publisher.Publish(DeadLetterQueue.Name, value);
     }
 
     internal void RemoveFromProcessingQueue(RedisValue value)
@@ -237,7 +252,7 @@ namespace RedisMessaging
         var redisConnection = (RedisConnection)Container.Connection;
         _redis = redisConnection.Multiplexer;
       }
-      _redis.GetDatabase().ListRemove(ProcessingQueue.Name, value);
+      _redis.GetDatabase().ListRemoveAsync(ProcessingQueue.Name, value);
     }
 
     public void Dispose()
@@ -251,6 +266,13 @@ namespace RedisMessaging
       if (_redis!=null && _redis.IsConnected)
         _redis.Dispose();
       IsSubscribed = false;
+    }
+
+    public object Clone(int instance)
+    {
+      RedisChannel channel = (RedisChannel)this.MemberwiseClone();
+      channel.Id = channel.Id + instance;
+      return channel;
     }
   }
 

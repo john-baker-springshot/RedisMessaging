@@ -31,7 +31,8 @@ namespace RedisMessaging.Consumer
     {
       if(!isRegistered)
         RegisterListener();
-      //send item to message handler  
+      //send item to message handler
+      Log.Debug("Sending message "+m.ToString()+" to handler "+_handlerClass.GetType());  
       await Task.Run(() => _handlerMethod.Invoke(_handlerClass, new [] { m }));
       return true;
     }

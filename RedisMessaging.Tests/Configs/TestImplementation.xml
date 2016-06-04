@@ -11,7 +11,7 @@
   <!--Basic Configuration-->
   <object name="MyConnection"
       type="RedisMessaging.RedisConnection, RedisMessaging">
-    <constructor-arg name="connectionString" value="localhost:6379"/>
+    <constructor-arg name="connectionString" value="localhost:6379"/>    
   </object>
 
   <object name="MyMessageQueue"
@@ -38,6 +38,8 @@
   <object name="MyContainer"
       type="RedisMessaging.RedisContainer, RedisMessaging">
     <constructor-arg name="connection" ref="MyConnection"/>
+    <property name="EnableSentinel" value="true"/>
+    <property name="MessageTimeout" value="10"/>
     <property name ="Channels">
       <list>
         <ref object="MyChannel"/>
@@ -54,6 +56,7 @@
     <property name="MessageConverter" ref="JsonMessageConverter"/>
     <property name="DefaultErrorHandler" ref="DefaultErrorHandler"/>
     <property name="Id" value="Develop"/>
+    <property name="Count" value="5"/>
     <property name="Listeners">
       <list>
         <ref object ="MyListener"/>

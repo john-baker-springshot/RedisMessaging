@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Common.Logging;
 using MessageQueue.Contracts;
 using Newtonsoft.Json;
 
@@ -13,6 +14,8 @@ namespace RedisMessaging
     public ITypeMapper TypeMapper { get; private set; }
 
     public bool CreateMessageIds { get; private set; }
+
+    private static readonly ILog Log = LogManager.GetLogger(typeof(JsonMessageConverter));
 
     public object Convert(string message, out string key)
     {
@@ -25,6 +28,7 @@ namespace RedisMessaging
         return null;
       //deserialize and return the message object as the concrete type
       var concreteMessage = JsonConvert.DeserializeObject(kvpMessage.Value.ToString(), messageType);
+      Log.Debug("Message "+message+" converted to type "+messageType);
       return concreteMessage;
     }
   }

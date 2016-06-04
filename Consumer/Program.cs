@@ -13,72 +13,40 @@ using Spring.Context.Support;
 using Newtonsoft.Json;
 using Spring.Globalization.Formatters;
 
-namespace TestApp
+namespace Consumer
 {
   class Program
   {
     public static void Main(string[] args)
     {
       var container = ContextRegistry.GetContext();
-      var producer = container.GetObject<IProducer>("MyProducer");
-      bool test = true;
-      while (test)
-      {
-        Console.WriteLine("Enter number of messages");
-        int num = Int32.Parse(Console.ReadLine());
-        Stopwatch sw = new Stopwatch();
-        sw.Start();
-        Produce(num, producer);
-        sw.Stop();
-        Console.WriteLine("Producer finished in: " + sw.ElapsedMilliseconds);
-        Console.WriteLine("Continue?");
-        var y = Console.ReadLine();
-        if (y.Equals("n"))
-          test = false;
-      }
-      container.Dispose();
+      var consumer = container.GetObject<IContainer>("MyContainer");
+      consumer.Init();
+      Consume(consumer);
     }
 
-    public static string CreateBasicMessage(int number, string message)
-    {
-      KeyValuePair<string, BasicMessage> kvp = new KeyValuePair<string, BasicMessage>("Basic:" + number, new BasicMessage(message));
-      return JsonConvert.SerializeObject(kvp);
-    }
-
-    public static string CreateSpecificMessage(int number)
-    {
-      Event e = new Event
-      {
-        EventCategory = 0,
-        EventType = 0,
-        EntityId = 0,
-        IsHandled = false
-      };
-      KeyValuePair<string, Event> kvp = new KeyValuePair<string, Event>("Event:" + number, e);
-      return JsonConvert.SerializeObject(kvp);
-    }
-
-    public static void Produce(int number, IProducer producer)
-    {
-      producer.Connection.Connect();
-
-      for (int i = 0; i < number; i++)
-      {
-        //producer.Publish(CreateBasicMessage(i, "hey hey hey"));
-        producer.Publish(CreateSpecificMessage(i));
-      }
-    }
-
+  
     public static void Consume(IContainer consumer)
     {
-      
       var conn = (RedisConnection)consumer.Connection;
+      Stopwatch sw = new Stopwatch();
+      
+      while (conn.Multiplexer.GetDatabase().ListLength("MessageQueue") == 0)
+      {
+        //wait
+      }
+      sw.Start();
       while (conn.Multiplexer.GetDatabase().ListLength("MessageQueue") > 0)
       {
-        //do nothing
+        //wait again
       }
+      sw.Stop();
+      Console.WriteLine(sw.ElapsedMilliseconds);
+      Console.WriteLine("Continue?");
+      var y = Console.ReadLine();
+      if(y.Equals("y"))
+        Consume(consumer);
     }
-
   }
 
   public class TestMessageHandler

@@ -96,7 +96,7 @@
     <Folder Include="UtilTests\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Configs\Implementation.xml">
+    <EmbeddedResource Include="Configs\TestImplementation.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>

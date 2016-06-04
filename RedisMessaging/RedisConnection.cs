@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Remoting.Messaging;
+using Common.Logging;
 using MessageQueue.Contracts;
 using StackExchange.Redis;
 
@@ -11,16 +12,32 @@ namespace RedisMessaging
     private readonly string _connectionString;
 
     private static Lazy<ConnectionMultiplexer> _lazyConnection;
+    private readonly ConfigurationOptions _config;
+    private static readonly ILog Log = LogManager.GetLogger(typeof(RedisConnection));
+    public RedisConnection(string connectionString) : this(connectionString, null) { }
 
-    public RedisConnection(string connectionString)
+    public RedisConnection(string connectionString, string pass)
     {
       _connectionString = connectionString;
-       _lazyConnection = new Lazy<ConnectionMultiplexer>(
+
+      _config = new ConfigurationOptions
+      {
+        EndPoints = { connectionString},
+      };
+
+      if (pass != null)
+      {
+        Pass = pass;
+        _config.Password = pass;
+      }
+      
+      _lazyConnection = new Lazy<ConnectionMultiplexer>(
       () =>
       {
-        return ConnectionMultiplexer.Connect(_connectionString);
+        return ConnectionMultiplexer.Connect(_config);
       });
-
+      Connect();
+      Log.Info("Redis Connection connected to "+connectionString);
     }
 
     //need a way to turn this on/off
@@ -54,12 +71,14 @@ namespace RedisMessaging
       if (IsConnected)
         return;
 
-      if(Multiplexer.IsConnected)
+      if (Multiplexer.IsConnected)
+      {
         IsConnected = true;
-
-      if(Multiplexer.GetDatabase()==null)
+      }
+      else
+      {
         throw new Exception("Database not reachable");
-           
+      }     
     }
 
     public void Dispose()

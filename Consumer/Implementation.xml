@@ -35,6 +35,7 @@
     <property name="CreateKey" value="true"/>
   </object>
 
+  
   <!--Consumer Configuration-->
   <object name="MyContainer"
       type="RedisMessaging.RedisContainer, RedisMessaging">

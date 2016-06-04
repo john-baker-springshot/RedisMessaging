@@ -18,6 +18,8 @@ namespace RedisMessaging.Producer
 
     private readonly IConnectionMultiplexer _redis;
 
+    private static readonly ILog Log = LogManager.GetLogger(typeof(RedisProducer));
+
     public RedisProducer(IConnection connection) : this(connection, null) { }
     
     public RedisProducer(IConnection connection, IQueue queue)
@@ -29,6 +31,7 @@ namespace RedisMessaging.Producer
 
       var redisConnection = (RedisConnection) Connection;
       _redis = redisConnection.Multiplexer;
+      Log.Info("Producer Initialized");
     }
 
     public virtual void Publish(string message)
@@ -38,6 +41,7 @@ namespace RedisMessaging.Producer
         throw new Exception("MessageQueue not initialized");
       
       _redis.GetDatabase().ListLeftPushAsync(MessageQueue.Name, message);
+      Log.Debug("Sending message "+message+" to "+MessageQueue.Name);
     }
 
     public virtual void Publish(string queue, string message)
@@ -45,6 +49,7 @@ namespace RedisMessaging.Producer
       Connect();
 
       _redis.GetDatabase().ListLeftPushAsync(queue, message);
+      Log.Debug("Sending message " + message + " to " + queue);
     }
 
     public virtual void Publish(IQueue queue, string message)
@@ -55,6 +60,7 @@ namespace RedisMessaging.Producer
         throw new Exception("Queue parameter not initialized");
 
       _redis.GetDatabase().ListLeftPushAsync(queue.Name, message);
+      Log.Debug("Sending message " + message + " to " + queue.Name);
     }
 
     public virtual void PublishWithKey(string message, string key)

@@ -12,7 +12,7 @@ namespace RedisMessaging.Tests
     public void HandleMessage(object m)
     {
       //Task.Delay(5000);
-      Console.WriteLine(m.ToString());
+      //Console.WriteLine(m.ToString());
     }
   }
 }

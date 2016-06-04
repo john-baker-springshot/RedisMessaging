@@ -41,8 +41,8 @@ namespace RedisMessaging.Tests.ConnectionTests
     public void RedisConnection_BadConnectionTest()
     {
       const string connString = "bad endpoint";
-      RedisConnection connection = new RedisConnection(connString);
-      Assert.That(() => connection.Connect(), Throws.Exception);
+      RedisConnection connection; 
+      Assert.That(() => connection = new RedisConnection(connString), Throws.Exception);
     }
 
 
