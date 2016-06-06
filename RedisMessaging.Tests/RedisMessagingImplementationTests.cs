@@ -47,7 +47,7 @@ namespace RedisMessaging.Tests
     [Test, MaxTime(10000)]
     public void RedisMessaging_LoadTest()
     {
-      const int maxMessage = 10000;
+      const int maxMessage = 100000;
       var _producer = ServiceLocator.GetService<IProducer>("MyProducer");
       _producer.Connection.Connect();
       for (int i = 0; i < maxMessage; i++)

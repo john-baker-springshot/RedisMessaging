@@ -51,31 +51,5 @@ namespace RedisMessaging.Tests.ConsumerTests
       Assert.IsTrue(testObject.Connection.IsConnected);
       Assert.IsTrue(testObject.Channels.First().IsSubscribed);     
     }
-
-   //[Test]
-   public void RedisContainer_SentinelTest()
-   {
-      var connection = _container.GetObject<IConnection>("MyConnection") as RedisConnection;
-      //RedisQueueSentinel sent = new RedisQueueSentinel(connection, 10);
-
-
-      var container = _container.GetObject<IContainer>("MyContainer");
-      container.Init();
-      var channel = container.Channels.First() as RedisChannel;
-      var redisConnection = container.Connection as RedisConnection;
-      IConnectionMultiplexer redis = redisConnection.Multiplexer;
-
-      //push messages to the ProcessingQueue
-      redis.GetDatabase().ListLeftPush(channel.ProcessingQueue.Name, "test");
-
-      //wait 10 seconds for "timeout" time to occur
-      System.Threading.Thread.Sleep(12000);
-
-
-      //should requeue the messages
-      //BUT if the container is init'd, than the Channels are actively subscribing
-      //so how can I assert that the Sentinel is doing what its supposed to
-    }
-
   }
 }

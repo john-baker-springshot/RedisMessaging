@@ -30,7 +30,7 @@ namespace RedisMessaging
 
     public IQueue MessageQueue { get; private set; }
 
-    public IQueue ProcessingQueue { get; set; }
+    public IQueue ProcessingQueue { get; private set; }
 
     public IQueue PoisonQueue { get; private set; }
 
@@ -46,13 +46,10 @@ namespace RedisMessaging
 
     private static readonly ILog Log = LogManager.GetLogger(typeof(RedisChannel));
 
-    public RedisProducer _publisher { get; private set; }
+    private RedisProducer _publisher;
 
-    public void Subscribe()
+    public void Init()
     {
-      if (IsSubscribed)
-        return;
-
       var redisConnection = (RedisConnection)Container.Connection;
       _redis = redisConnection.Multiplexer;
 
@@ -62,9 +59,17 @@ namespace RedisMessaging
       if (Id == null)
         Id = "NA";
       var processingQueueName = MessageQueue.Name;
-      processingQueueName += ":" + Id + "-" + Environment.MachineName+"-Processing";
+      processingQueueName += ":" + Id + "-" + Environment.MachineName + "-Processing";
 
       ProcessingQueue = new RedisQueue(processingQueueName, 0);
+    }
+
+    public void Subscribe()
+    {
+      if (IsSubscribed)
+        return;
+
+      Init();
 
       //TODO: Retest this
       while (_redis.GetDatabase().ListLength(ProcessingQueue.Name)>0)
@@ -274,6 +279,12 @@ namespace RedisMessaging
       channel.Id = channel.Id + instance;
       return channel;
     }
+
+    public RedisValue[] GetProcessingMessages()
+    {
+      return _redis.GetDatabase().ListRange(ProcessingQueue.Name, 0, -1);
+    }
+
   }
 
 }

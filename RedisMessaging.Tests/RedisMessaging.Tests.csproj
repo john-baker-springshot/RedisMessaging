@@ -71,6 +71,7 @@
     <Compile Include="ConnectionTests\TestRedisConnection.cs" />
     <Compile Include="RedisMessagingImplementationTests.cs" />
     <Compile Include="TestMessageHandler.cs" />
+    <Compile Include="TestRedisQueueSentinel.cs" />
     <Compile Include="TestSerialization.cs" />
   </ItemGroup>
   <ItemGroup>
