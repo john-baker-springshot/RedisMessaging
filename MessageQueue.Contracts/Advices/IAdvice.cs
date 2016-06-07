@@ -2,7 +2,7 @@
 
 namespace MessageQueue.Contracts.Advices
 {
-  public interface IAdvice<out T> where T : Exception
+  public interface IAdvice
   {
     /// <summary>
     /// Boolean flag for retrying message execution on a specific exception occurence

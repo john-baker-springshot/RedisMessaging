@@ -39,7 +39,7 @@
       type="RedisMessaging.RedisContainer, RedisMessaging">
     <constructor-arg name="connection" ref="MyConnection"/>
     <property name="EnableSentinel" value="true"/>
-    <property name="MessageTimeout" value="10"/>
+    <property name="Sentinel" ref="MySentinel"/>
     <property name ="Channels">
       <list>
         <ref object="MyChannel"/>
@@ -130,14 +130,23 @@
     <property name ="Channel" ref="MyChannel"/>
   </object>
 
-  <object name="TimeoutException" type ="RedisMessaging.Errors.RetryTimeoutException, RedisMessaging">
-    <property name="RetryOnFail" value="true"/>
+  <object name="TimeoutException" type ="RedisMessaging.Errors.ErrorAdvice, RedisMessaging">
+    <property name="RetryOnFail" value ="true"/>
+    <property name="ExceptionType" value="TimeoutException"/>
+    <property name="AdviceType" value="IRetryRequeueAdvice"/>
   </object>
 
-  <object name="TestTimedRetryException" type ="RedisMessaging.Tests.ConsumerTests.RetryException, RedisMessaging.Tests">
-    <property name="RetryOnFail" value="true"/>
+  <object name="TestTimedRetryException" type ="RedisMessaging.Errors.ErrorAdvice, RedisMessaging">
+    <property name="RetryOnFail" value ="true"/>
+    <property name="ExceptionType" value="Application Exception"/>
+    <property name="AdviceType" value="ITimedRetryAdvice"/>
     <property name="RetryCount" value="1"/>
     <property name="RetryInterval" value="5"/>
   </object>
 
+  <object name ="MySentinel" type ="RedisMessaging.RedisQueueSentinel, RedisMessaging">
+    <constructor-arg name ="connection" ref="MyConnection"/>
+    <constructor-arg name ="timeout" value="10"/>
+  </object>
+  
 </objects>

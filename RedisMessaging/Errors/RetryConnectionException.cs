@@ -4,7 +4,7 @@ using StackExchange.Redis;
 
 namespace RedisMessaging.Errors
 {
-  public class RetryConnectionException : ITimedRetryAdvice<RedisConnectionException>
+  public class RetryConnectionException : ITimedRetryAdvice
   {
     public int RetryCount { get; private set; }
 
@@ -12,7 +12,7 @@ namespace RedisMessaging.Errors
 
     public bool RetryOnFail { get; private set; }
 
-    Type IAdvice<RedisConnectionException>.GetType()
+    Type IAdvice.GetType()
     {
       return typeof (RedisConnectionException);
     }

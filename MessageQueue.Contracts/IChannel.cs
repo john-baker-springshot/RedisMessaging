@@ -48,7 +48,7 @@ namespace MessageQueue.Contracts
     /// <summary>
     /// List of Advice error handlers for determining specific error handling scenarios
     /// </summary>
-    IEnumerable<IAdvice<Exception>> ErrorAdvice { get; }
+    IEnumerable<IAdvice> ErrorAdvice { get; }
     /// <summary>
     /// Number of instances of the channel you wish to spawn on initialization
     /// </summary>

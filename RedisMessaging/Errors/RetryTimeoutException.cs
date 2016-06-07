@@ -3,11 +3,11 @@ using MessageQueue.Contracts.Advices;
 
 namespace RedisMessaging.Errors
 {
-  public class RetryTimeoutException : IRetryRequeueAdvice<TimeoutException>
+  public class RetryTimeoutException : IRetryRequeueAdvice
   {
     public bool RetryOnFail { get; private set; }
 
-    Type IAdvice<TimeoutException>.GetType()
+    Type IAdvice.GetType()
     {
       return typeof(TimeoutException);
     }

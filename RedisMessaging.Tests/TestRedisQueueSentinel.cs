@@ -30,7 +30,7 @@ namespace RedisMessaging.Tests
     [Test]
     public void RedisQueueSentienl_AddTest()
     {
-      var sentinel = new RedisQueueSentinel(10);
+      var sentinel = _container.GetObject<RedisQueueSentinel>("MySentinel");
       List<RedisValue> list = new List<RedisValue>();
       list.Add("hey");
       sentinel.Add(QueueName, list);
@@ -40,7 +40,7 @@ namespace RedisMessaging.Tests
     [Test]
     public void RedisQueueSentienl_EvictTest()
     {
-      var sentinel = new RedisQueueSentinel(10);
+      var sentinel = _container.GetObject<RedisQueueSentinel>("MySentinel");
       List<RedisValue> addList = new List<RedisValue>();
       addList.Add("heyheyhey");
       sentinel.Add(QueueName, addList);
@@ -54,8 +54,9 @@ namespace RedisMessaging.Tests
     [Test]
     public void RedisQueueSentienl_RequeueTest()
     {
-      var sentinel = new RedisQueueSentinel(10);
-      var channel = _container.GetObject<IChannel>("MyChannel") as RedisChannel;
+      var container = _container.GetObject<IContainer>("MyContainer") as RedisContainer;
+      var sentinel = RedisQueueSentinel.Instance;
+      var channel = container.Channels.FirstOrDefault() as RedisChannel;
       channel.Init();
       const string expectedMessage = "hey";
       var connection = channel.Container.Connection as RedisConnection;
@@ -66,8 +67,27 @@ namespace RedisMessaging.Tests
       sentinel.Add(channel.ProcessingQueue.Name, list);
       //sleep for the timeout period
       System.Threading.Thread.Sleep(10000);
-      sentinel.Requeue(channel);
+      sentinel.Requeue();
 
+      var message = _redis.GetDatabase().ListLeftPop(channel.MessageQueue.Name);
+      Assert.That(message.ToString(), Is.EqualTo(expectedMessage));
+    }
+
+    [Test]
+    public void RedisQueueSentinel_StartTest()
+    {
+      var container = _container.GetObject<IContainer>("MyContainer") as RedisContainer;
+      var sentinel = RedisQueueSentinel.Instance;
+      var channel = container.Channels.FirstOrDefault() as RedisChannel;
+      channel.Init();
+      const string expectedMessage = "hey";
+      var connection = channel.Container.Connection as RedisConnection;
+      var _redis = connection.Multiplexer;
+      _redis.GetDatabase().ListRightPush(channel.ProcessingQueue.Name, expectedMessage);
+      
+      sentinel.Start();
+      //sleep for the timeout period
+      System.Threading.Thread.Sleep(15000);
       var message = _redis.GetDatabase().ListLeftPop(channel.MessageQueue.Name);
       Assert.That(message.ToString(), Is.EqualTo(expectedMessage));
     }

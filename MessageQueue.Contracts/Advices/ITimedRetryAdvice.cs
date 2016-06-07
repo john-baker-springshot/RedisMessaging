@@ -3,7 +3,7 @@
 namespace MessageQueue.Contracts.Advices
 {
   //TODO: Should this inherit as IAdvice<T> instead?
-  public interface ITimedRetryAdvice<out T> : IAdvice<T> where T: Exception
+  public interface ITimedRetryAdvice : IAdvice
   {
     /// <summary>
     /// Maximum number of retries allowed before auto-failure

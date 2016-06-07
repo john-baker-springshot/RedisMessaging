@@ -10,6 +10,7 @@ using StackExchange.Redis;
 using RedisMessaging.Consumer;
 using System.Linq;
 using Common.Logging;
+using RedisMessaging.Errors;
 using RedisMessaging.Producer;
 
 namespace RedisMessaging
@@ -20,7 +21,7 @@ namespace RedisMessaging
 
     public IErrorHandler DefaultErrorHandler { get; private set; }
 
-    public IEnumerable<IAdvice<Exception>> ErrorAdvice { get; private set; }
+    public IEnumerable<IAdvice> ErrorAdvice { get; private set; }
 
     public string Id { get; private set; }
 
@@ -59,7 +60,7 @@ namespace RedisMessaging
       if (Id == null)
         Id = "NA";
       var processingQueueName = MessageQueue.Name;
-      processingQueueName += ":" + Id + "-" + Environment.MachineName + "-Processing";
+      processingQueueName += ":" + Id + "_" + Environment.MachineName + "_"+DateTime.Now.ToString("yyyyMMdd_HHmmss");
 
       ProcessingQueue = new RedisQueue(processingQueueName, 0);
     }
@@ -167,9 +168,15 @@ namespace RedisMessaging
 
     internal async void HandleException(Exception e, object m)
     {
+      ErrorAdvice advice = null;
       try
       {
-        var advice = (from adv in ErrorAdvice where adv.GetType() == e.GetType() select adv).FirstOrDefault();
+        foreach (ErrorAdvice adv in ErrorAdvice)
+        {
+          if (adv.GetExceptionType() == e.GetType())
+            advice = adv;
+        }
+        //var advice = (from adv in ErrorAdvice where adv.GetExceptionType() == e.GetType() select adv).FirstOrDefault();
         //if nothing in advice chain matches use default error handler
         if (advice == null)
         {
@@ -180,27 +187,27 @@ namespace RedisMessaging
         if (advice.RetryOnFail)
         {
           //need to determine type of retry
-          var retryAdvice = advice as ITimedRetryAdvice<Exception>;
-          if (retryAdvice != null)
+          //var retryAdvice = advice as ITimedRetryAdvice;
+          if (advice.GetAdviceType() == typeof(ITimedRetryAdvice))
           {
             var errorCount = 0;
             _errorDictionary.TryGetValue(m, out errorCount);
             if (errorCount == 0)
               _errorDictionary.Add(m, 0);
-            else if (errorCount >= retryAdvice.RetryCount)
+            else if (errorCount >= advice.RetryCount)
             {
               SendToDeadLetterQueue(m.ToString());
               return;
             }
             Log.Warn("TimedRetryAdvice found for message "+m+", retrying Handle Message");
             _errorDictionary[m] = errorCount + 1;
-            await Task.Delay((retryAdvice.RetryInterval*1000));
+            await Task.Delay((advice.RetryInterval*1000));
             HandleMessage(m.ToString());
 
             return;
           }
-          var retryRequeueAdvice = advice as IRetryRequeueAdvice<Exception>;
-          if (retryRequeueAdvice != null)
+          //var retryRequeueAdvice = advice as IRetryRequeueAdvice;
+          if (advice.GetAdviceType() == typeof(IRetryRequeueAdvice))
           {
             Log.Warn("RetryRequeue Advice found for message " + m + ", requeing message");
             SendToMessageQueue(m.ToString());
@@ -236,7 +243,7 @@ namespace RedisMessaging
         var redisConnection = (RedisConnection)Container.Connection;
         _publisher = new RedisProducer(redisConnection);
       }
-      _publisher.Publish(MessageQueue.Name, value);
+      _publisher.PublishToFront(MessageQueue.Name, value);
     }
 
     internal void SendToDeadLetterQueue(RedisValue value)

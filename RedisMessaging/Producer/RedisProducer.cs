@@ -63,41 +63,9 @@ namespace RedisMessaging.Producer
       Log.Debug("Sending message " + message + " to " + queue.Name);
     }
 
-    public virtual void PublishWithKey(string message, string key)
+    public virtual void PublishToFront(string queueName, string message)
     {
-      Connect();
-      if (string.IsNullOrEmpty(MessageQueue?.Name))
-        throw new Exception("MessageQueue not initialized");
-      if (CreateKey)
-        message = CreateMessageKey(message, key);
-
-      _redis.GetDatabase().ListLeftPushAsync(MessageQueue.Name, message);
-    }
-
-    public virtual void PublishWithKey(string queue, string message, string key)
-    {
-      Connect();
-      if (CreateKey)
-        message = CreateMessageKey(message, key);
-      _redis.GetDatabase().ListLeftPushAsync(queue, message);
-    }
-
-    public virtual void PublishWithKey(IQueue queue, string message, string key)
-    {
-      Connect();
-
-      if (string.IsNullOrEmpty(queue?.Name))
-        throw new Exception("Queue parameter not initialized");
-      if (CreateKey)
-        message = CreateMessageKey(message, key);
-      _redis.GetDatabase().ListLeftPushAsync(queue.Name, message);
-    }
-
-    private string CreateMessageKey(string message, string key)
-    {
-      key = key + ":" + System.Guid.NewGuid().ToString();
-      KeyValuePair<string, string> newMessage = new KeyValuePair<string, string>(key, message);
-      return JsonConvert.SerializeObject(newMessage);
+      _redis.GetDatabase().ListRightPushAsync(queueName,message);
     }
 
     private void Connect()

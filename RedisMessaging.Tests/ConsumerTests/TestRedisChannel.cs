@@ -162,7 +162,7 @@ namespace RedisMessaging.Tests.ConsumerTests
 
   }
 
-  public class RetryException : ITimedRetryAdvice<ApplicationException>
+  public class RetryException : ITimedRetryAdvice
   {
     public int RetryCount { get; set; }
 
@@ -170,7 +170,7 @@ namespace RedisMessaging.Tests.ConsumerTests
 
     public bool RetryOnFail { get; set; }
 
-    Type IAdvice<ApplicationException>.GetType()
+    Type IAdvice.GetType()
     {
       return typeof(ApplicationException);
     }
