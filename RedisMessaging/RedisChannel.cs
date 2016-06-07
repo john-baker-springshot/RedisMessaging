@@ -188,7 +188,7 @@ namespace RedisMessaging
         {
           //need to determine type of retry
           //var retryAdvice = advice as ITimedRetryAdvice;
-          if (advice.GetAdviceType() == typeof(ITimedRetryAdvice))
+          if (advice.GetAdviceType() == AdviceType.TimedRetry)
           {
             var errorCount = 0;
             _errorDictionary.TryGetValue(m, out errorCount);
@@ -207,7 +207,7 @@ namespace RedisMessaging
             return;
           }
           //var retryRequeueAdvice = advice as IRetryRequeueAdvice;
-          if (advice.GetAdviceType() == typeof(IRetryRequeueAdvice))
+          if (advice.GetAdviceType() == AdviceType.RetryRequeue)
           {
             Log.Warn("RetryRequeue Advice found for message " + m + ", requeing message");
             SendToMessageQueue(m.ToString());

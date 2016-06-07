@@ -63,7 +63,6 @@
     <Compile Include="BasicMessage.cs" />
     <Compile Include="Errors\DeadLetterErrorHandler.cs" />
     <Compile Include="Errors\ErrorAdvice.cs" />
-    <Compile Include="Errors\RetryTimeoutException.cs" />
     <Compile Include="JsonMessageConverter.cs" />
     <Compile Include="RedisConnection.cs" />
     <Compile Include="RedisQueue.cs" />
@@ -72,7 +71,6 @@
     <Compile Include="Consumer\RedisListener.cs" />
     <Compile Include="Producer\RedisProducer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Errors\RetryConnectionException.cs" />
     <Compile Include="RedisQueueSentinel.cs" />
     <Compile Include="Util\ReflectionHelper.cs" />
     <Compile Include="Util\ServiceLocator.cs" />

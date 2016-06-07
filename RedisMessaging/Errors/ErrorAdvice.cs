@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using MessageQueue.Contracts;
 using MessageQueue.Contracts.Advices;
 using RedisMessaging.Util;
 
@@ -19,7 +20,7 @@ namespace RedisMessaging.Errors
     public bool RetryOnFail { get; private set; }
 
     private Type _exceptionType;
-    private Type _adviceType;
+    private AdviceType _adviceType;
 
     public Type GetExceptionType()
     {
@@ -33,17 +34,10 @@ namespace RedisMessaging.Errors
       return _exceptionType;
     }
 
-    public Type GetAdviceType()
+    public AdviceType GetAdviceType()
     {
-      if (_adviceType == null)
-      {
-        _adviceType = ReflectionHelper.GetTypeByName(AdviceType).FirstOrDefault();
-
-        if (AdviceType==null)// || _adviceType!=typeof(IAdvice))
-          throw new ArgumentException("Error registering AdviceType " + AdviceType + " is not a valid advice type");
-      }
-
-      return _adviceType;
+      var test = (AdviceType)Enum.Parse(typeof(AdviceType), AdviceType);
+      return test;
     }
 
   }

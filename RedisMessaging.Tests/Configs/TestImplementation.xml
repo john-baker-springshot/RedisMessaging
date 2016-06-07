@@ -133,13 +133,13 @@
   <object name="TimeoutException" type ="RedisMessaging.Errors.ErrorAdvice, RedisMessaging">
     <property name="RetryOnFail" value ="true"/>
     <property name="ExceptionType" value="TimeoutException"/>
-    <property name="AdviceType" value="IRetryRequeueAdvice"/>
+    <property name="AdviceType" value="RetryRequeue"/>
   </object>
 
   <object name="TestTimedRetryException" type ="RedisMessaging.Errors.ErrorAdvice, RedisMessaging">
     <property name="RetryOnFail" value ="true"/>
-    <property name="ExceptionType" value="Application Exception"/>
-    <property name="AdviceType" value="ITimedRetryAdvice"/>
+    <property name="ExceptionType" value="ApplicationException"/>
+    <property name="AdviceType" value="TimedRetry"/>
     <property name="RetryCount" value="1"/>
     <property name="RetryInterval" value="5"/>
   </object>

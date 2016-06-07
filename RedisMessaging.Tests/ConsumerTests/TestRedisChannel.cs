@@ -162,7 +162,7 @@ namespace RedisMessaging.Tests.ConsumerTests
 
   }
 
-  public class RetryException : ITimedRetryAdvice
+  public class RetryException : IAdvice
   {
     public int RetryCount { get; set; }
 

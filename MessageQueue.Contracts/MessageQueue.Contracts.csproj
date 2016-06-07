@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Advices\AdviceType.cs" />
     <Compile Include="IConnection.cs" />
     <Compile Include="IMessageConverter.cs" />
     <Compile Include="IQueue.cs" />
@@ -50,8 +51,6 @@
     <Compile Include="ITypeMap.cs" />
     <Compile Include="Advices\IAdvice.cs" />
     <Compile Include="IErrorHandler.cs" />
-    <Compile Include="Advices\ITimedRetryAdvice.cs" />
-    <Compile Include="Advices\IRetryRequeueAdvice.cs" />
     <Compile Include="ITypeMapper.cs" />
     <Compile Include="Producer\IProducer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
