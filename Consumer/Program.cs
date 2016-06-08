@@ -51,7 +51,7 @@ namespace Consumer
 
   public class TestMessageHandler
   {
-    public void HandleMessage(BasicMessage m)
+    public void HandleMessage(Event m)
     {
       Task.Delay(5000);
       //Console.WriteLine(m.Message);

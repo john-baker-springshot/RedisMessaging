@@ -38,7 +38,6 @@ namespace RedisMessaging.Tests
     {
       var _producer = ServiceLocator.GetService<IProducer>("MyProducer");
       var _consumer = ServiceLocator.GetService<IContainer>("MyContainer");
-      _producer.Connection.Connect();
       _consumer.Init();
       Assert.IsTrue(_producer.Connection.IsConnected);
       Assert.IsTrue(_consumer.Connection.IsConnected);
@@ -49,7 +48,6 @@ namespace RedisMessaging.Tests
     {
       const int maxMessage = 100000;
       var _producer = ServiceLocator.GetService<IProducer>("MyProducer");
-      _producer.Connection.Connect();
       for (int i = 0; i < maxMessage; i++)
       {
         _producer.Publish(CreateBasicMessage(i, "hey hey hey"));

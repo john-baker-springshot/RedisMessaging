@@ -72,13 +72,13 @@ namespace RedisMessaging
 
       Init();
 
-      //TODO: Retest this
-      while (_redis.GetDatabase().ListLength(ProcessingQueue.Name)>0)
-      {
-        var job = _redis.GetDatabase().ListRange(ProcessingQueue.Name, 0, 0).FirstOrDefault();
-        if (!job.IsNullOrEmpty)
-          HandleMessage(job);
-      }
+      ////TODO: Retest this
+      //while (_redis.GetDatabase().ListLength(ProcessingQueue.Name)>0)
+      //{
+      //  var job = _redis.GetDatabase().ListRange(ProcessingQueue.Name, 0, 0).FirstOrDefault();
+      //  if (!job.IsNullOrEmpty)
+      //    HandleMessage(job);
+      //}
 
       ConnectListeners();
 

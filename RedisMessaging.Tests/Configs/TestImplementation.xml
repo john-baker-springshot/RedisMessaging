@@ -27,13 +27,6 @@
     <constructor-arg name="queue" ref="MyMessageQueue"/>
   </object>
 
-  <object name="MyKeyProducer"
-  type="RedisMessaging.Producer.RedisProducer, RedisMessaging">
-    <constructor-arg name="connection" ref="MyConnection"/>
-    <constructor-arg name="queue" ref="MyMessageQueue"/>
-    <property name="CreateKey" value="true"/>
-  </object>
-
   <!--Consumer Configuration-->
   <object name="MyContainer"
       type="RedisMessaging.RedisContainer, RedisMessaging">
@@ -56,7 +49,7 @@
     <property name="MessageConverter" ref="JsonMessageConverter"/>
     <property name="DefaultErrorHandler" ref="DefaultErrorHandler"/>
     <property name="Id" value="Develop"/>
-    <property name="Count" value="5"/>
+    <property name="Count" value="1"/>
     <property name="Listeners">
       <list>
         <ref object ="MyListener"/>

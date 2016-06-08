@@ -11,8 +11,7 @@
   <!--Basic Configuration-->
   <object name="MyConnection"
       type="RedisMessaging.RedisConnection, RedisMessaging">
-    <constructor-arg name="connectionString" value="54.183.149.200:6379"/>
-    <constructor-arg name="pass" value="kKHfsdSghuUKjbGGYujhgFDescVBNnkkJHH886%587uHH65545^788***9hG"/>
+    <constructor-arg name="connectionString" value="localhost:6379"/>
   </object>
 
   <object name="MyMessageQueue"
@@ -35,11 +34,12 @@
     <property name="CreateKey" value="true"/>
   </object>
 
-  
   <!--Consumer Configuration-->
   <object name="MyContainer"
       type="RedisMessaging.RedisContainer, RedisMessaging">
     <constructor-arg name="connection" ref="MyConnection"/>
+    <property name="EnableSentinel" value="true"/>
+    <property name="Sentinel" ref="MySentinel"/>
     <property name ="Channels">
       <list>
         <ref object="MyChannel"/>
@@ -56,6 +56,7 @@
     <property name="MessageConverter" ref="JsonMessageConverter"/>
     <property name="DefaultErrorHandler" ref="DefaultErrorHandler"/>
     <property name="Id" value="Develop"/>
+    <property name="Count" value="5"/>
     <property name="Listeners">
       <list>
         <ref object ="MyListener"/>
@@ -72,7 +73,7 @@
   <object name="MyListener"
     type="RedisMessaging.Consumer.RedisListener, RedisMessaging" >
     <property name="Channel" ref="MyChannel"/>
-    <property name="TypeKey" value="Basic"/>
+    <property name="TypeKey" value="Event"/>
     <property name="HandlerType" ref="MyMessageHandler"/>
     <property name="HandlerMethod" value="HandleMessage"/>
   </object>
@@ -107,6 +108,7 @@
     <property name="_typeMaps">
       <list>
         <ref object="MyTypeMap"/>
+        <ref object="EventTypeMap"/>
       </list>
     </property>
   </object>
@@ -117,26 +119,41 @@
     <property name="TypeName" value="RedisMessaging.BasicMessage, RedisMessaging"/>
   </object>
 
+  <object name="EventTypeMap"
+     type="MessageQueue.Contracts.TypeMap, MessageQueue.Contracts" >
+    <property name="Key" value="Event"/>
+    <property name="TypeName" value="Consumer.Event, Consumer"/>
+  </object>
+
   <object name="MyMessageHandler"
-     type="RedisMessaging.Tests.TestMessageHandler, RedisMessaging.Tests" >
+     type="Consumer.TestMessageHandler, Consumer" >
   </object>
 
   <object name="ListenerTestMessageHandler"
-     type="RedisMessaging.Tests.ConsumerTests.TestMessageHandler, RedisMessaging.Tests" >
+     type="Consumer.TestMessageHandler, Consumer" >
   </object>
 
   <object name ="DefaultErrorHandler" type ="RedisMessaging.Errors.DeadLetterErrorHandler, RedisMessaging">
     <property name ="Channel" ref="MyChannel"/>
   </object>
 
-  <object name="TimeoutException" type ="RedisMessaging.Errors.RetryTimeoutException, RedisMessaging">
-    <property name="RetryOnFail" value="true"/>
+  <object name="TimeoutException" type ="RedisMessaging.Errors.ErrorAdvice, RedisMessaging">
+    <property name="RetryOnFail" value ="true"/>
+    <property name="ExceptionType" value="TimeoutException"/>
+    <property name="AdviceType" value="RetryRequeue"/>
   </object>
 
-  <object name="TestTimedRetryException" type ="RedisMessaging.Tests.ConsumerTests.RetryException, RedisMessaging.Tests">
-    <property name="RetryOnFail" value="true"/>
+  <object name="TestTimedRetryException" type ="RedisMessaging.Errors.ErrorAdvice, RedisMessaging">
+    <property name="RetryOnFail" value ="true"/>
+    <property name="ExceptionType" value="ApplicationException"/>
+    <property name="AdviceType" value="TimedRetry"/>
     <property name="RetryCount" value="1"/>
     <property name="RetryInterval" value="5"/>
+  </object>
+
+  <object name ="MySentinel" type ="RedisMessaging.RedisQueueSentinel, RedisMessaging">
+    <constructor-arg name ="connection" ref="MyConnection"/>
+    <constructor-arg name ="timeout" value="10"/>
   </object>
 
 </objects>
