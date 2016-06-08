@@ -53,7 +53,7 @@ namespace RedisMessaging
       //initialize and start RedisQueueSentinel
       if (EnableSentinel)
       {
-        RedisQueueSentinel.Instance.Start();
+        Sentinel.Start();
       }
       Log.Info("Redis Container Initialized");
     }

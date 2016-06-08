@@ -49,7 +49,7 @@
     <property name="MessageConverter" ref="JsonMessageConverter"/>
     <property name="DefaultErrorHandler" ref="DefaultErrorHandler"/>
     <property name="Id" value="Develop"/>
-    <property name="Count" value="1"/>
+    <property name="Count" value="5"/>
     <property name="Listeners">
       <list>
         <ref object ="MyListener"/>
@@ -136,10 +136,11 @@
     <property name="RetryCount" value="1"/>
     <property name="RetryInterval" value="5"/>
   </object>
-
+ 
   <object name ="MySentinel" type ="RedisMessaging.RedisQueueSentinel, RedisMessaging">
     <constructor-arg name ="connection" ref="MyConnection"/>
-    <constructor-arg name ="timeout" value="10"/>
+    <constructor-arg name ="processingMessageTimeout" value="10"/>
+    <constructor-arg name ="sentinelInterval" value="1"/>
   </object>
   
 </objects>

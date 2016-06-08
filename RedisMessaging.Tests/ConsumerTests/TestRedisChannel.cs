@@ -159,7 +159,7 @@ namespace RedisMessaging.Tests.ConsumerTests
       //but thats a bad assertion, asserting nothing, so...what do?
       Assert.That(_redis.GetDatabase().ListGetByIndex("DeadLetterQueue", _redis.GetDatabase().ListLength("DeadLetterQueue") - 1).ToString(), Is.EqualTo(m.ToString()));
     }
-
+    
   }
 
   public class RetryException : IAdvice

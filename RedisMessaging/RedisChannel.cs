@@ -59,9 +59,7 @@ namespace RedisMessaging
       //need to be able to add in the instance id here...
       if (Id == null)
         Id = "NA";
-      var processingQueueName = MessageQueue.Name;
-      processingQueueName += ":" + Id + "_" + Environment.MachineName + "_"+DateTime.Now.ToString("yyyyMMdd_HHmmss");
-
+      var processingQueueName = $"{MessageQueue.Name}:ProcessingQueue:{Id}_{Environment.MachineName}_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}";
       ProcessingQueue = new RedisQueue(processingQueueName, 0);
     }
 
@@ -71,14 +69,6 @@ namespace RedisMessaging
         return;
 
       Init();
-
-      ////TODO: Retest this
-      //while (_redis.GetDatabase().ListLength(ProcessingQueue.Name)>0)
-      //{
-      //  var job = _redis.GetDatabase().ListRange(ProcessingQueue.Name, 0, 0).FirstOrDefault();
-      //  if (!job.IsNullOrEmpty)
-      //    HandleMessage(job);
-      //}
 
       ConnectListeners();
 
@@ -188,7 +178,7 @@ namespace RedisMessaging
         {
           //need to determine type of retry
           //var retryAdvice = advice as ITimedRetryAdvice;
-          if (advice.GetAdviceType() == AdviceType.TimedRetry)
+          if (advice.Type() == AdviceType.TimedRetry)
           {
             var errorCount = 0;
             _errorDictionary.TryGetValue(m, out errorCount);
@@ -207,7 +197,7 @@ namespace RedisMessaging
             return;
           }
           //var retryRequeueAdvice = advice as IRetryRequeueAdvice;
-          if (advice.GetAdviceType() == AdviceType.RetryRequeue)
+          if (advice.Type() == AdviceType.RetryRequeue)
           {
             Log.Warn("RetryRequeue Advice found for message " + m + ", requeing message");
             SendToMessageQueue(m.ToString());

@@ -14,19 +14,19 @@ namespace RedisMessaging.Errors
   {
 
     public string ExceptionType { get; private set; }
-    public string AdviceType { get; private set; }
+    private string AdviceType { get; set; }
     public int RetryInterval { get; private set; }
     public int RetryCount { get; private set; }
     public bool RetryOnFail { get; private set; }
 
     private Type _exceptionType;
-    private AdviceType _adviceType;
+    //private AdviceType _adviceType;
 
     public Type GetExceptionType()
     {
       if (_exceptionType == null)
       {
-        _exceptionType = ReflectionHelper.GetTypeByName(ExceptionType).FirstOrDefault();
+        _exceptionType = ReflectionHelper.GetTypeByName(ExceptionType);
 
         if(_exceptionType==null)// || _exceptionType!=typeof(Exception))
           throw new ArgumentException("Error registering ErrorAdvice "+ExceptionType+" is not a valid exception type");
@@ -34,10 +34,9 @@ namespace RedisMessaging.Errors
       return _exceptionType;
     }
 
-    public AdviceType GetAdviceType()
+    public AdviceType Type()
     {
-      var test = (AdviceType)Enum.Parse(typeof(AdviceType), AdviceType);
-      return test;
+      return (AdviceType)Enum.Parse(typeof(AdviceType), AdviceType);
     }
 
   }

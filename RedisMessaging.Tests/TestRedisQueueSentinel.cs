@@ -55,7 +55,7 @@ namespace RedisMessaging.Tests
     public void RedisQueueSentienl_RequeueTest()
     {
       var container = _container.GetObject<IContainer>("MyContainer") as RedisContainer;
-      var sentinel = RedisQueueSentinel.Instance;
+      var sentinel = container.Sentinel;
       var channel = container.Channels.FirstOrDefault() as RedisChannel;
       channel.Init();
       const string expectedMessage = "hey";
@@ -77,7 +77,7 @@ namespace RedisMessaging.Tests
     public void RedisQueueSentinel_StartTest()
     {
       var container = _container.GetObject<IContainer>("MyContainer") as RedisContainer;
-      var sentinel = RedisQueueSentinel.Instance;
+      var sentinel = container.Sentinel;
       var channel = container.Channels.FirstOrDefault() as RedisChannel;
       channel.Init();
       const string expectedMessage = "hey";

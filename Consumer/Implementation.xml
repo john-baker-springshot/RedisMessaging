@@ -151,9 +151,10 @@
     <property name="RetryInterval" value="5"/>
   </object>
 
-  <object name ="MySentinel" type ="RedisMessaging.RedisQueueSentinel, RedisMessaging">
+  <object name ="MySentinel" type ="RedisMessaging.RedisQueueSentinel, RedisMessaging" singleton="true">
     <constructor-arg name ="connection" ref="MyConnection"/>
-    <constructor-arg name ="timeout" value="10"/>
+    <constructor-arg name ="processingMessageTimeout" value="10"/>
+    <constructor-arg name ="sentinelInterval" value="1"/>
   </object>
 
 </objects>
