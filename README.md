@@ -12,6 +12,7 @@ Wanting a more feature-rich Message Queue closer to RabbitMQ without sacrificing
 
 The most important part of getting started with RedisMessaging is to set up your configuration file based on your needs. The config format follows spring.net object definition conventions
 
+```
 <!--Basic Configuration-->
 <object name="MyConnection"
   type="RedisMessaging.RedisConnection, RedisMessaging">
@@ -29,6 +30,7 @@ The most important part of getting started with RedisMessaging is to set up your
 <constructor-arg name="connection" ref="MyConnection"/>
 <constructor-arg name="queue" ref="MyMessageQueue"/>
 </object>
+```
 
 And so on, you can look at the Implementation.xml files in the source for a clearer picture on how everything works, more documentation on the subject to come
 
