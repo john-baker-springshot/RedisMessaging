@@ -5,7 +5,7 @@ namespace RedisMessaging.Util
 {
   internal static class XmlElementExtensions
   {
-    public static string ToKeyValuePairStringIfDefined(this XmlElement element, string attributeName)
+    public static string ToKeyValuePairAttributeStringIfDefined(this XmlElement element, string attributeName)
     {
       return element.HasAttribute(attributeName) ? $",{attributeName}={element.GetAttribute(attributeName)}" : String.Empty;
     }

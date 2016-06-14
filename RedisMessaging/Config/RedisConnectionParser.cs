@@ -144,23 +144,23 @@ namespace RedisMessaging.Config
 
       var connectionString = new StringBuilder();
       connectionString.Append(element.GetAttribute(Endpoints));
-      connectionString.Append(element.ToKeyValuePairStringIfDefined(AbortOnConnectFail));
-      connectionString.Append(element.ToKeyValuePairStringIfDefined(AllowAdmin));
-      connectionString.Append(element.ToKeyValuePairStringIfDefined(ChannelPrefix));
-      connectionString.Append(element.ToKeyValuePairStringIfDefined(ConnectRetry));
-      connectionString.Append(element.ToKeyValuePairStringIfDefined(ConnectTimeout));
-      connectionString.Append(element.ToKeyValuePairStringIfDefined(ConfigChannel));
-      connectionString.Append(element.ToKeyValuePairStringIfDefined(DefaultDatabase));
-      connectionString.Append(element.ToKeyValuePairStringIfDefined(KeepAlive));
-      connectionString.Append(element.ToKeyValuePairStringIfDefined(Password));
-      connectionString.Append(element.ToKeyValuePairStringIfDefined(Proxy));
-      connectionString.Append(element.ToKeyValuePairStringIfDefined(ResolveDns));
-      connectionString.Append(element.ToKeyValuePairStringIfDefined(Ssl));
-      connectionString.Append(element.ToKeyValuePairStringIfDefined(SslHost));
-      connectionString.Append(element.ToKeyValuePairStringIfDefined(SyncTimeout));
-      connectionString.Append(element.ToKeyValuePairStringIfDefined(TieBreaker));
-      connectionString.Append(element.ToKeyValuePairStringIfDefined(Version));
-      connectionString.Append(element.ToKeyValuePairStringIfDefined(WriteBufferSize));
+      connectionString.Append(element.ToKeyValuePairAttributeStringIfDefined(AbortOnConnectFail));
+      connectionString.Append(element.ToKeyValuePairAttributeStringIfDefined(AllowAdmin));
+      connectionString.Append(element.ToKeyValuePairAttributeStringIfDefined(ChannelPrefix));
+      connectionString.Append(element.ToKeyValuePairAttributeStringIfDefined(ConnectRetry));
+      connectionString.Append(element.ToKeyValuePairAttributeStringIfDefined(ConnectTimeout));
+      connectionString.Append(element.ToKeyValuePairAttributeStringIfDefined(ConfigChannel));
+      connectionString.Append(element.ToKeyValuePairAttributeStringIfDefined(DefaultDatabase));
+      connectionString.Append(element.ToKeyValuePairAttributeStringIfDefined(KeepAlive));
+      connectionString.Append(element.ToKeyValuePairAttributeStringIfDefined(Password));
+      connectionString.Append(element.ToKeyValuePairAttributeStringIfDefined(Proxy));
+      connectionString.Append(element.ToKeyValuePairAttributeStringIfDefined(ResolveDns));
+      connectionString.Append(element.ToKeyValuePairAttributeStringIfDefined(Ssl));
+      connectionString.Append(element.ToKeyValuePairAttributeStringIfDefined(SslHost));
+      connectionString.Append(element.ToKeyValuePairAttributeStringIfDefined(SyncTimeout));
+      connectionString.Append(element.ToKeyValuePairAttributeStringIfDefined(TieBreaker));
+      connectionString.Append(element.ToKeyValuePairAttributeStringIfDefined(Version));
+      connectionString.Append(element.ToKeyValuePairAttributeStringIfDefined(WriteBufferSize));
 
       builder.AddConstructorArg(new TypedStringValue(connectionString.ToString()));
     }
