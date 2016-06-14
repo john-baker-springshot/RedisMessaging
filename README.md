@@ -34,7 +34,7 @@ The most important part of getting started with RedisMessaging is to set up your
 
 And so on, you can look at the Implementation.xml files in the source for a clearer picture on how everything works, more documentation on the subject to come
 
-Once configured, all you need to do is instantiate the Producer defined in the configuration and start .Publish - ing messages. For the Producer, only the Container object need be instantiated, after which Container.Init() will begin the message consuming process.
+Once configured, all you need to do is instantiate the Producer defined in the configuration and start .Publish - ing messages. For the Consumer, only the Container object need be instantiated, after which Container.Init() will begin the message consuming process.
 
 - More to come
 
