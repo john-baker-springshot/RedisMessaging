@@ -66,6 +66,7 @@
     <Compile Include="ConsumerTests\TestRedisChannel.cs" />
     <Compile Include="ConsumerTests\TestRedisContainer.cs" />
     <Compile Include="ConsumerTests\TestRedisListener.cs" />
+    <Compile Include="ParserTests\RedisConnectionParserTests.cs" />
     <Compile Include="ProducerTests\TestRedisProducer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ConnectionTests\TestRedisConnection.cs" />
@@ -79,6 +80,12 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <EmbeddedResource Include="Configs\Connection-2.config">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configs\Connection-3.config">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -94,7 +101,11 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Configs\Connection-1.config">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Configs\TestImplementation.xml">
       <SubType>Designer</SubType>

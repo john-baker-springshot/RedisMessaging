@@ -61,6 +61,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BasicMessage.cs" />
+    <Compile Include="Config\NamespaceUtils.cs" />
+    <Compile Include="Config\RedisConnectionParser.cs" />
+    <Compile Include="Config\RedisNamespaceHandler.cs" />
     <Compile Include="Errors\DeadLetterErrorHandler.cs" />
     <Compile Include="Errors\ErrorAdvice.cs" />
     <Compile Include="JsonMessageConverter.cs" />
@@ -76,6 +79,9 @@
     <Compile Include="Util\ServiceLocator.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Config\spring-redis-1.0.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
