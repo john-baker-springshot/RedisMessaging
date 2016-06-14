@@ -8,10 +8,15 @@ namespace RedisMessaging
   public class RedisConnection : IConnection
   {
     private static Lazy<ConnectionMultiplexer> _lazyConnection;
-    internal readonly ConfigurationOptions Config;
+
     private static readonly ILog Log = LogManager.GetLogger(typeof(RedisConnection));
+
+    internal readonly ConfigurationOptions Config;
+
     public RedisConnection(string connectionString) : this(ConfigurationOptions.Parse(connectionString))
-    {}
+    {
+      
+    }
     public RedisConnection(ConfigurationOptions configurationOptions)
     {
       Config = configurationOptions;
@@ -58,7 +63,7 @@ namespace RedisMessaging
 
     public bool IsConnected { get; private set; }
 
-    internal IConnectionMultiplexer Multiplexer { get { return _lazyConnection.Value; } }
+    internal IConnectionMultiplexer Multiplexer => _lazyConnection.Value;
 
     public void Connect()
     {

@@ -43,7 +43,7 @@ namespace RedisMessaging.Tests.ParserTests
       const string expectedConfigChannel = "ch1";
       const string expectedVersion = "3.0.4";
       const int expectedWriteBuffer = 100;
-      const string expectedSslHost = "dev-redis.springshot.com";
+      const string expectedSslHost = "localhost";
 
       var objectFactory = LoadContext(2);
 
