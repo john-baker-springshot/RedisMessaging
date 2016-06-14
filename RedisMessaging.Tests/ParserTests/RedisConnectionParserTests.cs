@@ -3,6 +3,7 @@ using Common.Logging;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using RedisMessaging.Config;
+using RedisMessaging.Tests.UtilTests;
 using Spring.Core.IO;
 using Spring.Objects.Factory;
 using Spring.Objects.Factory.Xml;
@@ -12,9 +13,12 @@ namespace RedisMessaging.Tests.ParserTests
   [TestFixture]
   public class RedisConnectionParserTests
   {
+/*
     private static readonly ILog Logger = LogManager.GetLogger<RedisConnectionParserTests>();
+*/
+    private readonly string ConfigConventionPrefix = "Connection";
 
-    [SetUp]
+    [OneTimeSetUp]
     public void Setup()
     {
       NamespaceParserRegistry.RegisterParser(typeof(RedisNamespaceHandler));
@@ -24,7 +28,7 @@ namespace RedisMessaging.Tests.ParserTests
     [Test]
     public void TestWithConnectionString()
     {
-      var objectFactory = LoadContext(1);
+      var objectFactory = ParserTestsHelper.LoadContext(ConfigConventionPrefix, 1);
 
       var redisConnection = objectFactory.GetObject<RedisConnection>("strongConnection");
 
@@ -45,7 +49,7 @@ namespace RedisMessaging.Tests.ParserTests
       const int expectedWriteBuffer = 100;
       const string expectedSslHost = "localhost";
 
-      var objectFactory = LoadContext(2);
+      var objectFactory = ParserTestsHelper.LoadContext(ConfigConventionPrefix, 2);
 
       var redisConnection = objectFactory.GetObject<RedisConnection>("strongConnection");
 
@@ -72,17 +76,8 @@ namespace RedisMessaging.Tests.ParserTests
     {
       Assert.Throws<ObjectDefinitionStoreException>(() =>
       {
-        var objectFactory = LoadContext(3);
+        var objectFactory = ParserTestsHelper.LoadContext(ConfigConventionPrefix, 3);
       });
-    }
-
-    private XmlObjectFactory LoadContext(int configId)
-    {
-      var resourceName = $"assembly://RedisMessaging.Tests/RedisMessaging.Tests.Configs/Connection-{configId}.config";
-      Logger.Info(m => m($"Resource Name: {resourceName}"));
-
-      var resource = new AssemblyResource(resourceName);
-      return new XmlObjectFactory(resource);
     }
   }
 }

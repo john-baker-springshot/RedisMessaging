@@ -15,7 +15,9 @@ namespace RedisMessaging.Config
     /// </summary>
     public override void Init()
     {
-      this.RegisterObjectDefinitionParser("connection", new RedisConnectionParser());
+      RegisterObjectDefinitionParser("connection", new RedisConnectionParser());
+      RegisterObjectDefinitionParser("errorAdvice", new RedisErrorAdviceParser());
+      RegisterObjectDefinitionParser("sentinel", new RedisSentinelParser());
     }
 
     #endregion

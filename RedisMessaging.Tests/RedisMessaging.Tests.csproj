@@ -67,6 +67,8 @@
     <Compile Include="ConsumerTests\TestRedisContainer.cs" />
     <Compile Include="ConsumerTests\TestRedisListener.cs" />
     <Compile Include="ParserTests\RedisConnectionParserTests.cs" />
+    <Compile Include="ParserTests\RedisErrorAdviceParserTests.cs" />
+    <Compile Include="ParserTests\RedisSentinelParserTests.cs" />
     <Compile Include="ProducerTests\TestRedisProducer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ConnectionTests\TestRedisConnection.cs" />
@@ -74,6 +76,7 @@
     <Compile Include="TestMessageHandler.cs" />
     <Compile Include="TestRedisQueueSentinel.cs" />
     <Compile Include="TestSerialization.cs" />
+    <Compile Include="UtilTests\ParserTestsHelper.cs" />
     <Compile Include="UtilTests\TestReflectionHelper.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -84,6 +87,24 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Configs\Connection-3.config">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configs\ErrorAdvice-1.config">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configs\ErrorAdvice-2.config">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configs\ErrorAdvice-3.config">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configs\Sentinel-1.config">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configs\Sentinel-2.config">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configs\Sentinel-3.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="packages.config" />

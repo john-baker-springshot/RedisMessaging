@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Common.Logging;
-using MessageQueue.Contracts;
-using RedisMessaging.Util;
-using Spring.Caching;
 using StackExchange.Redis;
 
 namespace RedisMessaging
 {
   public class RedisQueueSentinel: IDisposable
   {
+    private readonly object _lock = new object();
 
+    private const int DefaultInterval = 10;
+
+    private const int DefaultMessageTimeout = 300;
 
     public readonly Dictionary<KeyValuePair<string, RedisValue>, DateTime>  ProcessingMessages = new Dictionary<KeyValuePair<string, RedisValue>, DateTime>();
     public int MessageTimeout { get; private set; }
@@ -24,17 +23,16 @@ namespace RedisMessaging
     private static readonly ILog Log = LogManager.GetLogger(typeof(RedisQueueSentinel));
     private readonly IConnectionMultiplexer _redis;
 
-    private RedisQueueSentinel(RedisConnection connection, int processingMessageTimeout, int sentinelInterval )
+    private RedisQueueSentinel(RedisConnection connection, int processingMessageTimeout, int sentinelInterval)
     {
       Connection = connection;
-      //if MessageTimeout is not included in config, default to 5 min timeout
-      if (processingMessageTimeout == 0)
-        processingMessageTimeout = 300;
-      MessageTimeout = processingMessageTimeout;
-      if (sentinelInterval == 0)
-        sentinelInterval = 10;
-      Interval = sentinelInterval;
+      
+      MessageTimeout = processingMessageTimeout > 0 ? processingMessageTimeout : DefaultMessageTimeout;
+
+      Interval = sentinelInterval > 0 ? sentinelInterval : DefaultInterval;
+
       _redis = Connection.Multiplexer;
+
       Log.Info("Sentienl Initialized with timeout " + MessageTimeout);
     }
 
@@ -45,11 +43,14 @@ namespace RedisMessaging
 
     public void Start()
     {
-      if (IsStarted)
-        return;
+      lock (_lock)
+      {
+        if (IsStarted)
+          return;
 
-      IsStarted = true;
-      new Task(() => Processing(), new System.Threading.CancellationToken(), TaskCreationOptions.LongRunning).Start();
+        IsStarted = true;
+        new Task(Processing, new System.Threading.CancellationToken(), TaskCreationOptions.LongRunning).Start();
+      }
     }
 
     private void Processing()

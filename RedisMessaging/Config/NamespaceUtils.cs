@@ -1,5 +1,5 @@
 using System.Xml;
-using Spring.Core;
+using RedisMessaging.Util;
 using Spring.Objects.Factory.Config;
 using Spring.Objects.Factory.Support;
 using Spring.Objects.Factory.Xml;
@@ -26,31 +26,27 @@ namespace RedisMessaging.Config
     /// <returns>True if successful, else false.</returns>
     public static bool SetValueIfAttributeDefined(ObjectDefinitionBuilder builder, XmlElement element, string attributeName, string propertyName)
     {
-      var attributeValue = element.GetAttribute(attributeName);
-      if (!string.IsNullOrWhiteSpace(attributeValue))
+      if (element.IsAttributeDefined(attributeName))
       {
-        builder.AddPropertyValue(propertyName, new TypedStringValue(attributeValue));
-        return true;
+        var attributeValue = element.GetAttribute(attributeName);
+        if (!string.IsNullOrWhiteSpace(attributeValue))
+        {
+          builder.AddPropertyValue(propertyName, new TypedStringValue(attributeValue));
+          return true;
+        }
       }
-
       return false;
     }
 
     /// <summary>Sets the value if attribute defined.</summary>
     /// <param name="builder">The builder.</param>
     /// <param name="element">The element.</param>
-    /// <param name="attributeName">Name of the attribute.</param>
+    /// <param name="propertyName">Name of the attribute.</param>
     /// <returns>True if successful, else false.</returns>
-    public static bool SetValueIfAttributeDefined(ObjectDefinitionBuilder builder, XmlElement element, string attributeName) { return SetValueIfAttributeDefined(builder, element, attributeName, Conventions.AttributeNameToPropertyName(attributeName)); }
-
-    /// <summary>Determines whether [is attribute defined] [the specified element].</summary>
-    /// <param name="element">The element.</param>
-    /// <param name="attributeName">Name of the attribute.</param>
-    /// <returns><c>true</c> if [is attribute defined] [the specified element]; otherwise, <c>false</c>.</returns>
-    public static bool IsAttributeDefined(XmlElement element, string attributeName)
+    public static bool SetValueIfAttributeDefined(ObjectDefinitionBuilder builder, XmlElement element,
+      string propertyName)
     {
-      var value = element.GetAttribute(attributeName);
-      return !string.IsNullOrWhiteSpace(value);
+      return SetValueIfAttributeDefined(builder, element, propertyName.ToCamelCase(), propertyName);
     }
 
     /// <summary>Adds the constructor arg value if attribute defined.</summary>
@@ -145,9 +141,13 @@ namespace RedisMessaging.Config
     /// <summary>Sets the reference if attribute defined.</summary>
     /// <param name="builder">The builder.</param>
     /// <param name="element">The element.</param>
-    /// <param name="attributeName">Name of the attribute.</param>
+    /// <param name="propertyName">Name of the attribute.</param>
     /// <returns><c>true</c> if [is attribute defined] [the specified element]; otherwise, <c>false</c>.</returns>
-    public static bool SetReferenceIfAttributeDefined(ObjectDefinitionBuilder builder, XmlElement element, string attributeName) { return SetReferenceIfAttributeDefined(builder, element, attributeName, Conventions.AttributeNameToPropertyName(attributeName)); }
+    public static bool SetReferenceIfAttributeDefined(ObjectDefinitionBuilder builder, XmlElement element,
+      string propertyName)
+    {
+      return SetReferenceIfAttributeDefined(builder, element, propertyName.ToCamelCase(), propertyName);
+    }
 
     /// <summary>Creates the element description.</summary>
     /// <param name="element">The element.</param>

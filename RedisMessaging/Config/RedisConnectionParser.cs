@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using System.Xml;
+using RedisMessaging.Util;
 using Spring.Objects.Factory.Config;
 using Spring.Objects.Factory.Support;
 using Spring.Objects.Factory.Xml;
@@ -143,32 +144,27 @@ namespace RedisMessaging.Config
 
       var connectionString = new StringBuilder();
       connectionString.Append(element.GetAttribute(Endpoints));
-      connectionString.Append(GetAttributeValueIfDefined(element, AbortOnConnectFail));
-      connectionString.Append(GetAttributeValueIfDefined(element, AllowAdmin));
-      connectionString.Append(GetAttributeValueIfDefined(element, ChannelPrefix));
-      connectionString.Append(GetAttributeValueIfDefined(element, ConnectRetry));
-      connectionString.Append(GetAttributeValueIfDefined(element, ConnectTimeout));
-      connectionString.Append(GetAttributeValueIfDefined(element, ConfigChannel));
-      connectionString.Append(GetAttributeValueIfDefined(element, DefaultDatabase));
-      connectionString.Append(GetAttributeValueIfDefined(element, KeepAlive));
-      connectionString.Append(GetAttributeValueIfDefined(element, Password));
-      connectionString.Append(GetAttributeValueIfDefined(element, Proxy));
-      connectionString.Append(GetAttributeValueIfDefined(element, ResolveDns));
-      connectionString.Append(GetAttributeValueIfDefined(element, Ssl));
-      connectionString.Append(GetAttributeValueIfDefined(element, SslHost));
-      connectionString.Append(GetAttributeValueIfDefined(element, SyncTimeout));
-      connectionString.Append(GetAttributeValueIfDefined(element, TieBreaker));
-      connectionString.Append(GetAttributeValueIfDefined(element, Version));
-      connectionString.Append(GetAttributeValueIfDefined(element, WriteBufferSize));
+      connectionString.Append(element.ToKeyValuePairStringIfDefined(AbortOnConnectFail));
+      connectionString.Append(element.ToKeyValuePairStringIfDefined(AllowAdmin));
+      connectionString.Append(element.ToKeyValuePairStringIfDefined(ChannelPrefix));
+      connectionString.Append(element.ToKeyValuePairStringIfDefined(ConnectRetry));
+      connectionString.Append(element.ToKeyValuePairStringIfDefined(ConnectTimeout));
+      connectionString.Append(element.ToKeyValuePairStringIfDefined(ConfigChannel));
+      connectionString.Append(element.ToKeyValuePairStringIfDefined(DefaultDatabase));
+      connectionString.Append(element.ToKeyValuePairStringIfDefined(KeepAlive));
+      connectionString.Append(element.ToKeyValuePairStringIfDefined(Password));
+      connectionString.Append(element.ToKeyValuePairStringIfDefined(Proxy));
+      connectionString.Append(element.ToKeyValuePairStringIfDefined(ResolveDns));
+      connectionString.Append(element.ToKeyValuePairStringIfDefined(Ssl));
+      connectionString.Append(element.ToKeyValuePairStringIfDefined(SslHost));
+      connectionString.Append(element.ToKeyValuePairStringIfDefined(SyncTimeout));
+      connectionString.Append(element.ToKeyValuePairStringIfDefined(TieBreaker));
+      connectionString.Append(element.ToKeyValuePairStringIfDefined(Version));
+      connectionString.Append(element.ToKeyValuePairStringIfDefined(WriteBufferSize));
 
       builder.AddConstructorArg(new TypedStringValue(connectionString.ToString()));
     }
 
     #endregion
-
-    private string GetAttributeValueIfDefined(XmlElement element, string attributeName)
-    {
-      return element.HasAttribute(attributeName) ? $",{attributeName}={element.GetAttribute(attributeName)}" : string.Empty;
-    }
   }
 }
