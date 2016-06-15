@@ -6,8 +6,8 @@ namespace MessageQueue.Contracts
 {
   public interface ITypeMapper
   {
-    IEnumerable<ITypeMap> TypeMaps { get; }
-
     Type GetTypeForKey(string key);
+
+    IDictionary<string, Type> Types { get; } 
   }
 }

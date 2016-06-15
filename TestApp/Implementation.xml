@@ -98,10 +98,10 @@
 
   <object name="MyTypeMapper"
      type="MessageQueue.Contracts.TypeMapper, MessageQueue.Contracts" >
-    <property name="_typeMaps">
-      <list>
-        <ref object="MyTypeMap"/>
-      </list>
+    <property name="Types">
+      <dictionary key-type="System.String" value-type="System.Type">
+        <entry key="Basic" value="RedisMessaging.BasicMessage, RedisMessaging" />
+      </dictionary>
     </property>
   </object>
 

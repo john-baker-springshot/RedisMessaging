@@ -6,23 +6,22 @@ namespace MessageQueue.Contracts
 {
   public class TypeMapper : ITypeMapper
   {
-    private IEnumerable<ITypeMap> _typeMaps;
+    /// <summary>
+    /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+    /// </summary>
+    public TypeMapper()
+    {
+      Types = new Dictionary<string, Type>();
+    }
 
     #region Implementation of ITypeMapper
 
-    public virtual IEnumerable<ITypeMap> TypeMaps => _typeMaps;
-
     public virtual Type GetTypeForKey(string key)
     {
-      foreach (ITypeMap tmap in TypeMaps)
-      {
-        if (tmap.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase))
-          return Type.GetType(tmap.TypeName);
-      }
-      return null;
-      //var res = (from tmap in TypeMaps where tmap.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase) select Type.GetType(tmap.TypeName)).FirstOrDefault();
-      //return res;
+      return Types.Where(type => type.Key.Equals(key)).Select(type => type.Value).FirstOrDefault();
     }
+
+    public IDictionary<string, Type> Types { get; }
 
     #endregion
 

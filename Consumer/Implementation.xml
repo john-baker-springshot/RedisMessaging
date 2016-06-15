@@ -105,11 +105,11 @@
 
   <object name="MyTypeMapper"
      type="MessageQueue.Contracts.TypeMapper, MessageQueue.Contracts" >
-    <property name="_typeMaps">
-      <list>
-        <ref object="MyTypeMap"/>
-        <ref object="EventTypeMap"/>
-      </list>
+    <property name="Types">
+      <dictionary key-type="System.String" value-type="System.Type">
+        <entry key="Basic" value="RedisMessaging.BasicMessage, RedisMessaging" />
+        <entry key="Event" value="Consumer.Event, Consumer" />
+      </dictionary>
     </property>
   </object>
 
