@@ -66,13 +66,13 @@ namespace RedisMessaging.Config
         .Where(childNode => childNode.NodeType == XmlNodeType.Element && 
                childNode.LocalName.Equals(KnownTypeElement)))
       {
-        ParseKnownTypeElement((XmlElement) childNode, element, parserContext, knownTypeDictionary);
+        ParseKnownTypeElement((XmlElement) childNode, parserContext, knownTypeDictionary);
       }
 
       builder.AddPropertyValue(nameof(TypeMapper.Types), knownTypeDictionary);
     }
 
-    private void ParseKnownTypeElement(XmlElement knownTypeElement, XmlElement containerElement, ParserContext parserContext, Dictionary<string, Type> dictionary)
+    private void ParseKnownTypeElement(XmlElement knownTypeElement, ParserContext parserContext, IDictionary<string, Type> dictionary)
     {
       var key = knownTypeElement.GetAttribute("key");
       if (string.IsNullOrEmpty(key))
