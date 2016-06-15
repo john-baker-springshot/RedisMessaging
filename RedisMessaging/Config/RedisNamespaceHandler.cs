@@ -20,6 +20,8 @@ namespace RedisMessaging.Config
       RegisterObjectDefinitionParser("sentinel", new RedisSentinelParser());
       RegisterObjectDefinitionParser("queue", new RedisQueueParser());
       RegisterObjectDefinitionParser("typeMapper", new TypeMapperParser());
+      RegisterObjectDefinitionParser("messageConverter", new RedisMessageConverterParser());
+      RegisterObjectDefinitionParser("producer", new RedisProducerParser());
     }
 
     #endregion

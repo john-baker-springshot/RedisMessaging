@@ -12,7 +12,7 @@ namespace RedisMessaging.Producer
   {
     public IConnection Connection { get; }
 
-    public IQueue MessageQueue { get; }
+    public IQueue Queue { get; }
 
     public bool CreateKey { get; private set; }
 
@@ -25,7 +25,7 @@ namespace RedisMessaging.Producer
     public RedisProducer(IConnection connection, IQueue queue)
     {
       Connection = connection;
-      MessageQueue = queue;
+      Queue = queue;
 
       Connect();
 
@@ -37,11 +37,11 @@ namespace RedisMessaging.Producer
     public virtual void Publish(string message)
     {
       Connect();
-      if (string.IsNullOrEmpty(MessageQueue?.Name))
+      if (string.IsNullOrEmpty(Queue?.Name))
         throw new Exception("MessageQueue not initialized");
       
-      _redis.GetDatabase().ListLeftPushAsync(MessageQueue.Name, message);
-      Log.Debug("Sending message "+message+" to "+MessageQueue.Name);
+      _redis.GetDatabase().ListLeftPushAsync(Queue.Name, message);
+      Log.Debug("Sending message "+message+" to "+Queue.Name);
     }
 
     public virtual void Publish(string queue, string message)

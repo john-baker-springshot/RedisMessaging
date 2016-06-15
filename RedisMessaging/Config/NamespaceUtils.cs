@@ -130,6 +130,27 @@ namespace RedisMessaging.Config
       return false;
     }
 
+    public static bool AddConstructorArgValueIfElementDefined(XmlElement element, ParserContext parserContext, ObjectDefinitionBuilder builder, string childElementName)
+    {
+      var connectionElement = element.GetSingleChildElement(childElementName);
+
+      if (connectionElement != null)
+      {
+        var parser = NamespaceParserRegistry.GetParser(connectionElement.NamespaceURI);
+        var inlineConnection = parser.ParseElement(connectionElement, parserContext);
+        builder.AddConstructorArg(inlineConnection);
+
+        return true;
+      }
+
+      return false;
+    }
+
+    public static bool AddConstructorArgIfAttributeOrElementDefined(XmlElement element, ParserContext parserContext, ObjectDefinitionBuilder builder, string objectSchemaName)
+    {
+      return AddConstructorArgRefIfAttributeDefined(builder, element, objectSchemaName) || AddConstructorArgValueIfElementDefined(element, parserContext, builder, objectSchemaName);
+    }
+
     /// <summary>Sets the reference if attribute defined.</summary>
     /// <param name="builder">The builder.</param>
     /// <param name="element">The element.</param>
@@ -208,5 +229,26 @@ namespace RedisMessaging.Config
 
       return inDef;
     }
+
+    public static void CheckPresenceRule(XmlElement element, ParserContext parserContext, string propertyName)
+    {
+      var attrName = propertyName.ToCamelCase();
+
+      if (!element.IsAttributeDefined(attrName) && !element.HasChildElement(attrName))
+      {
+        parserContext.ReaderContext.ReportFatalException(element, $"Either {attrName} attribute or the {attrName} element should be defined.");
+      }
+    }
+
+    public static void CheckAmbiguityRule(XmlElement element, ParserContext parserContext, string propertyName)
+    {
+      var attrName = propertyName.ToCamelCase();
+
+      if (element.IsAttributeDefined(attrName) && element.HasChildElement(attrName))
+      {
+        parserContext.ReaderContext.ReportFatalException(element, $"The {attrName} attribute and the {attrName} element, both cannot be defined at the same time.");
+      }
+    }
+
   }
 }

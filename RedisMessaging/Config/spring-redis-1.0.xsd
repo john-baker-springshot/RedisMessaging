@@ -16,155 +16,156 @@
 
   <!--<xsd:import namespace="http://www.springframework.net" />-->
 
-  <xsd:element name="connection">
+  <xsd:element name="connection" type="Connection">
     <xsd:annotation>
       <xsd:documentation>
         <![CDATA[	Creates a redis connection with sensible defaults. ]]>
       </xsd:documentation>
     </xsd:annotation>
-    <xsd:complexType>
-      <xsd:attribute name="id" type="xsd:string" use="optional">
-        <xsd:annotation>
-          <xsd:documentation>
-            <![CDATA[ Unique name for this redis connection used as a bean definition identifier. ]]>
-          </xsd:documentation>
-        </xsd:annotation>
-      </xsd:attribute>
-      <xsd:attribute name="connectionString" type="xsd:string" use="optional">
-        <xsd:annotation>
-          <xsd:documentation>
-            <![CDATA[ The connection string to connect to Redis server(s). For formatting information please refer to the StachExchange.Redis project on github. ]]>
-          </xsd:documentation>
-        </xsd:annotation>
-      </xsd:attribute>
-      <xsd:attribute name="endpoints" type="xsd:string" use="optional">
-        <xsd:annotation>
-          <xsd:documentation>
-            <![CDATA[ The redis server(s), with (optional) respective ports. When port is not defined, 6379 is used for non-SSL and 6380 for SSL. ]]>
-          </xsd:documentation>
-        </xsd:annotation>
-      </xsd:attribute>
-      <xsd:attribute name="abortConnect" type="xsd:boolean" use="optional">
-        <xsd:annotation>
-          <xsd:documentation>
-            <![CDATA[ If true, Connect will not create a connection while no servers are available. ]]>
-          </xsd:documentation>
-        </xsd:annotation>
-      </xsd:attribute>
-      <xsd:attribute name="allowAdmin" type="xsd:boolean" use="optional">
-        <xsd:annotation>
-          <xsd:documentation>
-            <![CDATA[ Enables a range of commands that are considered risky. ]]>
-          </xsd:documentation>
-        </xsd:annotation>
-      </xsd:attribute>
-      <xsd:attribute name="channelPrefix" type="xsd:string" use="optional">
-        <xsd:annotation>
-          <xsd:documentation>
-            <![CDATA[ Optional channel prefix for all pub/sub operations. ]]>
-          </xsd:documentation>
-        </xsd:annotation>
-      </xsd:attribute>
-      <xsd:attribute name="connectRetry" type="xsd:int" use="optional">
-        <xsd:annotation>
-          <xsd:documentation>
-            <![CDATA[ The number of times to repeat connect attempts during initial Connect. ]]>
-          </xsd:documentation>
-        </xsd:annotation>
-      </xsd:attribute>
-      <xsd:attribute name="connectTimeout" type="xsd:int" use="optional">
-        <xsd:annotation>
-          <xsd:documentation>
-            <![CDATA[ Timeout (ms) for connect operations. ]]>
-          </xsd:documentation>
-        </xsd:annotation>
-      </xsd:attribute>
-      <xsd:attribute name="configChannel" type="xsd:string" use="optional">
-        <xsd:annotation>
-          <xsd:documentation>
-            <![CDATA[ Broadcast channel name for communicating configuration changes. ]]>
-          </xsd:documentation>
-        </xsd:annotation>
-      </xsd:attribute>
-      <xsd:attribute name="defaultDatabase" type="xsd:int" use="optional">
-        <xsd:annotation>
-          <xsd:documentation>
-            <![CDATA[ Default database index, from 0 to databases - 1. ]]>
-          </xsd:documentation>
-        </xsd:annotation>
-      </xsd:attribute>
-      <xsd:attribute name="keepAlive" type="xsd:int" use="optional">
-        <xsd:annotation>
-          <xsd:documentation>
-            <![CDATA[ Time (seconds) at which to send a message to help keep sockets alive. ]]>
-          </xsd:documentation>
-        </xsd:annotation>
-      </xsd:attribute>
-      <xsd:attribute name="password" type="xsd:string" use="optional">
-        <xsd:annotation>
-          <xsd:documentation>
-            <![CDATA[ Password for the redis server. ]]>
-          </xsd:documentation>
-        </xsd:annotation>
-      </xsd:attribute>
-      <xsd:attribute name="proxy" type="xsd:string" use="optional">
-        <xsd:annotation>
-          <xsd:documentation>
-            <![CDATA[ Type of proxy in use (if any); for example "twemproxy". ]]>
-          </xsd:documentation>
-        </xsd:annotation>
-      </xsd:attribute>
-      <xsd:attribute name="resolveDns" type="xsd:boolean" use="optional">
-        <xsd:annotation>
-          <xsd:documentation>
-            <![CDATA[ Specifies that DNS resolution should be explicit and eager, rather than implicit. ]]>
-          </xsd:documentation>
-        </xsd:annotation>
-      </xsd:attribute>
-      <xsd:attribute name="ssl" type="xsd:boolean" use="optional">
-        <xsd:annotation>
-          <xsd:documentation>
-            <![CDATA[ Specifies that SSL encryption should be used. ]]>
-          </xsd:documentation>
-        </xsd:annotation>
-      </xsd:attribute>
-      <xsd:attribute name="sslHost" type="xsd:string" use="optional">
-        <xsd:annotation>
-          <xsd:documentation>
-            <![CDATA[ Enforces a particular SSL host identity on the server's certificate. ]]>
-          </xsd:documentation>
-        </xsd:annotation>
-      </xsd:attribute>
-      <xsd:attribute name="syncTimeout" type="xsd:int" use="optional">
-        <xsd:annotation>
-          <xsd:documentation>
-            <![CDATA[ Time (ms) to allow for synchronous operations. ]]>
-          </xsd:documentation>
-        </xsd:annotation>
-      </xsd:attribute>
-      <xsd:attribute name="tiebreaker" type="xsd:string" use="optional">
-        <xsd:annotation>
-          <xsd:documentation>
-            <![CDATA[ Key to use for selecting a server in an ambiguous master scenario. ]]>
-          </xsd:documentation>
-        </xsd:annotation>
-      </xsd:attribute>
-      <xsd:attribute name="version" type="xsd:string" use="optional">
-        <xsd:annotation>
-          <xsd:documentation>
-            <![CDATA[ Redis version level (useful when the server does not make this available). ]]>
-          </xsd:documentation>
-        </xsd:annotation>
-      </xsd:attribute>
-      <xsd:attribute name="writeBuffer" type="xsd:int" use="optional">
-        <xsd:annotation>
-          <xsd:documentation>
-            <![CDATA[ Size of the output buffer. ]]>
-          </xsd:documentation>
-        </xsd:annotation>
-      </xsd:attribute>
-    </xsd:complexType>
   </xsd:element>
+
+  <xsd:complexType name="Connection">
+    <xsd:attribute name="id" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Unique name for this redis connection used as a bean definition identifier. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="connectionString" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ The connection string to connect to Redis server(s). For formatting information please refer to the StachExchange.Redis project on github. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="endpoints" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ The redis server(s), with (optional) respective ports. When port is not defined, 6379 is used for non-SSL and 6380 for SSL. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="abortConnect" type="xsd:boolean" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ If true, Connect will not create a connection while no servers are available. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="allowAdmin" type="xsd:boolean" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Enables a range of commands that are considered risky. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="channelPrefix" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Optional channel prefix for all pub/sub operations. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="connectRetry" type="xsd:int" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ The number of times to repeat connect attempts during initial Connect. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="connectTimeout" type="xsd:int" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Timeout (ms) for connect operations. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="configChannel" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Broadcast channel name for communicating configuration changes. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="defaultDatabase" type="xsd:int" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Default database index, from 0 to databases - 1. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="keepAlive" type="xsd:int" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Time (seconds) at which to send a message to help keep sockets alive. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="password" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Password for the redis server. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="proxy" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Type of proxy in use (if any); for example "twemproxy". ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="resolveDns" type="xsd:boolean" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Specifies that DNS resolution should be explicit and eager, rather than implicit. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="ssl" type="xsd:boolean" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Specifies that SSL encryption should be used. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="sslHost" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Enforces a particular SSL host identity on the server's certificate. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="syncTimeout" type="xsd:int" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Time (ms) to allow for synchronous operations. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="tiebreaker" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Key to use for selecting a server in an ambiguous master scenario. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="version" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Redis version level (useful when the server does not make this available). ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="writeBuffer" type="xsd:int" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Size of the output buffer. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
 
   <xsd:element name="container">
     <xsd:annotation>
@@ -423,4 +424,91 @@
     </xsd:attribute>
     <!-- define something that represents dictionary<string, string> here-->
   </xsd:complexType>
+
+  <xsd:element name="messageConverter">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[ Defines a message converter. ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="typeMapper" type="TypeMapper" minOccurs="0" maxOccurs="1">
+          <xsd:annotation>
+            <xsd:documentation>
+              <![CDATA[ Inline definition of the type mapper. Cannot be used in conjunction with the typeMapper attribute. ]]>
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[ Unique name for this message converter, used as a bean definition identifier. ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+      <xsd:attribute name="createMessageIds" type="xsd:boolean" default="true">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[ If true, creates message ids when publishing known types (based on the Type Mapper). ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+      <xsd:attribute name="typeMapper" type="xsd:string" use="optional">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[ The object id of the Type Mapper to be used. ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="producer">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[ Defines a Redis Producer. ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="connection" type="Connection" minOccurs="0" maxOccurs="1">
+          <xsd:annotation>
+            <xsd:documentation>
+              <![CDATA[ Defines a Redis connection inline, local to this producer. ]]>
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="queue" type="Queue" minOccurs="0" maxOccurs="1">
+          <xsd:annotation>
+            <xsd:documentation>
+              <![CDATA[ Defines a Redis queue inline, local to this producer. ]]>
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[ Unique name for this message producer, used as a bean definition identifier. ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+      <xsd:attribute name="connection" type="xsd:string" use="optional">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[ Pointer ref to the redis connection. ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+      <xsd:attribute name="queue" type="xsd:string" use="optional">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[ Pointer ref to the redis queue. ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+    </xsd:complexType>
+  </xsd:element>
 </xsd:schema>

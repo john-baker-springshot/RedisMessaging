@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Xml;
 
 namespace RedisMessaging.Util
@@ -30,6 +31,18 @@ namespace RedisMessaging.Util
     {
       var value = element.GetAttribute(attributeName);
       return !string.IsNullOrWhiteSpace(value);
+    }
+
+    public static bool HasChildElement(this XmlElement element, string childElementName)
+    {
+      return element.ChildNodes.Cast<XmlNode>()
+        .Any(node => node.NodeType == XmlNodeType.Element && node.LocalName == childElementName);
+    }
+
+    public static XmlElement GetSingleChildElement(this XmlElement parentElement, string childElementName)
+    {
+      return (XmlElement) parentElement.ChildNodes.Cast<XmlNode>()
+        .SingleOrDefault(node => node.NodeType == XmlNodeType.Element && node.LocalName == childElementName);
     }
   }
 }

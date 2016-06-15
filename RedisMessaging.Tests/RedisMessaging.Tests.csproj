@@ -68,6 +68,8 @@
     <Compile Include="ConsumerTests\TestRedisListener.cs" />
     <Compile Include="ParserTests\RedisConnectionParserTests.cs" />
     <Compile Include="ParserTests\RedisErrorAdviceParserTests.cs" />
+    <Compile Include="ParserTests\RedisMessageConverterParserTests.cs" />
+    <Compile Include="ParserTests\RedisProducerParserTests.cs" />
     <Compile Include="ParserTests\RedisQueueParserTests.cs" />
     <Compile Include="ParserTests\RedisSentinelParserTests.cs" />
     <Compile Include="ParserTests\TypeMapperParsetTests.cs" />
@@ -128,6 +130,45 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Configs\TypeMapper-4.config">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configs\MessageConverter-1.config">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configs\MessageConverter-3.config">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configs\MessageConverter-2.config">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configs\MessageConverter-4.config">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configs\Sentinel-4.config">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configs\Producer-1.config">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configs\Producer-2.config">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configs\Producer-3.config">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configs\Producer-5.config">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configs\Producer-4.config">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configs\Producer-6.config">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configs\Producer-7.config">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configs\Producer-8.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="packages.config" />

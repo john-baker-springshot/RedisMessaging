@@ -40,5 +40,15 @@ namespace RedisMessaging.Tests.ParserTests
         ParserTestsHelper.LoadContext(ConfigConventionPrefix, 2);
       });
     }
+
+    [Test]
+    public void TestWithBrokenRefConnectionArg()
+    {
+      Assert.Throws<ObjectCreationException>(() =>
+      {
+        var objectFactory = ParserTestsHelper.LoadContext(ConfigConventionPrefix, 4);
+        objectFactory.GetObject<RedisQueueSentinel>("sentinel");
+      });
+    }
   }
 }

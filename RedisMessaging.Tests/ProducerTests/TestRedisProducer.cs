@@ -30,7 +30,7 @@ namespace RedisMessaging.Tests.ProducerTests
       var testObject = _container.GetObject<IProducer>("MyProducer");
       Assert.IsNotNull(testObject);
       Assert.That(testObject.GetType(), Is.EqualTo(typeof(RedisProducer)));
-      Assert.That(testObject.MessageQueue.GetType(), Is.EqualTo(typeof(RedisQueue)));
+      Assert.That(testObject.Queue.GetType(), Is.EqualTo(typeof(RedisQueue)));
       Assert.That(testObject.Connection.GetType(), Is.EqualTo(typeof(RedisConnection)));
     }
 
@@ -42,7 +42,7 @@ namespace RedisMessaging.Tests.ProducerTests
       producer.Publish(message);
       //Assert.IsTrue(1 == 1);
       var connection = (RedisConnection)producer.Connection;
-      var actualMessage = connection.Multiplexer.GetDatabase().ListLeftPop(producer.MessageQueue.Name);
+      var actualMessage = connection.Multiplexer.GetDatabase().ListLeftPop(producer.Queue.Name);
       Assert.That(actualMessage.ToString(), Is.EqualTo(message));
     }
 
