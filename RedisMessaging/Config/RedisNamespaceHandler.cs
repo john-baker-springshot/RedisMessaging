@@ -18,6 +18,7 @@ namespace RedisMessaging.Config
       RegisterObjectDefinitionParser("connection", new RedisConnectionParser());
       RegisterObjectDefinitionParser("errorAdvice", new RedisErrorAdviceParser());
       RegisterObjectDefinitionParser("sentinel", new RedisSentinelParser());
+      RegisterObjectDefinitionParser("queue", new RedisQueueParser());
     }
 
     #endregion

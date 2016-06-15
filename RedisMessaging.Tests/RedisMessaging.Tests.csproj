@@ -68,6 +68,7 @@
     <Compile Include="ConsumerTests\TestRedisListener.cs" />
     <Compile Include="ParserTests\RedisConnectionParserTests.cs" />
     <Compile Include="ParserTests\RedisErrorAdviceParserTests.cs" />
+    <Compile Include="ParserTests\RedisQueueParserTests.cs" />
     <Compile Include="ParserTests\RedisSentinelParserTests.cs" />
     <Compile Include="ProducerTests\TestRedisProducer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -105,6 +106,15 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Configs\Sentinel-3.config">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configs\Queue-1.config">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configs\Queue-2.config">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configs\Queue-3.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="packages.config" />

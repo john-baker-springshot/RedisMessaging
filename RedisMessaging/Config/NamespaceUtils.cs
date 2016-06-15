@@ -49,6 +49,16 @@ namespace RedisMessaging.Config
       return SetValueIfAttributeDefined(builder, element, propertyName.ToCamelCase(), propertyName);
     }
 
+    /// <summary>Adds the constructor arg value. Should be used only for mandatory attributes or attributes with default values.</summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="element">The element.</param>
+    /// <param name="attributeName">Name of the attribute.</param>
+    /// <returns><c>true</c> if [is attribute defined] [the specified element]; otherwise, <c>false</c>.</returns>
+    public static bool AddConstructorArgValue(ObjectDefinitionBuilder builder, XmlElement element, string attributeName)
+    {
+      return AddConstructorArgValueIfAttributeDefined(builder, element, attributeName);
+    }
+
     /// <summary>Adds the constructor arg value if attribute defined.</summary>
     /// <param name="builder">The builder.</param>
     /// <param name="element">The element.</param>

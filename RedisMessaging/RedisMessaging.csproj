@@ -65,6 +65,7 @@
     <Compile Include="Config\RedisConnectionParser.cs" />
     <Compile Include="Config\RedisErrorAdviceParser.cs" />
     <Compile Include="Config\RedisNamespaceHandler.cs" />
+    <Compile Include="Config\RedisQueueParser.cs" />
     <Compile Include="Config\RedisSentinelParser.cs" />
     <Compile Include="Errors\DeadLetterErrorHandler.cs" />
     <Compile Include="Errors\ErrorAdvice.cs" />

@@ -313,7 +313,44 @@
       </xsd:annotation>
     </xsd:attribute>
   </xsd:complexType>
-  
+
+  <xsd:element name="queue" type="Queue">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[ Defines a redis queue element. ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+
+  <xsd:complexType name="Queue">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[ Represents a Redis Queue. ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="id" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Unique name for this redis queue, used as a bean definition identifier. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="name" type="xsd:string" use="required">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ The redis queue name. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="ttl" type="xsd:int" use="optional" default="10000">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ The TTL for this queue. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+
   <xsd:complexType name="Channel">
     <xsd:annotation>
       <xsd:documentation>
