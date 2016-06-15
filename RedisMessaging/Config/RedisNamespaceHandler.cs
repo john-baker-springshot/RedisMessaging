@@ -19,6 +19,7 @@ namespace RedisMessaging.Config
       RegisterObjectDefinitionParser("errorAdvice", new RedisErrorAdviceParser());
       RegisterObjectDefinitionParser("sentinel", new RedisSentinelParser());
       RegisterObjectDefinitionParser("queue", new RedisQueueParser());
+      RegisterObjectDefinitionParser("typeMapper", new TypeMapperParser());
     }
 
     #endregion

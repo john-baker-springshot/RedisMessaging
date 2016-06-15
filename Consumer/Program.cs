@@ -1,17 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using MessageQueue.Contracts;
-using MessageQueue.Contracts.Producer;
 using RedisMessaging;
-using RedisMessaging.Producer;
-using Spring.Context;
 using Spring.Context.Support;
-using Newtonsoft.Json;
-using Spring.Globalization.Formatters;
 
 namespace Consumer
 {
@@ -30,6 +22,8 @@ namespace Consumer
     {
       var conn = (RedisConnection)consumer.Connection;
       Stopwatch sw = new Stopwatch();
+
+      Console.WriteLine($"Connected to {conn.Config.SslHost}/{conn.Config.DefaultDatabase}");
       
       while (conn.Multiplexer.GetDatabase().ListLength("MessageQueue") == 0)
       {

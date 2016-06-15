@@ -70,6 +70,7 @@
     <Compile Include="ParserTests\RedisErrorAdviceParserTests.cs" />
     <Compile Include="ParserTests\RedisQueueParserTests.cs" />
     <Compile Include="ParserTests\RedisSentinelParserTests.cs" />
+    <Compile Include="ParserTests\TypeMapperParsetTests.cs" />
     <Compile Include="ProducerTests\TestRedisProducer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ConnectionTests\TestRedisConnection.cs" />
@@ -115,6 +116,18 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Configs\Queue-3.config">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configs\TypeMapper-1.config">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configs\TypeMapper-2.config">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configs\TypeMapper-3.config">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configs\TypeMapper-4.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="packages.config" />

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Common.Logging;
 using MessageQueue.Contracts;
 using StackExchange.Redis;
@@ -20,7 +21,6 @@ namespace RedisMessaging
     public RedisConnection(ConfigurationOptions configurationOptions)
     {
       Config = configurationOptions;
-
       //_config = new ConfigurationOptions
       //{
       //  EndPoints = { connectionString},

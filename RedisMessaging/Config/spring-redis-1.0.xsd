@@ -379,4 +379,48 @@
       </xsd:annotation>
     </xsd:attribute>
   </xsd:complexType>
+
+  <xsd:element name="typeMapper" type="TypeMapper">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[ The type mapper element declaration. ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  
+  <xsd:complexType name="TypeMapper">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[ Defines a typemap registry. ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="knownType" minOccurs="0" maxOccurs="unbounded">
+        <xsd:complexType>
+          <xsd:attribute name="key" type="xsd:string" use="required">
+            <xsd:annotation>
+              <xsd:documentation>
+                <![CDATA[ The unique key for the knownType. ]]>
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:attribute>
+          <xsd:attribute name="type" type="xsd:string" use="required">
+            <xsd:annotation>
+              <xsd:documentation>
+                <![CDATA[ The assembly qualified name of the type. ]]>
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:attribute>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Unique name for this type mapper, used as a bean definition identifier. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <!-- define something that represents dictionary<string, string> here-->
+  </xsd:complexType>
 </xsd:schema>

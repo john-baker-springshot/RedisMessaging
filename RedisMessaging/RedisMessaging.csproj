@@ -67,6 +67,7 @@
     <Compile Include="Config\RedisNamespaceHandler.cs" />
     <Compile Include="Config\RedisQueueParser.cs" />
     <Compile Include="Config\RedisSentinelParser.cs" />
+    <Compile Include="Config\TypeMapperParser.cs" />
     <Compile Include="Errors\DeadLetterErrorHandler.cs" />
     <Compile Include="Errors\ErrorAdvice.cs" />
     <Compile Include="JsonMessageConverter.cs" />
