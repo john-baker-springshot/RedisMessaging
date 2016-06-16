@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Xml;
 using RedisMessaging.Util;
 using Spring.Objects.Factory.Config;
@@ -48,6 +50,63 @@ namespace RedisMessaging.Config
     {
       return SetValueIfAttributeDefined(builder, element, propertyName.ToCamelCase(), propertyName);
     }
+
+    public static bool SetValueIfElementDefined(XmlElement element, ParserContext parserContext, ObjectDefinitionBuilder builder, string propertyName)
+    {
+      var childElement = element.GetSingleChildElement(propertyName.ToCamelCase());
+
+      if (childElement != null)
+      {
+        var parser = NamespaceParserRegistry.GetParser(childElement.NamespaceURI);
+        var objectDefinition = parser.ParseElement(childElement, parserContext);
+        builder.AddPropertyValue(propertyName, objectDefinition);
+
+        return true;
+      }
+
+      return false;
+    }
+
+    public static bool SetPropertyIfAttributeOrElementDefined(XmlElement element, ParserContext parserContext, ObjectDefinitionBuilder builder, string propertyName)
+    {
+      return SetReferenceIfAttributeDefined(builder, element, propertyName) || SetValueIfElementDefined(element, parserContext, builder, propertyName);
+    }
+
+    internal static bool SetCollectionPropertyIfElementDefined(XmlElement element, ParserContext parserContext, ObjectDefinitionBuilder builder, string propertyName)
+    {
+      return SetCollectionPropertyIfElementDefined(element, parserContext, builder, propertyName, null, null);
+    }
+
+    internal static bool SetCollectionPropertyIfElementDefined(XmlElement element, ParserContext parserContext, 
+      ObjectDefinitionBuilder builder, string propertyName, string parentPropertyName, string parentId)
+    {
+      var propertyElement = element.GetSingleChildElement(propertyName.ToCamelCase());
+
+      if (propertyElement != null)
+      {
+        var managedList = new ManagedList();
+
+        foreach (XmlNode node in propertyElement)
+        {
+          var parser = NamespaceParserRegistry.GetParser(node.NamespaceURI);
+          var objectDefinition = parser.ParseElement((XmlElement) node, parserContext);
+
+          if (!string.IsNullOrEmpty(parentPropertyName))
+          {
+            //if the child object has a parent Property specified then set it as well for bi-directional relationships to work seamlessly.
+            objectDefinition.PropertyValues.Add(parentPropertyName, new RuntimeObjectReference(parentId));
+          }
+
+          managedList.Add(objectDefinition);
+        }
+        builder.AddPropertyValue(propertyName, managedList);
+
+        return true;
+      }
+
+      return false;
+    }
+
 
     /// <summary>Adds the constructor arg value. Should be used only for mandatory attributes or attributes with default values.</summary>
     /// <param name="builder">The builder.</param>
@@ -132,12 +191,12 @@ namespace RedisMessaging.Config
 
     public static bool AddConstructorArgValueIfElementDefined(XmlElement element, ParserContext parserContext, ObjectDefinitionBuilder builder, string childElementName)
     {
-      var connectionElement = element.GetSingleChildElement(childElementName);
+      var childElement = element.GetSingleChildElement(childElementName);
 
-      if (connectionElement != null)
+      if (childElement != null)
       {
-        var parser = NamespaceParserRegistry.GetParser(connectionElement.NamespaceURI);
-        var inlineConnection = parser.ParseElement(connectionElement, parserContext);
+        var parser = NamespaceParserRegistry.GetParser(childElement.NamespaceURI);
+        var inlineConnection = parser.ParseElement(childElement, parserContext);
         builder.AddConstructorArg(inlineConnection);
 
         return true;
@@ -249,6 +308,5 @@ namespace RedisMessaging.Config
         parserContext.ReaderContext.ReportFatalException(element, $"The {attrName} attribute and the {attrName} element, both cannot be defined at the same time.");
       }
     }
-
   }
 }

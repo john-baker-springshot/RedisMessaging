@@ -2,14 +2,15 @@
 using System.Linq;
 using System.Xml;
 using RedisMessaging.Util;
+using Spring.Objects.Factory.Config;
 using Spring.Objects.Factory.Support;
 using Spring.Objects.Factory.Xml;
 
 namespace RedisMessaging.Config
 {
-  public class RedisMessageConverterParser : AbstractSingleObjectDefinitionParser
+  public class RedisContainerParser : AbstractSingleObjectDefinitionParser
   {
-    private readonly string TypeMapperElement = "typeMapper";
+    private readonly object ChannelElement = "channel";
 
     #region Overrides of AbstractSingleObjectDefinitionParser
 
@@ -34,7 +35,7 @@ namespace RedisMessaging.Config
     /// </returns>
     protected override Type GetObjectType(XmlElement element)
     {
-      return typeof(JsonMessageConverter);
+      return typeof(RedisContainer);
     }
 
     /// <summary>
@@ -55,31 +56,36 @@ namespace RedisMessaging.Config
     /// .</param>
     protected override void DoParse(XmlElement element, ParserContext parserContext, ObjectDefinitionBuilder builder)
     {
-      NamespaceUtils.CheckAmbiguityRule(element, parserContext, nameof(JsonMessageConverter.TypeMapper));
+      NamespaceUtils.CheckPresenceRule(element, parserContext, nameof(RedisContainer.Connection));
 
-      NamespaceUtils.SetPropertyIfAttributeOrElementDefined(element, parserContext, builder, nameof(JsonMessageConverter.TypeMapper).ToCamelCase());
-      //var hasInlineTypeMapper = element.HasChildElement(nameof(JsonMessageConverter.TypeMapper).ToCamelCase());
+      NamespaceUtils.AddConstructorArgRefIfAttributeDefined(builder, element, nameof(RedisContainer.Connection).ToCamelCase());
+      NamespaceUtils.SetValueIfAttributeDefined(builder, element, nameof(RedisContainer.EnableSentinel));
+      NamespaceUtils.SetReferenceIfAttributeDefined(builder, element, nameof(RedisContainer.Sentinel));
 
-      //if (hasInlineTypeMapper && element.IsAttributeDefined(nameof(JsonMessageConverter.TypeMapper).ToCamelCase()))
+      var parentId = ResolveId(element, builder.ObjectDefinition, parserContext);
+      NamespaceUtils.SetCollectionPropertyIfElementDefined(element, parserContext, builder, nameof(RedisContainer.Channels), nameof(RedisChannel.Container), parentId);
       //{
-      //  parserContext.ReaderContext.ReportFatalException(element, "When typeMapper attribute is defined, an inline type mapper cannot be defined, and vice versa.");
+      //  //Assign the parent container to this automatically.
+      //  foreach (IObjectDefinition objectDefinition in channelDefsList)
+      //  {
+      //    objectDefinition.PropertyValues.Add(nameof(RedisChannel.Container), new RuntimeObjectReference(ResolveId(element, builder.ObjectDefinition, parserContext)));
+      //  }
       //}
 
-      //if (hasInlineTypeMapper)
-      //{
-      //  var typeMapperElement = element.GetSingleChildElement(nameof(JsonMessageConverter.TypeMapper).ToCamelCase());
 
-      //  var parser = NamespaceParserRegistry.GetParser(typeMapperElement.NamespaceURI);
-      //  var internalMapper = parser.ParseElement((XmlElement) typeMapperElement, parserContext);
-      //  builder.AddPropertyValue(nameof(JsonMessageConverter.TypeMapper), internalMapper);
-      //}
-      //else
+      //var channelDefs = new ManagedList();
+
+      //var childNodes = element.ChildNodes;
+      //foreach (XmlNode child in childNodes.Cast<XmlNode>()
+      //  .Where(child => child.NodeType == XmlNodeType.Element && ChannelElement.Equals(child.LocalName)))
       //{
-      //  var propertyName = nameof(JsonMessageConverter.TypeMapper);
-      //  builder.AddPropertyReference(propertyName, element.GetAttribute(propertyName.ToCamelCase()));
+      //  var channelParser = NamespaceParserRegistry.GetParser(child.NamespaceURI);
+      //  var channelDefinition = channelParser.ParseElement((XmlElement) child, parserContext);
+      //  channelDefs.Add(channelDefinition);
       //}
 
-      NamespaceUtils.SetValueIfAttributeDefined(builder, element, nameof(JsonMessageConverter.CreateMessageIds));
+      //builder.AddPropertyValue(nameof(RedisContainer.Channels), channelDefs);
+      //ParseChannel((XmlElement)child, element, parserContext, builder);
     }
 
     #endregion

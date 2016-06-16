@@ -62,8 +62,11 @@
   <ItemGroup>
     <Compile Include="BasicMessage.cs" />
     <Compile Include="Config\NamespaceUtils.cs" />
+    <Compile Include="Config\RedisChannelParser.cs" />
     <Compile Include="Config\RedisConnectionParser.cs" />
+    <Compile Include="Config\RedisContainerParser.cs" />
     <Compile Include="Config\RedisErrorAdviceParser.cs" />
+    <Compile Include="Config\RedisListenerParser.cs" />
     <Compile Include="Config\RedisMessageConverterParser.cs" />
     <Compile Include="Config\RedisNamespaceHandler.cs" />
     <Compile Include="Config\RedisProducerParser.cs" />

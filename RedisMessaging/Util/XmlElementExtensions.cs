@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Xml;
 
 namespace RedisMessaging.Util
@@ -35,14 +36,38 @@ namespace RedisMessaging.Util
 
     public static bool HasChildElement(this XmlElement element, string childElementName)
     {
-      return element.ChildNodes.Cast<XmlNode>()
-        .Any(node => node.NodeType == XmlNodeType.Element && node.LocalName == childElementName);
+      //var hasChildElement = element.ChildNodes.Cast<XmlNode>()
+      //  .Any(node => node.NodeType == XmlNodeType.Element && node.LocalName == childElementName);
+
+      foreach (var childNode in element.ChildNodes.Cast<XmlNode>())
+      {
+        if ((childNode.NodeType == XmlNodeType.Element && childNode.LocalName == childElementName) || HasChildElement((XmlElement)childNode, childElementName))
+        {
+          return true;
+        }
+      }
+
+      return false;
     }
 
     public static XmlElement GetSingleChildElement(this XmlElement parentElement, string childElementName)
     {
-      return (XmlElement) parentElement.ChildNodes.Cast<XmlNode>()
-        .SingleOrDefault(node => node.NodeType == XmlNodeType.Element && node.LocalName == childElementName);
+      //return (XmlElement)parentElement.ChildNodes.Cast<XmlNode>()
+      //  .SingleOrDefault(node => node.NodeType == XmlNodeType.Element && node.LocalName == childElementName);
+
+      foreach (var childNode in parentElement.ChildNodes.Cast<XmlNode>())
+      {
+        if ((childNode.NodeType == XmlNodeType.Element && childNode.LocalName == childElementName))
+        {
+          return (XmlElement) childNode;
+        }
+
+        var childElement = GetSingleChildElement((XmlElement) childNode, childElementName);
+        if (childElement != null)
+          return childElement;
+      }
+
+      return null;
     }
   }
 }

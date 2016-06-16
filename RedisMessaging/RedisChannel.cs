@@ -21,7 +21,7 @@ namespace RedisMessaging
 
     public IErrorHandler DefaultErrorHandler { get; private set; }
 
-    public IEnumerable<IAdvice> ErrorAdvice { get; private set; }
+    public IEnumerable<IAdvice> AdviceChain { get; private set; }
 
     public string Id { get; private set; }
 
@@ -39,7 +39,7 @@ namespace RedisMessaging
 
     public IMessageConverter MessageConverter { get; private set; }
 
-    public int Count { get; private set; }
+    public int Concurrency { get; private set; }
 
     private IConnectionMultiplexer _redis;
 
@@ -161,7 +161,7 @@ namespace RedisMessaging
       ErrorAdvice advice = null;
       try
       {
-        foreach (ErrorAdvice adv in ErrorAdvice)
+        foreach (ErrorAdvice adv in AdviceChain)
         {
           if (adv.GetExceptionType() == e.GetType())
             advice = adv;

@@ -38,8 +38,8 @@ namespace RedisMessaging
       foreach (RedisChannel channel in Channels)
       {
         int count = 1;
-        Int32.TryParse(channel.Count.ToString() , out count);
-        for (int i = 2; i <= channel.Count; i++)
+        Int32.TryParse(channel.Concurrency.ToString() , out count);
+        for (int i = 2; i <= channel.Concurrency; i++)
         {
           RedisChannel c = (RedisChannel)channel.Clone(i);
           Channels = Channels.Concat(new [] {c});

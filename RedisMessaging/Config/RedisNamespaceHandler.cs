@@ -16,12 +16,28 @@ namespace RedisMessaging.Config
     public override void Init()
     {
       RegisterObjectDefinitionParser("connection", new RedisConnectionParser());
-      RegisterObjectDefinitionParser("errorAdvice", new RedisErrorAdviceParser());
+
+      RegisterObjectDefinitionParser("container", new RedisContainerParser());
+      RegisterObjectDefinitionParser("channel", new RedisChannelParser());
+      //RegisterObjectDefinitionParser("channel", new RedisChannelObjectParser());
+
       RegisterObjectDefinitionParser("sentinel", new RedisSentinelParser());
-      RegisterObjectDefinitionParser("queue", new RedisQueueParser());
+
+      var adviceParser = new RedisErrorAdviceParser();;
+      RegisterObjectDefinitionParser("errorAdvice", adviceParser);
+      RegisterObjectDefinitionParser("advice", adviceParser);
+
+      var queueParser = new RedisQueueParser();
+      RegisterObjectDefinitionParser("queue", queueParser);
+      RegisterObjectDefinitionParser("messageQueue", queueParser);
+      RegisterObjectDefinitionParser("deadLetterQueue", queueParser);
+      RegisterObjectDefinitionParser("poisonQueue", queueParser);
+
       RegisterObjectDefinitionParser("typeMapper", new TypeMapperParser());
       RegisterObjectDefinitionParser("messageConverter", new RedisMessageConverterParser());
       RegisterObjectDefinitionParser("producer", new RedisProducerParser());
+
+      RegisterObjectDefinitionParser("listener", new RedisListenerParser());
     }
 
     #endregion
