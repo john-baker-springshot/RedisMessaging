@@ -61,6 +61,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BasicMessage.cs" />
+    <Compile Include="Config\ErrorHandlerObjectParser.cs" />
+    <Compile Include="Config\NamespaceUtils.cs" />
+    <Compile Include="Config\RedisChannelParser.cs" />
+    <Compile Include="Config\RedisConnectionParser.cs" />
+    <Compile Include="Config\RedisContainerParser.cs" />
+    <Compile Include="Config\RedisErrorAdviceParser.cs" />
+    <Compile Include="Config\RedisListenerParser.cs" />
+    <Compile Include="Config\RedisMessageConverterParser.cs" />
+    <Compile Include="Config\RedisNamespaceHandler.cs" />
+    <Compile Include="Config\RedisProducerParser.cs" />
+    <Compile Include="Config\RedisQueueParser.cs" />
+    <Compile Include="Config\RedisSentinelParser.cs" />
+    <Compile Include="Config\TypeMapperParser.cs" />
     <Compile Include="Errors\DeadLetterErrorHandler.cs" />
     <Compile Include="Errors\ErrorAdvice.cs" />
     <Compile Include="JsonMessageConverter.cs" />
@@ -74,8 +87,13 @@
     <Compile Include="RedisQueueSentinel.cs" />
     <Compile Include="Util\ReflectionHelper.cs" />
     <Compile Include="Util\ServiceLocator.cs" />
+    <Compile Include="Util\StringExtensions.cs" />
+    <Compile Include="Util\XmlElementExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Config\spring-redis-1.0.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

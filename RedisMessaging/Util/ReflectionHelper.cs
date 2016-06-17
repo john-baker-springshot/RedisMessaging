@@ -37,34 +37,26 @@ namespace RedisMessaging.Util
     {
       if (_assemblyRegex.Match(className).Success)
       {
-        foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
-        {
-          foreach (var type in a.GetTypes())
-          {
-            if (type.AssemblyQualifiedName == className)
-              return type;
-          }
-        }
-        return (from a in AppDomain.CurrentDomain.GetAssemblies()
-                select (from aType in a.GetTypes()
-                        where aType.AssemblyQualifiedName == className
-                        select aType)
-                  .FirstOrDefault()).FirstOrDefault();
+        return AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes().Where(type => type.AssemblyQualifiedName == className)).FirstOrDefault();
+        //return (from a in AppDomain.CurrentDomain.GetAssemblies()
+        //        select (from aType in a.GetTypes()
+        //                where aType.AssemblyQualifiedName == className
+        //                select aType)
+        //          .FirstOrDefault()).FirstOrDefault();
       }
 
-
       if (_fullnameRegex.Match(className).Success)
-        return (from a in AppDomain.CurrentDomain.GetAssemblies()
-                select (from aType in a.GetTypes()
-                        where aType.FullName == className
-                        select aType)
-                  .FirstOrDefault()).FirstOrDefault();
+      {
+        return AppDomain.CurrentDomain.GetAssemblies().SelectMany(assembly => assembly.GetTypes().Where(type => type.FullName == className)).FirstOrDefault();
+      }
 
-      return (from a in AppDomain.CurrentDomain.GetAssemblies()
-              select (from aType in a.GetTypes()
-                      where aType.Name == className
-                      select aType)
-                .FirstOrDefault()).FirstOrDefault();
+      return AppDomain.CurrentDomain.GetAssemblies().SelectMany(assembly => assembly.GetTypes().Where(type => type.Name == className)).FirstOrDefault();
+
+      //return (from a in AppDomain.CurrentDomain.GetAssemblies()
+      //        select (from aType in a.GetTypes()
+      //                where aType.Name == className
+      //                select aType)
+      //          .FirstOrDefault()).FirstOrDefault();
     }
 
   }

@@ -1,17 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using MessageQueue.Contracts;
-using MessageQueue.Contracts.Producer;
 using RedisMessaging;
-using RedisMessaging.Producer;
-using Spring.Context;
 using Spring.Context.Support;
-using Newtonsoft.Json;
-using Spring.Globalization.Formatters;
 
 namespace Consumer
 {
@@ -29,14 +22,17 @@ namespace Consumer
     public static void Consume(IContainer consumer)
     {
       var conn = (RedisConnection)consumer.Connection;
+      var qName = consumer.Channels.First().MessageQueue.Name;
       Stopwatch sw = new Stopwatch();
+
+      Console.WriteLine($"Connected to {conn.Config.SslHost}/{conn.Config.DefaultDatabase}, Queue:{qName}");
       
-      while (conn.Multiplexer.GetDatabase().ListLength("MessageQueue") == 0)
+      while (conn.Multiplexer.GetDatabase().ListLength(qName) == 0)
       {
         //wait
       }
       sw.Start();
-      while (conn.Multiplexer.GetDatabase().ListLength("MessageQueue") > 0)
+      while (conn.Multiplexer.GetDatabase().ListLength(qName) > 0)
       {
         //wait again
       }

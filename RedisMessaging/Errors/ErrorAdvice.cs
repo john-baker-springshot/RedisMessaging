@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using MessageQueue.Contracts;
 using MessageQueue.Contracts.Advices;
 using RedisMessaging.Util;
@@ -12,11 +7,14 @@ namespace RedisMessaging.Errors
 {
   public class ErrorAdvice: IAdvice
   {
+    public AdviceType AdviceType { get; private set; }
 
     public string ExceptionType { get; private set; }
-    private string AdviceType { get; set; }
+
     public int RetryInterval { get; private set; }
+
     public int RetryCount { get; private set; }
+
     public bool RetryOnFail { get; private set; }
 
     private Type _exceptionType;
@@ -33,11 +31,5 @@ namespace RedisMessaging.Errors
       }
       return _exceptionType;
     }
-
-    public AdviceType Type()
-    {
-      return (AdviceType)Enum.Parse(typeof(AdviceType), AdviceType);
-    }
-
   }
 }

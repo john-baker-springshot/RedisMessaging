@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 using MessageQueue.Contracts;
 using MessageQueue.Contracts.Advices;
 using MessageQueue.Contracts.Consumer;
-using Newtonsoft.Json;
-using RedisMessaging.Util;
 using StackExchange.Redis;
 using RedisMessaging.Consumer;
 using System.Linq;
@@ -21,7 +19,7 @@ namespace RedisMessaging
 
     public IErrorHandler DefaultErrorHandler { get; private set; }
 
-    public IEnumerable<IAdvice> ErrorAdvice { get; private set; }
+    public IEnumerable<IAdvice> AdviceChain { get; private set; }
 
     public string Id { get; private set; }
 
@@ -39,7 +37,7 @@ namespace RedisMessaging
 
     public IMessageConverter MessageConverter { get; private set; }
 
-    public int Count { get; private set; }
+    public int Concurrency { get; private set; }
 
     private IConnectionMultiplexer _redis;
 
@@ -161,7 +159,7 @@ namespace RedisMessaging
       ErrorAdvice advice = null;
       try
       {
-        foreach (ErrorAdvice adv in ErrorAdvice)
+        foreach (ErrorAdvice adv in AdviceChain)
         {
           if (adv.GetExceptionType() == e.GetType())
             advice = adv;
@@ -178,7 +176,7 @@ namespace RedisMessaging
         {
           //need to determine type of retry
           //var retryAdvice = advice as ITimedRetryAdvice;
-          if (advice.Type() == AdviceType.TimedRetry)
+          if (advice.AdviceType == AdviceType.TimedRetry)
           {
             var errorCount = 0;
             _errorDictionary.TryGetValue(m, out errorCount);
@@ -197,7 +195,7 @@ namespace RedisMessaging
             return;
           }
           //var retryRequeueAdvice = advice as IRetryRequeueAdvice;
-          if (advice.Type() == AdviceType.RetryRequeue)
+          if (advice.AdviceType == AdviceType.RetryRequeue)
           {
             Log.Warn("RetryRequeue Advice found for message " + m + ", requeing message");
             SendToMessageQueue(m.ToString());

@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Runtime.InteropServices;
-using System.Runtime.Remoting.Messaging;
+using System.Linq;
 using Common.Logging;
 using MessageQueue.Contracts;
 using StackExchange.Redis;
@@ -9,35 +8,35 @@ namespace RedisMessaging
 {
   public class RedisConnection : IConnection
   {
-    private readonly string _connectionString;
-
     private static Lazy<ConnectionMultiplexer> _lazyConnection;
-    private readonly ConfigurationOptions _config;
+
     private static readonly ILog Log = LogManager.GetLogger(typeof(RedisConnection));
-    public RedisConnection(string connectionString) : this(connectionString, null) { }
 
-    public RedisConnection(string connectionString, string pass)
+    internal readonly ConfigurationOptions Config;
+
+    public RedisConnection(string connectionString) : this(ConfigurationOptions.Parse(connectionString))
     {
-      _connectionString = connectionString;
-
-      _config = new ConfigurationOptions
-      {
-        EndPoints = { connectionString},
-      };
-
-      if (pass != null)
-      {
-        Pass = pass;
-        _config.Password = pass;
-      }
       
-      _lazyConnection = new Lazy<ConnectionMultiplexer>(
-      () =>
-      {
-        return ConnectionMultiplexer.Connect(_config);
-      });
+    }
+    public RedisConnection(ConfigurationOptions configurationOptions)
+    {
+      Config = configurationOptions;
+      //_config = new ConfigurationOptions
+      //{
+      //  EndPoints = { connectionString},
+      //};
+
+      //if (pass != null)
+      //{
+      //  Pass = pass;
+      //  _config.Password = pass;
+      //}
+
+      _lazyConnection = new Lazy<ConnectionMultiplexer>(() => ConnectionMultiplexer.Connect(Config));
+
       Connect();
-      Log.Info("Redis Connection connected to "+connectionString);
+
+      Log.Info("Redis Connection connected to " + configurationOptions.EndPoints);
     }
 
     //need a way to turn this on/off
@@ -64,7 +63,7 @@ namespace RedisMessaging
 
     public bool IsConnected { get; private set; }
 
-    internal IConnectionMultiplexer Multiplexer { get { return _lazyConnection.Value; } }
+    internal IConnectionMultiplexer Multiplexer => _lazyConnection.Value;
 
     public void Connect()
     {

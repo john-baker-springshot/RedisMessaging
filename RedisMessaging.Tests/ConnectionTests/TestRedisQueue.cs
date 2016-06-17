@@ -2,26 +2,34 @@
 using Spring.Context;
 using Spring.Context.Support;
 using MessageQueue.Contracts;
+using RedisMessaging.Tests.UtilTests;
+using Spring.Objects.Factory.Xml;
 
 namespace RedisMessaging.Tests.ConnectionTests
 {
   [TestFixture]
   public class TestRedisQueue
   {
-    private IApplicationContext _container;
+    private XmlObjectFactory _objectFactory;
 
-    [SetUp]
+    [OneTimeSetUp]
     public void Init()
     {
-      _container = ContextRegistry.GetContext();
+      _objectFactory = ParserTestsHelper.LoadMessagingConfig();
+    }
+
+    [OneTimeTearDown]
+    public void Dispose()
+    {
+      _objectFactory.Dispose();
     }
 
     [Test]
     public void RedisQueue_DI_Test()
     {
-      const string name = "MessageQueue";
-      const int ttl = 0;
-      var testObject = _container.GetObject<IQueue>("MyMessageQueue");
+      const string name = "myRedisQ";
+      const int ttl = 10000;
+      var testObject = _objectFactory.GetObject<IQueue>("myQueue");
       Assert.IsNotNull(testObject);
       Assert.That(testObject.GetType(), Is.EqualTo(typeof(RedisQueue)));
       Assert.That(testObject.Name, Is.EqualTo(name));

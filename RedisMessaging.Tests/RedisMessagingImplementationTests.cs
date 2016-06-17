@@ -2,74 +2,65 @@
 using MessageQueue.Contracts.Producer;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using RedisMessaging.Util;
-using Spring.Context;
-using Spring.Context.Support;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
-using System.Text;
-using System.Threading.Tasks;
+using RedisMessaging.Tests.UtilTests;
+using Spring.Objects.Factory.Xml;
 
 namespace RedisMessaging.Tests
 {
   [TestFixture]
   public class RedisMessagingImplementationTests
   {
+    private XmlObjectFactory _objectFactory;
 
-    private IApplicationContext _container;
+    private const string ProducerName = "myProducer";
+    private const string ConsumerName = "myContainer";
 
-
-
-    [SetUp]
+    [OneTimeSetUp]
     public void Init()
     {
-      _container = ContextRegistry.GetContext();
+      _objectFactory = ParserTestsHelper.LoadMessagingConfig();
     }
 
-    [TearDown]
+    [OneTimeTearDown]
     public void Dispose()
     {
+      _objectFactory.Dispose();
     }
 
     [Test]
     public void RedisMessaging_DIInitTest()
     {
-      var _producer = ServiceLocator.GetService<IProducer>("MyProducer");
-      var _consumer = ServiceLocator.GetService<IContainer>("MyContainer");
-      _consumer.Init();
-      Assert.IsTrue(_producer.Connection.IsConnected);
-      Assert.IsTrue(_consumer.Connection.IsConnected);
+      var producer = _objectFactory.GetObject<IProducer>(ProducerName);
+      var consumer = _objectFactory.GetObject<IContainer>(ConsumerName);
+      consumer.Init();
+      Assert.IsTrue(producer.Connection.IsConnected);
+      Assert.IsTrue(consumer.Connection.IsConnected);
     }
 
     [Test, MaxTime(10000)]
     public void RedisMessaging_LoadTest()
     {
       const int maxMessage = 100000;
-      var _producer = ServiceLocator.GetService<IProducer>("MyProducer");
+      var producer = _objectFactory.GetObject<IProducer>(ProducerName);
+
       for (int i = 0; i < maxMessage; i++)
       {
-        _producer.Publish(CreateBasicMessage(i, "hey hey hey"));
+        producer.Publish(CreateBasicMessage(i, "hey hey hey"));
       }
-
-      //_consumer.Init();
-      //var conn = (RedisConnection)_consumer.Connection;
-      //while (conn.Multiplexer.GetDatabase().ListLength("MessageQueue") > 0)
-      //{
-      //  //do nothing
-      //}
-      //Assert.IsTrue(1 == 1);
-      //Assert.IsTrue(1 == 1);
     }
 
-    [Test, MaxTime(280000)]
+    [Test, MaxTime(20000)]
     public void RedisMessaging_UnloadTest()
     {
-      var _consumer = ServiceLocator.GetService<IContainer>("MyContainer");
-      _consumer.Init();
-      var conn = (RedisConnection)_consumer.Connection;
-      while (conn.Multiplexer.GetDatabase().ListLength("MessageQueue") > 0)
+      var consumer = _objectFactory.GetObject<IContainer>(ConsumerName);
+      consumer.Init();
+
+      var conn = (RedisConnection)consumer.Connection;
+      var queueName = consumer.Channels.First().MessageQueue.Name;
+
+      while (conn.Multiplexer.GetDatabase().ListLength(queueName) > 0)
       {
         //do nothing
       }

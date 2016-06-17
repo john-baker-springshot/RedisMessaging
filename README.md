@@ -2,39 +2,72 @@
 
 RedisMessaging is a lightweight Redis Messaging Queue framework utilizing StackExchange.Redis for interaction with redis and spring.core for DI/configuration. 
 
-Inspired by RabbitMQ, RedisMessaging contains many out of the box features such as Poison/DeadLetter Queues, a transient Processing Queue per Listener to reduce the likelyhood of lost messages, a Sentinel class that scans all Processing Queues for abandoned messages eligible for Requeuing, and customizable error handling via RetryRequeue and TimedRetry mechanisms.
+Inspired by AMQP messaging frameworks/infrastructures, RedisMessaging contains several out of the box features, akin to any Messaging infratructure, such as Poison/DeadLetter Queues, a transient Processing Queue per Listener to reduce the likelyhood of lost messages, a Sentinel class that scans all Processing Queues for abandoned messages eligible for Requeuing, and customizable error handling via advice chaining mechanisms.
 
 ## Motivation
 
-Wanting a more feature-rich Message Queue closer to RabbitMQ without sacrificing the speed and ease of use of Redis, we took the parts of RabbitMQ we liked (namely the spring-based configuration and infratructure principles) and the most supported open source .Net Redis Framework (StackExchange.Redis) and combined the two into a lightweight framework.
+Wanting a more feature-rich Message Queue framework similar to Spring.AMQP.RabbitMQ without sacrificing the speed and ease of use of Redis, we took the parts of Spring's RabbitMQ we liked (namely the spring-based configuration and infratructure principles) and the most supported open source .Net Redis Framework (StackExchange.Redis) and combined the two into a lightweight messaging framework.
 
 ## Code Example
 
-The most important part of getting started with RedisMessaging is to set up your configuration file based on your needs. The config format follows spring.net object definition conventions
+The most important part of getting started with RedisMessaging is to set up your configuration file based on your needs. The config format follows spring.net object definition conventions. We have put a nice wrapper around it in order to make it clear and concise.
 
 ```
-<!--Basic Configuration-->
-<object name="MyConnection"
-  type="RedisMessaging.RedisConnection, RedisMessaging">
-<constructor-arg name="connectionString" value="localhost:6379"/>
-</object>
+<!--Basic Consumer Configuration-->
+<redis:connection id="myConnection"
+				endpoints="localhost:6379"
+				password="password"
+				defaultDatabase="1"
+				abortConnect="true"
+				allowAdmin="true"
+				connectRetry="5" />
+<!-- For more connection options, please refer to https://github.com/StackExchange/StackExchange.Redis/blob/master/Docs/Configuration.md -->
 
-<object name="MyMessageQueue"
-  type="RedisMessaging.RedisQueue, RedisMessaging">
-<constructor-arg name="Name" value="MessageQueue"/>
-<constructor-arg name="TTL" value="0"/>
-</object>
+<redis:sentinel id="sentinel" connection="myConnection" messageTimeout="60" interval="1000" />
+
+<redis:container id="myContainer"
+			   connection="myConnection"
+			   enableSentinel="true"
+			   sentinel="sentinel">
+
+<redis:channels>
+  <redis:channel id="myChannel" concurrency="5">
+
+	<redis:listeners>
+	  <redis:listener handlerType="RedisMessaging.Tests.ConsumerTests.TestMessageHandler, RedisMessaging.Tests" handlerMethod="HandleMessage" typeKey="Event" />
+	</redis:listeners>
+
+	<redis:queues>
+	  <redis:messageQueue name="myRedisQ" />
+	  <redis:deadLetterQueue name="myDeadLetterQ" />
+	  <redis:poisonQueue name="myPoisonQ" />
+	</redis:queues>
+
+	<redis:messageConverter createMessageIds="true">
+	  <redis:typeMapper>
+		<redis:knownType key="Basic" type="RedisMessaging.BasicMessage, RedisMessaging" />
+		<redis:knownType key="Event" type="Consumer.Event, Consumer" />
+	  </redis:typeMapper>
+	</redis:messageConverter>
+
+	<redis:adviceChain>
+	  <redis:advice retryOnFail="true" exceptionType="TimeoutException" adviceType="TimedRetry" retryCount="8" retryInterval="30" />
+	  <redis:advice id="advice2" retryOnFail="true" exceptionType="System.Data.SqlClient.SqlException" adviceType="RetryRequeue" />
+	</redis:adviceChain>
+
+  </redis:channel>
+</redis:channels>
+
+</redis:container>
 
 <!--Producer Configuration-->
-<object name="MyProducer" type="RedisMessaging.Producer.RedisProducer, RedisMessaging">
-<constructor-arg name="connection" ref="MyConnection"/>
-<constructor-arg name="queue" ref="MyMessageQueue"/>
-</object>
+<redis:producer id="myProducer" connection="myConnection" queue="myQueue" />
+
 ```
 
-And so on, you can look at the Implementation.xml files in the source for a clearer picture on how everything works, more documentation on the subject to come
+And so on, you can look at the Producer.config or Consumer.config files in the source for a clearer picture on how everything works, more documentation on the subject to come
 
-Once configured, all you need to do is instantiate the Producer defined in the configuration and start .Publish - ing messages. For the Consumer, only the Container object need be instantiated, after which Container.Init() will begin the message consuming process.
+Once configured, all you need to do is fetch the Producer, using Spring IoC, defined in the configuration and start .Publish - ing messages. For the Consumer, only the Container need be fetched, after which Container.Init() will begin the message consuming process.
 
 - More to come
 

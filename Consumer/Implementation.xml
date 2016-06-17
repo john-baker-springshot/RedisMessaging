@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <objects xmlns="http://www.springframework.net"
-		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://www.springframework.net http://www.springframework.net/schema/objects/spring-objects-1.1.xsd"
-     default-lazy-init="true">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://www.springframework.net http://www.springframework.net/schema/objects/spring-objects-1.1.xsd"
+         default-lazy-init="true">
 
   <description>
     This xml file is used for testing a fully wired up Spring xml config for RedisMessaging service
@@ -105,11 +105,11 @@
 
   <object name="MyTypeMapper"
      type="MessageQueue.Contracts.TypeMapper, MessageQueue.Contracts" >
-    <property name="_typeMaps">
-      <list>
-        <ref object="MyTypeMap"/>
-        <ref object="EventTypeMap"/>
-      </list>
+    <property name="Types">
+      <dictionary key-type="System.String" value-type="System.Type">
+        <entry key="Basic" value="RedisMessaging.BasicMessage, RedisMessaging" />
+        <entry key="Event" value="Consumer.Event, Consumer" />
+      </dictionary>
     </property>
   </object>
 

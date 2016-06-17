@@ -1,0 +1,709 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns="http://www.springframework.net/schema/redis"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns:vs="http://schemas.microsoft.com/Visual-Studio-Intellisense"
+            xmlns:objects="http://www.springframework.net"
+            targetNamespace="http://www.springframework.net/schema/redis"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified"
+            vs:friendlyname="Redis Messaging for .NET Configuration"
+            vs:ishtmlschema="false"
+            vs:iscasesensitive="true"
+            vs:requireattributequotes="true"
+            vs:defaultnamespacequalifier=""
+            vs:defaultnsprefix="">
+
+  <xsd:element name="connection" type="Connection">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[	Creates a redis connection with sensible defaults. ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+
+  <xsd:complexType name="Connection">
+    <xsd:attribute name="id" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Unique name for this redis connection used as a bean definition identifier. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="connectionString" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ The connection string to connect to Redis server(s). For formatting information please refer to the StachExchange.Redis project on github. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="endpoints" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ The redis server(s), with (optional) respective ports. When port is not defined, 6379 is used for non-SSL and 6380 for SSL. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="abortConnect" type="xsd:boolean" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ If true, Connect will not create a connection while no servers are available. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="allowAdmin" type="xsd:boolean" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Enables a range of commands that are considered risky. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="channelPrefix" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Optional channel prefix for all pub/sub operations. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="connectRetry" type="xsd:int" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ The number of times to repeat connect attempts during initial Connect. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="connectTimeout" type="xsd:int" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Timeout (ms) for connect operations. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="configChannel" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Broadcast channel name for communicating configuration changes. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="defaultDatabase" type="xsd:int" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Default database index, from 0 to databases - 1. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="keepAlive" type="xsd:int" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Time (seconds) at which to send a message to help keep sockets alive. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="password" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Password for the redis server. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="proxy" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Type of proxy in use (if any); for example "twemproxy". ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="resolveDns" type="xsd:boolean" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Specifies that DNS resolution should be explicit and eager, rather than implicit. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="ssl" type="xsd:boolean" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Specifies that SSL encryption should be used. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="sslHost" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Enforces a particular SSL host identity on the server's certificate. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="syncTimeout" type="xsd:int" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Time (ms) to allow for synchronous operations. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="tiebreaker" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Key to use for selecting a server in an ambiguous master scenario. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="version" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Redis version level (useful when the server does not make this available). ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="writeBuffer" type="xsd:int" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Size of the output buffer. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+
+  <xsd:element name="container">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[ Creates a Redis Container object. ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="channels" minOccurs="1" maxOccurs="1">
+          <xsd:annotation>
+            <xsd:documentation>
+              <![CDATA[ Defines the wrapper element for all the channels within this container. ]]>
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="channel" type="Channel" minOccurs="1" maxOccurs="unbounded" />
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:string" use="optional">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[ The unique id of this container, used as a bean definition identifier. ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+      <xsd:attribute name="connection" type="xsd:string" use="required">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[ The id of the connection object. ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+      <xsd:attribute name="enableSentinel" type="xsd:boolean" use="optional">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[ If true, the container will run the Sentinel service. ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+      <xsd:attribute name="sentinel" type="xsd:string" use="optional">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[ The id of the Sentinel service object. ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="errorAdvice" type="ErrorAdvice">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[ Defines an ErrorAdvice element. ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+
+  <xsd:complexType name="ErrorAdvice">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[ Configure error advice for specific types of errors. ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="id" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Unique name for this error advice used as a bean definition identifier. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="retryOnFail" type="xsd:boolean" use="required">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ If true, define custom retry mechanism. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="exceptionType" type="xsd:string" use="required">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ The type of System.Exception for which the custom behavior is defined. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="adviceType" type="AdviceType" use="required">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ The type of advice applicable. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="retryCount" type="xsd:int" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Number of time to retry when using AdviceType = TimedRetry. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="retryInterval" type="xsd:int" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Defines the interval in seconds between each retry. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+
+  <xsd:simpleType name="AdviceType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[ The type of error advice. ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="RetryRequeue" />
+      <xsd:enumeration value="TimedRetry" />
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:element name="sentinel" type="Sentinel">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[ Defines a Sentinel element. ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+
+  <xsd:complexType name="Sentinel">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[ Defines a Redis Sentinel ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="id" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Unique name for this sentinel used as a bean definition identifier. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="connection" type="xsd:string" use="required">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ The identifier of the Redis connection object. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="messageTimeout" type="xsd:int" default="300">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ The timeout in seconds after which a message is deemed unpicked. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="interval" type="xsd:int" default="10">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ The time interval in milliseconds for the sentinel, between checks. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+
+  <xsd:element name="queue" type="Queue">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[ Defines a redis queue element. ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+
+  <xsd:complexType name="Queue">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[ Represents a Redis Queue. ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="id" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Unique name for this redis queue, used as a bean definition identifier. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="name" type="xsd:string" use="required">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ The redis queue name. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="ttl" type="xsd:int" use="optional" default="10000">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ The TTL for this queue. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+
+  <xsd:element name="channel" type="Channel">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[ Defines a Redis Channel element. ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+
+  <xsd:complexType name="Channel">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[ Defines a channel that connects to a Redis queue. ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="listeners" minOccurs="1" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[ Outer element containing all listeners on this channel. ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="listener" type="Listener" minOccurs="1" maxOccurs="unbounded">
+              <xsd:annotation>
+                <xsd:documentation>
+                  <![CDATA[ Defines an inline listener ]]>
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="queues" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[ Outer element containing all listeners on this channel. ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="messageQueue" type="Queue" minOccurs="0" maxOccurs="1">
+              <xsd:annotation>
+                <xsd:documentation>
+                  <![CDATA[ Defines an inline main message queue to subscribe to. ]]>
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="deadLetterQueue" type="Queue" minOccurs="0" maxOccurs="1">
+              <xsd:annotation>
+                <xsd:documentation>
+                  <![CDATA[ Defines an inline main message queue to subscribe to. ]]>
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="poisonQueue" type="Queue" minOccurs="0" maxOccurs="1">
+              <xsd:annotation>
+                <xsd:documentation>
+                  <![CDATA[ Defines an inline main message queue to subscribe to. ]]>
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="messageConverter" type="MessageConverter" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[ Defines an inline Redis (JSON) message converter. ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="defaultErrorHandler" type="ErrorHandler" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[ Defines the default error handler. ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="adviceChain" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[ Outer element containing error advice chain on this channel. ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="advice" type="ErrorAdvice" minOccurs="1" maxOccurs="unbounded">
+              <xsd:annotation>
+                <xsd:documentation>
+                  <![CDATA[ Defines an inline Error Advice ]]>
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Unique name for this redis channel, used as a bean definition identifier. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="messageQueue" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ The id of the Redis queue. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="deadLetterQueue" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ The id of the Dead Letter queue. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="poisonQueue" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ The id of the poison queue. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="messageConverter" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ The id of the Redis (JSON) message converter. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="defaultErrorHandler" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ The id of the ErrorHandler. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="concurrency" type="xsd:short" default="1">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ The id of the Redis (JSON) message converter. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+
+  <xsd:element name="typeMapper" type="TypeMapper">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[ The type mapper element declaration. ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+
+  <xsd:complexType name="TypeMapper">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[ Defines a typemap registry. ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="knownType" minOccurs="0" maxOccurs="unbounded">
+        <xsd:complexType>
+          <xsd:attribute name="key" type="xsd:string" use="required">
+            <xsd:annotation>
+              <xsd:documentation>
+                <![CDATA[ The unique key for the knownType. ]]>
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:attribute>
+          <xsd:attribute name="type" type="xsd:string" use="required">
+            <xsd:annotation>
+              <xsd:documentation>
+                <![CDATA[ The assembly qualified name of the type. ]]>
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:attribute>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Unique name for this type mapper, used as a bean definition identifier. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+
+  <xsd:element name="messageConverter" type="MessageConverter">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[ Defines a message converter. ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  
+  <xsd:complexType name="MessageConverter">
+    <xsd:sequence>
+      <xsd:element name="typeMapper" type="TypeMapper" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[ Inline definition of the type mapper. Cannot be used in conjunction with the typeMapper attribute. ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:string">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Unique name for this message converter, used as a bean definition identifier. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="createMessageIds" type="xsd:boolean" default="true">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ If true, creates message ids when publishing known types (based on the Type Mapper). ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="typeMapper" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ The object id of the Type Mapper to be used. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+
+  <xsd:element name="producer">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[ Defines a Redis Producer. ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="connection" type="Connection" minOccurs="0" maxOccurs="1">
+          <xsd:annotation>
+            <xsd:documentation>
+              <![CDATA[ Defines a Redis connection inline, local to this producer. ]]>
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="queue" type="Queue" minOccurs="0" maxOccurs="1">
+          <xsd:annotation>
+            <xsd:documentation>
+              <![CDATA[ Defines a Redis queue inline, local to this producer. ]]>
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[ Unique name for this message producer, used as a bean definition identifier. ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+      <xsd:attribute name="connection" type="xsd:string" use="optional">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[ Pointer ref to the redis connection. ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+      <xsd:attribute name="queue" type="xsd:string" use="optional">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[ Pointer ref to the redis queue. ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:complexType name="ErrorHandler">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[ Defines a DefaultErrorHandler. ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="id" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Unique name for this error handler, used as a bean definition identifier. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="type" type="xsd:string" use="required">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ The assembly qualified name of the concrete error handler. Must be implementing IErrorHandler. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+
+  <xsd:complexType name="Listener">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[ Defines a Redis Listener. ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="id" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ Unique name for this type mapper, used as a bean definition identifier. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="handlerType" type="xsd:string" use="required">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ The concrete type name (assembly qualified name). ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="handlerMethod" type="xsd:string" use="required">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ The name of the method that will handle the message. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="typeKey" type="xsd:string" use="required">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ The name of the unique message key that will be used to route the correct message to this listener. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+
+</xsd:schema>

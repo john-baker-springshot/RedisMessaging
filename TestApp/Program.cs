@@ -62,6 +62,10 @@ namespace TestApp
     {
       producer.Connection.Connect();
 
+      var redisConnection = (RedisConnection)producer.Connection;
+
+      Console.WriteLine($"Publishing messages to {redisConnection.Config.SslHost}/{redisConnection.Config.DefaultDatabase}");
+
       for (int i = 0; i < number; i++)
       {
         //producer.Publish(CreateBasicMessage(i, "hey hey hey"));
