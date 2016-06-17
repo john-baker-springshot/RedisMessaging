@@ -21,6 +21,7 @@ The most important part of getting started with RedisMessaging is to set up your
 				abortConnect="true"
 				allowAdmin="true"
 				connectRetry="5" />
+<!-- For more connection options, please refer to https://github.com/StackExchange/StackExchange.Redis/blob/master/Docs/Configuration.md -->
 
 <redis:sentinel id="sentinel" connection="myConnection" messageTimeout="60" interval="1000" />
 
