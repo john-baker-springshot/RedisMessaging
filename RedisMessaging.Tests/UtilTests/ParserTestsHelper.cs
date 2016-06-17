@@ -8,11 +8,10 @@ namespace RedisMessaging.Tests.UtilTests
   {
     public static XmlObjectFactory LoadContext(string configConventionPrefix, int configId)
     {
-      var resourceName = $"assembly://RedisMessaging.Tests/RedisMessaging.Tests.Configs/{configConventionPrefix}-{configId}.config";
+      var resourceName = $"assembly://RedisMessaging.Tests/RedisMessaging.Tests.Configs.{configConventionPrefix}/{configConventionPrefix}-{configId}.config";
 
       var resource = new AssemblyResource(resourceName);
       return new XmlObjectFactory(resource);
     }
-
   }
 }

@@ -89,139 +89,139 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-    <EmbeddedResource Include="Configs\Connection-2.config">
+    <EmbeddedResource Include="Configs\Connection\Connection-2.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\Connection-3.config">
+    <EmbeddedResource Include="Configs\Connection\Connection-3.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\ErrorAdvice-1.config">
+    <EmbeddedResource Include="Configs\ErrorAdvice\ErrorAdvice-1.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\ErrorAdvice-2.config">
+    <EmbeddedResource Include="Configs\ErrorAdvice\ErrorAdvice-2.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\ErrorAdvice-3.config">
+    <EmbeddedResource Include="Configs\ErrorAdvice\ErrorAdvice-3.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\Sentinel-1.config">
+    <EmbeddedResource Include="Configs\Sentinel\Sentinel-1.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\Sentinel-2.config">
+    <EmbeddedResource Include="Configs\Sentinel\Sentinel-2.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\Sentinel-3.config">
+    <EmbeddedResource Include="Configs\Sentinel\Sentinel-3.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\Queue-1.config">
+    <EmbeddedResource Include="Configs\Queue\Queue-1.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\Queue-2.config">
+    <EmbeddedResource Include="Configs\Queue\Queue-2.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\Queue-3.config">
+    <EmbeddedResource Include="Configs\Queue\Queue-3.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\TypeMapper-1.config">
+    <EmbeddedResource Include="Configs\TypeMapper\TypeMapper-1.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\TypeMapper-2.config">
+    <EmbeddedResource Include="Configs\TypeMapper\TypeMapper-2.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\TypeMapper-3.config">
+    <EmbeddedResource Include="Configs\TypeMapper\TypeMapper-3.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\TypeMapper-4.config">
+    <EmbeddedResource Include="Configs\TypeMapper\TypeMapper-4.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\MessageConverter-1.config">
+    <EmbeddedResource Include="Configs\MessageConverter\MessageConverter-1.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\MessageConverter-3.config">
+    <EmbeddedResource Include="Configs\MessageConverter\MessageConverter-3.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\MessageConverter-2.config">
+    <EmbeddedResource Include="Configs\MessageConverter\MessageConverter-2.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\MessageConverter-4.config">
+    <EmbeddedResource Include="Configs\MessageConverter\MessageConverter-4.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\Sentinel-4.config">
+    <EmbeddedResource Include="Configs\Sentinel\Sentinel-4.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\Producer-1.config">
+    <EmbeddedResource Include="Configs\Producer\Producer-1.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\Producer-2.config">
+    <EmbeddedResource Include="Configs\Producer\Producer-2.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\Producer-3.config">
+    <EmbeddedResource Include="Configs\Producer\Producer-3.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\Producer-5.config">
+    <EmbeddedResource Include="Configs\Producer\Producer-5.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\Producer-4.config">
+    <EmbeddedResource Include="Configs\Producer\Producer-4.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\Producer-6.config">
+    <EmbeddedResource Include="Configs\Producer\Producer-6.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\Producer-7.config">
+    <EmbeddedResource Include="Configs\Producer\Producer-7.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\Producer-8.config">
+    <EmbeddedResource Include="Configs\Producer\Producer-8.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\Channel-1.config">
+    <EmbeddedResource Include="Configs\Channel\Channel-1.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\Container-1.config">
+    <EmbeddedResource Include="Configs\Container\Container-1.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\Container-2.config">
+    <EmbeddedResource Include="Configs\Container\Container-2.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\Container-3.config">
+    <EmbeddedResource Include="Configs\Container\Container-3.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\Container-4.config">
+    <EmbeddedResource Include="Configs\Container\Container-4.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\Channel-2.config">
+    <EmbeddedResource Include="Configs\Channel\Channel-2.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\Channel-3.config">
+    <EmbeddedResource Include="Configs\Channel\Channel-3.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\Channel-7.config">
+    <EmbeddedResource Include="Configs\Channel\Channel-7.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\Channel-6.config">
+    <EmbeddedResource Include="Configs\Channel\Channel-6.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\Channel-5.config">
+    <EmbeddedResource Include="Configs\Channel\Channel-5.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\Channel-4.config">
+    <EmbeddedResource Include="Configs\Channel\Channel-4.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\Channel-8.config">
+    <EmbeddedResource Include="Configs\Channel\Channel-8.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\Channel-11.config">
+    <EmbeddedResource Include="Configs\Channel\Channel-11.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\Channel-10.config">
+    <EmbeddedResource Include="Configs\Channel\Channel-10.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\Channel-9.config">
+    <EmbeddedResource Include="Configs\Channel\Channel-9.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\Channel-13.config">
+    <EmbeddedResource Include="Configs\Channel\Channel-13.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configs\Channel-12.config">
+    <EmbeddedResource Include="Configs\Channel\Channel-12.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="packages.config" />
@@ -240,7 +240,7 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Configs\Connection-1.config">
+    <EmbeddedResource Include="Configs\Connection\Connection-1.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
@@ -249,6 +249,7 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

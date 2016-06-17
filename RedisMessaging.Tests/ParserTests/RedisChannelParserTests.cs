@@ -118,7 +118,6 @@ namespace RedisMessaging.Tests.ParserTests
       var attrName = propertyName.ToCamelCase();
       var expectedErrorMessage = $"The {attrName} attribute and the {attrName} element, both cannot be defined at the same time.";
       Assert.AreEqual(expectedErrorMessage, exception.GetBaseException().Message);
-
     }
 
     [Test]
