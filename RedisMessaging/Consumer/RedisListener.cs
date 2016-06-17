@@ -15,7 +15,7 @@ namespace RedisMessaging.Consumer
 
     public string TypeKey { get; private set; }
 
-    public object HandlerType { get; private set; }
+    public Type HandlerType { get; private set; }
 
     public string HandlerMethod { get; private set; }
 
@@ -39,7 +39,7 @@ namespace RedisMessaging.Consumer
 
     public void RegisterListener()
     {
-      ConstructorInfo constructor = HandlerType.GetType().GetConstructor(Type.EmptyTypes);
+      ConstructorInfo constructor = HandlerType.GetConstructor(Type.EmptyTypes);
       //create instance of handler class
       _handlerClass = constructor.Invoke(new object[] { });
 
@@ -48,7 +48,7 @@ namespace RedisMessaging.Consumer
 
       var t = Channel.MessageConverter.TypeMapper.GetTypeForKey(TypeKey);
 
-      _handlerMethod = HandlerType.GetType().GetMethod(HandlerMethod, new [] {t});
+      _handlerMethod = HandlerType.GetMethod(HandlerMethod, new [] {t});
       Log.Info("Listener Type "+TypeKey+" Registered");
     }
   }

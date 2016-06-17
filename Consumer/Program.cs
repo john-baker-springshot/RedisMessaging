@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using MessageQueue.Contracts;
 using RedisMessaging;
@@ -21,16 +22,17 @@ namespace Consumer
     public static void Consume(IContainer consumer)
     {
       var conn = (RedisConnection)consumer.Connection;
+      var qName = consumer.Channels.First().MessageQueue.Name;
       Stopwatch sw = new Stopwatch();
 
-      Console.WriteLine($"Connected to {conn.Config.SslHost}/{conn.Config.DefaultDatabase}");
+      Console.WriteLine($"Connected to {conn.Config.SslHost}/{conn.Config.DefaultDatabase}, Queue:{qName}");
       
-      while (conn.Multiplexer.GetDatabase().ListLength("MessageQueue") == 0)
+      while (conn.Multiplexer.GetDatabase().ListLength(qName) == 0)
       {
         //wait
       }
       sw.Start();
-      while (conn.Multiplexer.GetDatabase().ListLength("MessageQueue") > 0)
+      while (conn.Multiplexer.GetDatabase().ListLength(qName) > 0)
       {
         //wait again
       }

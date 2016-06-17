@@ -70,6 +70,9 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <Content Include="Consumer.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Implementation.xml">

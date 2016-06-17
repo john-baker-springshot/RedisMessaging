@@ -11,7 +11,7 @@ namespace MessageQueue.Contracts.Consumer
     /// <summary>
     /// Concrete type of class that will handle messages recieved by this listener
     /// </summary>
-    object HandlerType { get; }
+    Type HandlerType { get; }
     /// <summary>
     /// String method name of the concrete HandlerType used to handle the message
     /// </summary>
