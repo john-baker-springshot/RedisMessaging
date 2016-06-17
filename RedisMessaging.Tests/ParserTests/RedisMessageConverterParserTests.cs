@@ -22,7 +22,7 @@ namespace RedisMessaging.Tests.ParserTests
     {
       const int expectedKnownTypesCount = 2;
 
-      var objectFactory = ParserTestsHelper.LoadContext(ConfigConventionPrefix, 1);
+      var objectFactory = ParserTestsHelper.LoadConfig(ConfigConventionPrefix, 1);
 
       var msgConverter = objectFactory.GetObject<JsonMessageConverter>("msgConverter");
 
@@ -37,7 +37,7 @@ namespace RedisMessaging.Tests.ParserTests
     {
       const int expectedKnownTypesCount = 2;
 
-      var objectFactory = ParserTestsHelper.LoadContext(ConfigConventionPrefix, 2);
+      var objectFactory = ParserTestsHelper.LoadConfig(ConfigConventionPrefix, 2);
 
       var msgConverter = objectFactory.GetObject<JsonMessageConverter>("msgConverter");
 
@@ -52,7 +52,7 @@ namespace RedisMessaging.Tests.ParserTests
     {
       Assert.Throws<ObjectDefinitionStoreException>(() =>
       {
-        ParserTestsHelper.LoadContext(ConfigConventionPrefix, 3);
+        ParserTestsHelper.LoadConfig(ConfigConventionPrefix, 3);
       });
     }
 
@@ -61,7 +61,7 @@ namespace RedisMessaging.Tests.ParserTests
     {
       Assert.Throws<ObjectCreationException>(() =>
       {
-        var objectFactory = ParserTestsHelper.LoadContext(ConfigConventionPrefix, 4);
+        var objectFactory = ParserTestsHelper.LoadConfig(ConfigConventionPrefix, 4);
 
         objectFactory.GetObject<JsonMessageConverter>("msgConverter");
       });

@@ -19,7 +19,6 @@ namespace RedisMessaging.Config
 
       RegisterObjectDefinitionParser("container", new RedisContainerParser());
       RegisterObjectDefinitionParser("channel", new RedisChannelParser());
-      //RegisterObjectDefinitionParser("channel", new RedisChannelObjectParser());
 
       RegisterObjectDefinitionParser("sentinel", new RedisSentinelParser());
 

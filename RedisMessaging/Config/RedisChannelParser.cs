@@ -3,6 +3,7 @@ using System.Xml;
 using RedisMessaging.Consumer;
 using RedisMessaging.Errors;
 using RedisMessaging.Util;
+using Spring.Objects.Factory.Config;
 using Spring.Objects.Factory.Support;
 using Spring.Objects.Factory.Xml;
 
@@ -62,9 +63,13 @@ namespace RedisMessaging.Config
       const string msgConverterPropName = nameof(RedisChannel.MessageConverter);
       const string errorHandlerPropName = nameof(RedisChannel.DefaultErrorHandler);
 
+      var parentId = ResolveId(element, builder.ObjectDefinition, parserContext);
+
       if (!element.IsPropertyDefined(errorHandlerPropName))
       {
-        builder.AddPropertyValue(errorHandlerPropName, new RootObjectDefinition(typeof(DeadLetterErrorHandler)));
+        var deadLetterErrHandlerObject = new RootObjectDefinition(typeof(DeadLetterErrorHandler));
+        deadLetterErrHandlerObject.PropertyValues.Add(nameof(DeadLetterErrorHandler.Channel), new RuntimeObjectReference(parentId));
+        builder.AddPropertyValue(errorHandlerPropName, deadLetterErrHandlerObject);
       }
       else
       {
@@ -88,8 +93,6 @@ namespace RedisMessaging.Config
       NamespaceUtils.SetPropertyIfAttributeOrElementDefined(element, parserContext, builder, msgConverterPropName);
 
       NamespaceUtils.SetValueIfAttributeDefined(builder, element, nameof(RedisChannel.Concurrency));
-
-      var parentId = ResolveId(element, builder.ObjectDefinition, parserContext);
 
       NamespaceUtils.SetCollectionPropertyIfElementDefined(element, parserContext, builder, nameof(RedisChannel.Listeners), nameof(RedisListener.Channel), parentId);
       NamespaceUtils.SetCollectionPropertyIfElementDefined(element, parserContext, builder, nameof(RedisChannel.AdviceChain));

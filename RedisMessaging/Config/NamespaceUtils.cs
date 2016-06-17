@@ -19,6 +19,7 @@ namespace RedisMessaging.Config
     private static readonly string REF_ATTRIBUTE = "ref";
     private static readonly string METHOD_ATTRIBUTE = "method";
     private static readonly string ORDER = "order";
+    internal static readonly string RefAttributeName = "ref";
 
     /// <summary>Sets the value if attribute defined.</summary>
     /// <param name="builder">The builder.</param>

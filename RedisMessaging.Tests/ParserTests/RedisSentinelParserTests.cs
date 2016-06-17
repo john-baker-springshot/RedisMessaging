@@ -22,7 +22,7 @@ namespace RedisMessaging.Tests.ParserTests
     [TestCase(3, 300, 10)]
     public void TestLoadingValidSentinelConfig(int configId, int expectedMessageTimeout, int expectedInterval)
     {
-      var objectFactory = ParserTestsHelper.LoadContext(ConfigConventionPrefix, configId);
+      var objectFactory = ParserTestsHelper.LoadConfig(ConfigConventionPrefix, configId);
 
       var sentinel = objectFactory.GetObject<RedisQueueSentinel>("sentinel");
 
@@ -37,7 +37,7 @@ namespace RedisMessaging.Tests.ParserTests
     {
       Assert.Throws<ObjectDefinitionStoreException>(() =>
       {
-        ParserTestsHelper.LoadContext(ConfigConventionPrefix, 2);
+        ParserTestsHelper.LoadConfig(ConfigConventionPrefix, 2);
       });
     }
 
@@ -46,7 +46,7 @@ namespace RedisMessaging.Tests.ParserTests
     {
       Assert.Throws<ObjectCreationException>(() =>
       {
-        var objectFactory = ParserTestsHelper.LoadContext(ConfigConventionPrefix, 4);
+        var objectFactory = ParserTestsHelper.LoadConfig(ConfigConventionPrefix, 4);
         objectFactory.GetObject<RedisQueueSentinel>("sentinel");
       });
     }

@@ -3,6 +3,8 @@ using NUnit.Framework;
 using Spring.Context;
 using Spring.Context.Support;
 using System;
+using RedisMessaging.Tests.UtilTests;
+using Spring.Objects.Factory.Xml;
 
 namespace RedisMessaging.Tests.ConnectionTests
 {
@@ -10,18 +12,24 @@ namespace RedisMessaging.Tests.ConnectionTests
   public class TestRedisConnection
   {
 
-    private IApplicationContext _container;
+    private XmlObjectFactory _objectFactory;
 
-    [SetUp]
+    [OneTimeSetUp]
     public void Init()
     {
-      _container = ContextRegistry.GetContext();
+      _objectFactory = ParserTestsHelper.LoadMessagingConfig();
+    }
+    [OneTimeTearDown]
+
+    public void Dispose()
+    {
+      _objectFactory.Dispose();
     }
 
     [Test]
     public void RedisConnection_DI_Test()
     {
-      var testObject = _container.GetObject<IConnection>("MyConnection");
+      var testObject = _objectFactory.GetObject<IConnection>("strongConnection");
       Assert.IsNotNull(testObject);
       Assert.That(testObject.GetType(), Is.EqualTo(typeof(RedisConnection)));
     }
@@ -30,7 +38,7 @@ namespace RedisMessaging.Tests.ConnectionTests
     public void RedisConnection_ConnectionTest()
     {
       const string connString = "localhost:6379";
-      RedisConnection connection = new RedisConnection(connString);
+      var connection = new RedisConnection(connString);
       connection.Connect();
       Assert.IsTrue(connection.IsConnected);
       connection.Dispose();
@@ -44,10 +52,5 @@ namespace RedisMessaging.Tests.ConnectionTests
       RedisConnection connection; 
       Assert.That(() => connection = new RedisConnection(connString), Throws.Exception);
     }
-
-
-
-
-
   }
 }

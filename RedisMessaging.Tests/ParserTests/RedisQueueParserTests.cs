@@ -22,7 +22,7 @@ namespace RedisMessaging.Tests.ParserTests
     [TestCase(3, "QWithDefaultTTL", 10000)]
     public void TestValidQueueConfig(int configId, string expectedQueueName, int expectedTtl)
     {
-      var objectFactory = ParserTestsHelper.LoadContext(ConfigConventionPrefix, configId);
+      var objectFactory = ParserTestsHelper.LoadConfig(ConfigConventionPrefix, configId);
 
       var q = objectFactory.GetObject<RedisQueue>("queue1");
 
@@ -36,7 +36,7 @@ namespace RedisMessaging.Tests.ParserTests
     {
       Assert.Throws<ObjectDefinitionStoreException>(() =>
       {
-        ParserTestsHelper.LoadContext(ConfigConventionPrefix, 2);
+        ParserTestsHelper.LoadConfig(ConfigConventionPrefix, 2);
       });
     }
   }

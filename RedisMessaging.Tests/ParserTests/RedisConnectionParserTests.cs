@@ -28,7 +28,7 @@ namespace RedisMessaging.Tests.ParserTests
     [Test]
     public void TestWithConnectionString()
     {
-      var objectFactory = ParserTestsHelper.LoadContext(ConfigConventionPrefix, 1);
+      var objectFactory = ParserTestsHelper.LoadConfig(ConfigConventionPrefix, 1);
 
       var redisConnection = objectFactory.GetObject<RedisConnection>("strongConnection");
 
@@ -49,7 +49,7 @@ namespace RedisMessaging.Tests.ParserTests
       const int expectedWriteBuffer = 100;
       const string expectedSslHost = "localhost";
 
-      var objectFactory = ParserTestsHelper.LoadContext(ConfigConventionPrefix, 2);
+      var objectFactory = ParserTestsHelper.LoadConfig(ConfigConventionPrefix, 2);
 
       var redisConnection = objectFactory.GetObject<RedisConnection>("strongConnection");
 
@@ -76,7 +76,7 @@ namespace RedisMessaging.Tests.ParserTests
     {
       Assert.Throws<ObjectDefinitionStoreException>(() =>
       {
-        var objectFactory = ParserTestsHelper.LoadContext(ConfigConventionPrefix, 3);
+        var objectFactory = ParserTestsHelper.LoadConfig(ConfigConventionPrefix, 3);
       });
     }
   }

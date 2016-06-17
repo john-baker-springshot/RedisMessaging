@@ -14,8 +14,6 @@
             vs:defaultnamespacequalifier=""
             vs:defaultnsprefix="">
 
-  <!--<xsd:import namespace="http://www.springframework.net" />-->
-
   <xsd:element name="connection" type="Connection">
     <xsd:annotation>
       <xsd:documentation>
@@ -411,7 +409,7 @@
         </xsd:annotation>
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="messageQueue" type="Queue" minOccurs="1" maxOccurs="1">
+            <xsd:element name="messageQueue" type="Queue" minOccurs="0" maxOccurs="1">
               <xsd:annotation>
                 <xsd:documentation>
                   <![CDATA[ Defines an inline main message queue to subscribe to. ]]>

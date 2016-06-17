@@ -224,6 +224,13 @@
     <EmbeddedResource Include="Configs\Channel\Channel-12.config">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Configs\Messaging.config" />
+    <EmbeddedResource Include="Configs\Channel\Channel-14.config">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configs\Channel\Channel-15.config">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

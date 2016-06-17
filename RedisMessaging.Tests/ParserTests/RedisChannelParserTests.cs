@@ -24,7 +24,7 @@ namespace RedisMessaging.Tests.ParserTests
     [Test]
     public void TestWithInlineConfig()
     {
-      var objectFactory = ParserTestsHelper.LoadContext(ConfigConventionPrefix, 1);
+      var objectFactory = ParserTestsHelper.LoadConfig(ConfigConventionPrefix, 1);
 
       var channel = objectFactory.GetObject<RedisChannel>("myChannel");
 
@@ -47,7 +47,7 @@ namespace RedisMessaging.Tests.ParserTests
     [Test]
     public void TestWithRefObjects()
     {
-      var objectFactory = ParserTestsHelper.LoadContext(ConfigConventionPrefix, 2);
+      var objectFactory = ParserTestsHelper.LoadConfig(ConfigConventionPrefix, 2);
 
       var channel = objectFactory.GetObject<RedisChannel>("myChannel");
 
@@ -75,7 +75,7 @@ namespace RedisMessaging.Tests.ParserTests
     {
       Assert.Throws<ObjectCreationException>(() =>
       {
-        var objectFactory = ParserTestsHelper.LoadContext(ConfigConventionPrefix, configId);
+        var objectFactory = ParserTestsHelper.LoadConfig(ConfigConventionPrefix, configId);
 
         objectFactory.GetObject<RedisChannel>("myChannel");
       });
@@ -88,7 +88,7 @@ namespace RedisMessaging.Tests.ParserTests
     {
       var exception = Assert.Throws<ObjectDefinitionStoreException>(() =>
       {
-        var objectFactory = ParserTestsHelper.LoadContext(ConfigConventionPrefix, configId);
+        var objectFactory = ParserTestsHelper.LoadConfig(ConfigConventionPrefix, configId);
 
         objectFactory.GetObject<RedisChannel>("myChannel");
       });
@@ -100,17 +100,15 @@ namespace RedisMessaging.Tests.ParserTests
 
     [Test]
     [TestCase(11, nameof(RedisChannel.MessageQueue))]
-    //Test N/A because per the schema when <queues> element if defined, then <messageQueue> element becomes mandatory
-    //so we can't skip it. So technically the schema will have been violated, before it checks for DLQ or Poison queue ambiguity, by ambiguous messageQueue declaration
-    //[TestCase(12, nameof(RedisChannel.DeadLetterQueue))]
-    //[TestCase(13, nameof(RedisChannel.PoisonQueue))]
     [TestCase(12, nameof(RedisChannel.MessageConverter))]
     [TestCase(13, nameof(RedisChannel.DefaultErrorHandler))]
+    [TestCase(14, nameof(RedisChannel.DeadLetterQueue))]
+    [TestCase(15, nameof(RedisChannel.PoisonQueue))]
     public void TestDefenseAgainstAmbiguousConfig(int configId, string propertyName)
     {
       var exception = Assert.Throws<ObjectDefinitionStoreException>(() =>
       {
-        var objectFactory = ParserTestsHelper.LoadContext(ConfigConventionPrefix, configId);
+        var objectFactory = ParserTestsHelper.LoadConfig(ConfigConventionPrefix, configId);
 
         objectFactory.GetObject<RedisChannel>("myChannel");
       });
@@ -123,7 +121,7 @@ namespace RedisMessaging.Tests.ParserTests
     [Test]
     public void TestDefaultErrorHandlerAutoAssignedWhenNoneConfigured()
     {
-      var objectFactory = ParserTestsHelper.LoadContext(ConfigConventionPrefix, 8);
+      var objectFactory = ParserTestsHelper.LoadConfig(ConfigConventionPrefix, 8);
 
       var channel = objectFactory.GetObject<RedisChannel>("myChannel");
 

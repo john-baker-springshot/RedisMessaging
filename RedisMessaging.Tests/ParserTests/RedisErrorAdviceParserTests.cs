@@ -31,7 +31,7 @@ namespace RedisMessaging.Tests.ParserTests
       const int expectedRetryCount = 8;
       const int expectedRetryInterval = 30;
 
-      var objectFactory = ParserTestsHelper.LoadContext(ConfigConventionPrefix, 1);
+      var objectFactory = ParserTestsHelper.LoadConfig(ConfigConventionPrefix, 1);
 
       var timedErrorAdvice = objectFactory.GetObject<ErrorAdvice>("advice1");
 
@@ -52,7 +52,7 @@ namespace RedisMessaging.Tests.ParserTests
       const string expectedExceptionType = "System.Data.SqlClient.SqlException";
       var expectedTimeoutException = typeof(SqlException);
 
-      var objectFactory = ParserTestsHelper.LoadContext(ConfigConventionPrefix, 1);
+      var objectFactory = ParserTestsHelper.LoadConfig(ConfigConventionPrefix, 1);
 
       var timedErrorAdvice = objectFactory.GetObject<ErrorAdvice>("advice2");
 
@@ -68,7 +68,7 @@ namespace RedisMessaging.Tests.ParserTests
     {
       Assert.Throws<ObjectDefinitionStoreException>(() =>
       {
-        ParserTestsHelper.LoadContext(ConfigConventionPrefix, 2);
+        ParserTestsHelper.LoadConfig(ConfigConventionPrefix, 2);
       });
     }
 
@@ -77,7 +77,7 @@ namespace RedisMessaging.Tests.ParserTests
     {
       Assert.Throws<ObjectDefinitionStoreException>(() =>
       {
-        ParserTestsHelper.LoadContext(ConfigConventionPrefix, 3);
+        ParserTestsHelper.LoadConfig(ConfigConventionPrefix, 3);
       });
     }
   }

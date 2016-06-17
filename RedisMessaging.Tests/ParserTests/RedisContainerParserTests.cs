@@ -21,7 +21,7 @@ namespace RedisMessaging.Tests.ParserTests
     [Test]
     public void TestWithValidConfig()
     {
-      var objectFactory = ParserTestsHelper.LoadContext(ConfigConventionPrefix, 1);
+      var objectFactory = ParserTestsHelper.LoadConfig(ConfigConventionPrefix, 1);
 
       var container = objectFactory.GetObject<RedisContainer>("myContainer");
 
@@ -41,7 +41,7 @@ namespace RedisMessaging.Tests.ParserTests
     {
       Assert.Throws<ObjectDefinitionStoreException>(() =>
       {
-        ParserTestsHelper.LoadContext(ConfigConventionPrefix, 2);
+        ParserTestsHelper.LoadConfig(ConfigConventionPrefix, 2);
       });
     }
 
@@ -52,7 +52,7 @@ namespace RedisMessaging.Tests.ParserTests
     {
       Assert.Throws<ObjectCreationException>(() =>
       {
-        var objectFactory = ParserTestsHelper.LoadContext(ConfigConventionPrefix, configId);
+        var objectFactory = ParserTestsHelper.LoadConfig(ConfigConventionPrefix, configId);
 
         objectFactory.GetObject<RedisContainer>("myContainer");
       });

@@ -1,89 +1,87 @@
-﻿using MessageQueue.Contracts.Consumer;
-using NUnit.Framework;
-using RedisMessaging.Consumer;
-using Spring.Context;
-using Spring.Context.Support;
+﻿using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MessageQueue.Contracts;
 using MessageQueue.Contracts.Advices;
+using RedisMessaging.Errors;
+using RedisMessaging.Tests.UtilTests;
 using RedisMessaging.Util;
-using Spring.Validation;
-using StackExchange.Redis;
+using Spring.Objects.Factory.Xml;
 
 namespace RedisMessaging.Tests.ConsumerTests
 {
   [TestFixture]
   public class TestRedisChannel
   {
-
-    private IApplicationContext _container;
+    private XmlObjectFactory _objectFactory;
     private RedisChannel _channel;
 
-    [SetUp]
+    private const string ChannelName = "myChannel";
+
+    [OneTimeSetUp]
     public void Init()
     {
-      _container = ContextRegistry.GetContext();
+      //_container = ContextRegistry.GetContext();
+      _objectFactory = ParserTestsHelper.LoadMessagingConfig();
+      _channel = _objectFactory.GetObject<IChannel>(ChannelName) as RedisChannel;
     }
 
     [TearDown]
+    public void Cleanup()
+    {
+      var connection = (RedisConnection) _channel.Container.Connection;
+      var redis = connection.Multiplexer;
+      //var messageQueue = _channel.MessageQueue;
+      redis.GetDatabase().KeyDelete(_channel.MessageQueue.Name);
+      redis.GetDatabase().KeyDelete(_channel.DeadLetterQueue.Name);
+      redis.GetDatabase().KeyDelete(_channel.PoisonQueue.Name);
+
+      //while (redis.GetDatabase().ListLength(messageQueue.Name) > 0)
+      //  redis.GetDatabase().ListRightPop(messageQueue.Name);
+      //var poisonQueue = _channel.PoisonQueue;
+      //while (redis.GetDatabase().ListLength(poisonQueue.Name) > 0)
+      //  redis.GetDatabase().ListRightPop(poisonQueue.Name);
+      //var deadLetterQueue = _channel.DeadLetterQueue;
+      //while (redis.GetDatabase().ListLength(deadLetterQueue.Name) > 0)
+      //  redis.GetDatabase().ListRightPop(deadLetterQueue.Name);
+
+    }
+
+    [OneTimeTearDown]
     public void Dispose()
     {
-      var connection = _channel.Container.Connection as RedisConnection;
-      var redis = connection.Multiplexer;
-      var messageQueue = _channel.MessageQueue;
-      while (redis.GetDatabase().ListLength(messageQueue.Name) > 0)
-        redis.GetDatabase().ListRightPop(messageQueue.Name);
-      var poisonQueue = _channel.PoisonQueue;
-      while (redis.GetDatabase().ListLength(poisonQueue.Name) > 0)
-        redis.GetDatabase().ListRightPop(poisonQueue.Name);
-      var deadLetterQueue = _channel.DeadLetterQueue;
-      while (redis.GetDatabase().ListLength(deadLetterQueue.Name) > 0)
-        redis.GetDatabase().ListRightPop(deadLetterQueue.Name);
-      //var processingQueue = _channel.ProcessingQueue;
-      //while (redis.GetDatabase().ListLength(processingQueue.Name) > 0)
-      //  redis.GetDatabase().ListRightPop(processingQueue.Name);
-
+      _objectFactory.Dispose();
     }
 
     [Test]
     public void RedisChannel_DITest()
     {
-      _channel = _container.GetObject<IChannel>("MyChannel") as RedisChannel;
       Assert.IsNotNull(_channel);
       Assert.That(_channel.GetType(), Is.EqualTo(typeof(RedisChannel)));
     }
 
-
-
     [Test]
     public void RedisChannel_HandleErrorDefaultErrorTest()
     {
-      _channel = ServiceLocator.GetService<IChannel>("MyChannel") as RedisChannel;
       var connection = _channel.Container.Connection as RedisConnection;
       var _redis = connection.Multiplexer;
-      var deadLetterItems = _redis.GetDatabase().ListLength("DeadLetterQueue");
+      var deadLetterItems = _redis.GetDatabase().ListLength(_channel.DeadLetterQueue.Name);
       var e = new ArgumentNullException();
       var m = new KeyValuePair<string, object>("Bad Key", "{\"Message\":\"Bad Message\"}");
-
-
+      
       _channel.HandleException(e, m);      
-
-
-      Assert.That(_redis.GetDatabase().ListLength("DeadLetterQueue"), Is.EqualTo(deadLetterItems+1));
-      Assert.That(_redis.GetDatabase().ListGetByIndex("DeadLetterQueue", _redis.GetDatabase().ListLength("DeadLetterQueue")-1).ToString(), Is.EqualTo(m.ToString()));
+      
+      Assert.That(_redis.GetDatabase().ListLength(_channel.DeadLetterQueue.Name), Is.EqualTo(deadLetterItems+1));
+      Assert.That(_redis.GetDatabase().ListGetByIndex(_channel.DeadLetterQueue.Name, _redis.GetDatabase().ListLength(_channel.DeadLetterQueue.Name)-1).ToString(), Is.EqualTo(m.ToString()));
     }
 
     [Test]
     public void RedisChannel_HandleErrorRetryRequeueTest()
     {
-      _channel = ServiceLocator.GetService<IChannel>("MyChannel") as RedisChannel;
+      _channel = _objectFactory.GetObject<IChannel>(ChannelName) as RedisChannel;
       var connection = _channel.Container.Connection as RedisConnection;
       var _redis = connection.Multiplexer;
-      var messageQueueItems = _redis.GetDatabase().ListLength("MessageQueue");
+      var messageQueueItems = _redis.GetDatabase().ListLength(_channel.MessageQueue.Name);
       var e = new TimeoutException();
       var m = new KeyValuePair<string, object>("Requeue Key:", "{\"Message\":\"Requeue Message\"}");
 
@@ -91,39 +89,40 @@ namespace RedisMessaging.Tests.ConsumerTests
       _channel.HandleException(e, m);
 
 
-      Assert.That(_redis.GetDatabase().ListLength("MessageQueue"), Is.EqualTo(messageQueueItems + 1));
+      Assert.That(_redis.GetDatabase().ListLength(_channel.MessageQueue.Name), Is.EqualTo(messageQueueItems + 1));
       Assert.That(
         _redis.GetDatabase()
-          .ListGetByIndex("MessageQueue", _redis.GetDatabase().ListLength("MessageQueue") - 1)
+          .ListGetByIndex(_channel.MessageQueue.Name, _redis.GetDatabase().ListLength(_channel.MessageQueue.Name) - 1)
           .ToString(), Is.EqualTo(m.ToString()));
     }
 
     [Test]
     public void RedisChannel_HandleErrorTimedRetryBadMessageTest()
     {
-      _channel = ServiceLocator.GetService<IChannel>("MyChannel") as RedisChannel;
+      _channel = _objectFactory.GetObject<IChannel>(ChannelName) as RedisChannel;
       var connection = _channel.Container.Connection as RedisConnection;
       var _redis = connection.Multiplexer;
-      var messageQueueItems = _redis.GetDatabase().ListLength("MessageQueue");
+      var messageQueueItems = _redis.GetDatabase().ListLength(_channel.MessageQueue.Name);
       var e = new ApplicationException();
       var m = new KeyValuePair<string, object>("Retry Key:", "{\"Message\":\"Retry Message\"}");
 
 
       _channel.HandleException(e, m);
-      //need to wait the same amount of time as the retry internval of the exception or it will the tests
-      System.Threading.Thread.Sleep(10000);
+      //need to wait the same amount of time as the retry interval of the exception or it will the tests
+      var retryAdvice = _objectFactory.GetObject<ErrorAdvice>("advice2");
+      System.Threading.Thread.Sleep((retryAdvice.RetryInterval + 1) * 1000);
 
       //message will error due to key not being found, after which i expect to see it on the dead letter queue
-      Assert.That(_redis.GetDatabase().ListGetByIndex("DeadLetterQueue", _redis.GetDatabase().ListLength("DeadLetterQueue") - 1).ToString(), Is.EqualTo(m.ToString()));
+      Assert.That(_redis.GetDatabase().ListGetByIndex(_channel.DeadLetterQueue.Name, _redis.GetDatabase().ListLength(_channel.DeadLetterQueue.Name) - 1).ToString(), Is.EqualTo(m.ToString()));
     }
 
     [Test]
     public void RedisChannel_HandleErrorTimedRetryGoodMessageTest()
     {
-      _channel = ServiceLocator.GetService<IChannel>("MyChannel") as RedisChannel;
+      _channel = _objectFactory.GetObject<IChannel>(ChannelName) as RedisChannel;
       var connection = _channel.Container.Connection as RedisConnection;
       var _redis = connection.Multiplexer;
-      var messageQueueItems = _redis.GetDatabase().ListLength("MessageQueue");
+      var messageQueueItems = _redis.GetDatabase().ListLength(_channel.MessageQueue.Name);
       var e = new ApplicationException();
       var m = RedisMessagingImplementationTests.CreateBasicMessage(1, "HandleErrorTimedRetryGoodMessageTest");
 
@@ -133,19 +132,19 @@ namespace RedisMessaging.Tests.ConsumerTests
 
       //message will not error and will be handled successfully, so should not exist on deal letter, poison, or processing
       //but thats a bad assertion, asserting nothing, so...what do?
-      Assert.That(_redis.GetDatabase().ListGetByIndex("DeadLetterQueue", _redis.GetDatabase().ListLength("DeadLetterQueue") - 1).ToString(), Is.Not.EqualTo(m.ToString()));
-      Assert.That(_redis.GetDatabase().ListGetByIndex("PoisonQueue", _redis.GetDatabase().ListLength("PoisonQueue") - 1).ToString(), Is.Not.EqualTo(m.ToString()));
-      Assert.That(_redis.GetDatabase().ListGetByIndex("MessageQueue", _redis.GetDatabase().ListLength("MessageQueue") - 1).ToString(), Is.Not.EqualTo(m.ToString()));
-      Assert.That(_redis.GetDatabase().ListGetByIndex("MessageQueue:Processing", _redis.GetDatabase().ListLength("MessageQueue:Processing") - 1).ToString(), Is.Not.EqualTo(m.ToString()));
+      Assert.That(_redis.GetDatabase().ListGetByIndex(_channel.DeadLetterQueue.Name, _redis.GetDatabase().ListLength(_channel.DeadLetterQueue.Name) - 1).ToString(), Is.Not.EqualTo(m));
+      Assert.That(_redis.GetDatabase().ListGetByIndex(_channel.PoisonQueue.Name, _redis.GetDatabase().ListLength(_channel.PoisonQueue.Name) - 1).ToString(), Is.Not.EqualTo(m));
+      Assert.That(_redis.GetDatabase().ListGetByIndex(_channel.MessageQueue.Name, _redis.GetDatabase().ListLength(_channel.MessageQueue.Name) - 1).ToString(), Is.Not.EqualTo(m));
+      Assert.That(_redis.GetDatabase().ListGetByIndex($"{_channel.MessageQueue.Name}:Processing", _redis.GetDatabase().ListLength($"{_channel.MessageQueue.Name}:Processing") - 1).ToString(), Is.Not.EqualTo(m));
     }
 
     [Test]
     public void RedisChannel_HandleErrorTimedRetryOverRetryFailTest()
     {
-      _channel = ServiceLocator.GetService<IChannel>("MyChannel") as RedisChannel;
+      _channel = _objectFactory.GetObject<IChannel>(ChannelName) as RedisChannel;
       var connection = _channel.Container.Connection as RedisConnection;
       var _redis = connection.Multiplexer;
-      var messageQueueItems = _redis.GetDatabase().ListLength("MessageQueue");
+      var messageQueueItems = _redis.GetDatabase().ListLength(_channel.MessageQueue.Name);
       var e = new ApplicationException();
       var m = RedisMessagingImplementationTests.CreateBasicMessage(1, "HandleErrorTimedRetryOverRetryFailTest");
 
@@ -157,7 +156,7 @@ namespace RedisMessaging.Tests.ConsumerTests
 
       //message will not error and will be handled successfully, so should not exist on deal letter, poison, or processing
       //but thats a bad assertion, asserting nothing, so...what do?
-      Assert.That(_redis.GetDatabase().ListGetByIndex("DeadLetterQueue", _redis.GetDatabase().ListLength("DeadLetterQueue") - 1).ToString(), Is.EqualTo(m.ToString()));
+      Assert.That(_redis.GetDatabase().ListGetByIndex(_channel.DeadLetterQueue.Name, _redis.GetDatabase().ListLength(_channel.DeadLetterQueue.Name) - 1).ToString(), Is.EqualTo(m.ToString()));
     }
     
   }

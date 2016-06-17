@@ -57,13 +57,13 @@ namespace RedisMessaging
     {    
       while (IsStarted)
       {
+        var database = Connection.Config.DefaultDatabase.GetValueOrDefault();
+
         foreach (var endpoint in _redis.GetEndPoints())
         {
           var server = _redis.GetServer(endpoint);
-          var machineName = Environment.MachineName;
-
           //$"{MessageQueue.Name}:ProcessingQueue:{Id}_{Environment.MachineName}_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}";
-          foreach (var key in server.Keys(pattern: "*:ProcessingQueue:*", pageSize: 1000))
+          foreach (var key in server.Keys(pattern: "*:ProcessingQueue:*", pageSize: 1000, database: database))
           {
             var processingMessages = _redis.GetDatabase().ListRange(key, 0, -1).ToList();
             Add(key, processingMessages);

@@ -26,7 +26,7 @@ namespace RedisMessaging.Tests.ParserTests
       var basicMessageType = typeof (BasicMessage);
       const string basicMessageTypeKey = "Basic";
 
-      var objectFactory = ParserTestsHelper.LoadContext(ConfgiConventionPrefix, 1);
+      var objectFactory = ParserTestsHelper.LoadConfig(ConfgiConventionPrefix, 1);
 
       var mapper = objectFactory.GetObject<TypeMapper>("myTypeMapper");
 
@@ -42,7 +42,7 @@ namespace RedisMessaging.Tests.ParserTests
     {
       Assert.Throws<ObjectDefinitionStoreException>(() =>
       {
-        ParserTestsHelper.LoadContext(ConfgiConventionPrefix, 2);
+        ParserTestsHelper.LoadConfig(ConfgiConventionPrefix, 2);
       });
     }
 
@@ -51,7 +51,7 @@ namespace RedisMessaging.Tests.ParserTests
     {
       Assert.Throws<ObjectDefinitionStoreException>(() =>
       {
-        ParserTestsHelper.LoadContext(ConfgiConventionPrefix, 3);
+        ParserTestsHelper.LoadConfig(ConfgiConventionPrefix, 3);
       });
     }
 
@@ -60,7 +60,7 @@ namespace RedisMessaging.Tests.ParserTests
     {
       Assert.Throws<ObjectDefinitionStoreException>(() =>
       {
-        ParserTestsHelper.LoadContext(ConfgiConventionPrefix, 4);
+        ParserTestsHelper.LoadConfig(ConfgiConventionPrefix, 4);
       });
     }
   }

@@ -22,7 +22,7 @@ namespace RedisMessaging.Tests.ParserTests
     [Test]
     public void TestWithAttributeRefs()
     {
-      var objectFactory = ParserTestsHelper.LoadContext(ConfigConventionPrefix, 1);
+      var objectFactory = ParserTestsHelper.LoadConfig(ConfigConventionPrefix, 1);
 
       var producer = objectFactory.GetObject<RedisProducer>("myProducer");
 
@@ -39,7 +39,7 @@ namespace RedisMessaging.Tests.ParserTests
     [Test]
     public void TestWithNoQueueProvided()
     {
-      var objectFactory = ParserTestsHelper.LoadContext(ConfigConventionPrefix, 2);
+      var objectFactory = ParserTestsHelper.LoadConfig(ConfigConventionPrefix, 2);
 
       var producer = objectFactory.GetObject<RedisProducer>("myProducer");
 
@@ -58,7 +58,7 @@ namespace RedisMessaging.Tests.ParserTests
     {
       Assert.Throws<ObjectCreationException>(() =>
       {
-        var objectFactory = ParserTestsHelper.LoadContext(ConfigConventionPrefix, configId);
+        var objectFactory = ParserTestsHelper.LoadConfig(ConfigConventionPrefix, configId);
 
         objectFactory.GetObject<RedisProducer>("myProducer");
       });
@@ -69,7 +69,7 @@ namespace RedisMessaging.Tests.ParserTests
     {
       Assert.Throws<ObjectDefinitionStoreException>(() =>
       {
-        ParserTestsHelper.LoadContext(ConfigConventionPrefix, 5);
+        ParserTestsHelper.LoadConfig(ConfigConventionPrefix, 5);
       });
     }
 
@@ -80,14 +80,14 @@ namespace RedisMessaging.Tests.ParserTests
     {
       Assert.Throws<ObjectDefinitionStoreException>(() =>
       {
-        ParserTestsHelper.LoadContext(ConfigConventionPrefix, configId);
+        ParserTestsHelper.LoadConfig(ConfigConventionPrefix, configId);
       });
     }
 
     [Test]
     public void TestWithInlineConfiguration()
     {
-      var objectFactory = ParserTestsHelper.LoadContext(ConfigConventionPrefix, 8);
+      var objectFactory = ParserTestsHelper.LoadConfig(ConfigConventionPrefix, 8);
 
       var producer = objectFactory.GetObject<RedisProducer>("myProducer");
 
