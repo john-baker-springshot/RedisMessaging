@@ -34,6 +34,14 @@ namespace RedisMessaging.Util
       return !string.IsNullOrWhiteSpace(value);
     }
 
+    public static bool IsPropertyDefined(this XmlElement element, string propertyName)
+    {
+      var attrName = propertyName.ToCamelCase();
+
+      return (element.IsAttributeDefined(attrName) || element.HasChildElement(attrName));
+    }
+
+
     public static bool HasChildElement(this XmlElement element, string childElementName)
     {
       //var hasChildElement = element.ChildNodes.Cast<XmlNode>()

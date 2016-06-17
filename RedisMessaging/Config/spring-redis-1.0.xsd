@@ -403,7 +403,7 @@
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
-      <xsd:element name="queues" minOccurs="1" maxOccurs="1">
+      <xsd:element name="queues" minOccurs="0" maxOccurs="1">
         <xsd:annotation>
           <xsd:documentation>
             <![CDATA[ Outer element containing all listeners on this channel. ]]>
@@ -439,6 +439,13 @@
         <xsd:annotation>
           <xsd:documentation>
             <![CDATA[ Defines an inline Redis (JSON) message converter. ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="defaultErrorHandler" type="ErrorHandler" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[ Defines the default error handler. ]]>
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>

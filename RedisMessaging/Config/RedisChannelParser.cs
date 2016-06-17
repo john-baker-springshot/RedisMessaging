@@ -1,48 +1,13 @@
 ﻿using System;
 using System.Xml;
-using MessageQueue.Contracts;
 using RedisMessaging.Consumer;
+using RedisMessaging.Errors;
 using RedisMessaging.Util;
-using Spring.Objects.Factory.Config;
 using Spring.Objects.Factory.Support;
 using Spring.Objects.Factory.Xml;
-using Spring.Util;
 
 namespace RedisMessaging.Config
 {
-  public class RedisChannelObjectParser : IObjectDefinitionParser
-  {
-    #region Implementation of IObjectDefinitionParser
-
-    /// <summary>
-    /// Parse the specified XmlElement and register the resulting
-    ///             ObjectDefinitions with the <see cref="P:Spring.Objects.Factory.Xml.ParserContext.Registry"/> IObjectDefinitionRegistry
-    ///             embedded in the supplied <see cref="T:Spring.Objects.Factory.Xml.ParserContext"/>
-    /// </summary>
-    /// <remarks>
-    /// <p>This method is never invoked if the parser is namespace aware
-    ///             and was called to process the root node.
-    ///             </p>
-    /// </remarks>
-    /// <param name="element">The element to be parsed.
-    ///             </param><param name="parserContext">The object encapsulating the current state of the parsing process. 
-    ///             Provides access to a IObjectDefinitionRegistry
-    ///             </param>
-    /// <returns>
-    /// The primary object definition.
-    /// </returns>
-    public IObjectDefinition ParseElement(XmlElement element, ParserContext parserContext)
-    {
-      var channelDef = new RootObjectDefinition(typeof(RedisChannel));
-
-
-
-      return channelDef;
-    }
-
-    #endregion
-  }
-
   public class RedisChannelParser : AbstractSingleObjectDefinitionParser
   {
     private static readonly string ListenerElementName = "listener";
@@ -97,7 +62,18 @@ namespace RedisMessaging.Config
       const string msgConverterPropName = nameof(RedisChannel.MessageConverter);
       const string errorHandlerPropName = nameof(RedisChannel.DefaultErrorHandler);
 
+      if (!element.IsPropertyDefined(errorHandlerPropName))
+      {
+        builder.AddPropertyValue(errorHandlerPropName, new RootObjectDefinition(typeof(DeadLetterErrorHandler)));
+      }
+      else
+      {
+        NamespaceUtils.SetPropertyIfAttributeOrElementDefined(element, parserContext, builder, errorHandlerPropName);
+      }
+
       NamespaceUtils.CheckPresenceRule(element, parserContext, ListenerElementName);
+      NamespaceUtils.CheckPresenceRule(element, parserContext, messageQueuePropName);
+      NamespaceUtils.CheckPresenceRule(element, parserContext, msgConverterPropName);
 
       NamespaceUtils.CheckAmbiguityRule(element, parserContext, messageQueuePropName);
       NamespaceUtils.CheckAmbiguityRule(element, parserContext, deadLetterQueuePropName);
@@ -112,7 +88,6 @@ namespace RedisMessaging.Config
       NamespaceUtils.SetPropertyIfAttributeOrElementDefined(element, parserContext, builder, msgConverterPropName);
 
       NamespaceUtils.SetValueIfAttributeDefined(builder, element, nameof(RedisChannel.Concurrency));
-      NamespaceUtils.SetReferenceIfAttributeDefined(builder, element, errorHandlerPropName);
 
       var parentId = ResolveId(element, builder.ObjectDefinition, parserContext);
 

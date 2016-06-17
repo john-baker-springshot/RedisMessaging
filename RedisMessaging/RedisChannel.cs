@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 using MessageQueue.Contracts;
 using MessageQueue.Contracts.Advices;
 using MessageQueue.Contracts.Consumer;
-using Newtonsoft.Json;
-using RedisMessaging.Util;
 using StackExchange.Redis;
 using RedisMessaging.Consumer;
 using System.Linq;

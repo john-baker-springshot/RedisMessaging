@@ -289,17 +289,16 @@ namespace RedisMessaging.Config
       return inDef;
     }
 
-    public static void CheckPresenceRule(XmlElement element, ParserContext parserContext, string propertyName)
+    internal static void CheckPresenceRule(XmlElement element, ParserContext parserContext, string propertyName)
     {
-      var attrName = propertyName.ToCamelCase();
-
-      if (!element.IsAttributeDefined(attrName) && !element.HasChildElement(attrName))
+      if (!element.IsPropertyDefined(propertyName))
       {
-        parserContext.ReaderContext.ReportFatalException(element, $"Either {attrName} attribute or the {attrName} element should be defined.");
+        var attrName = propertyName.ToCamelCase();
+        parserContext.ReaderContext.ReportFatalException(element, $"Either {attrName} attribute or the {attrName} element (but not both) should be defined.");
       }
     }
 
-    public static void CheckAmbiguityRule(XmlElement element, ParserContext parserContext, string propertyName)
+    internal static void CheckAmbiguityRule(XmlElement element, ParserContext parserContext, string propertyName)
     {
       var attrName = propertyName.ToCamelCase();
 

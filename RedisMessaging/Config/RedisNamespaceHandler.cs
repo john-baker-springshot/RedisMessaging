@@ -27,6 +27,8 @@ namespace RedisMessaging.Config
       RegisterObjectDefinitionParser("errorAdvice", adviceParser);
       RegisterObjectDefinitionParser("advice", adviceParser);
 
+      RegisterObjectDefinitionParser("defaultErrorHandler", new ErrorHandlerObjectParser());
+
       var queueParser = new RedisQueueParser();
       RegisterObjectDefinitionParser("queue", queueParser);
       RegisterObjectDefinitionParser("messageQueue", queueParser);

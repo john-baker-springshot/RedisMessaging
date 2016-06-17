@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BasicMessage.cs" />
+    <Compile Include="Config\ErrorHandlerObjectParser.cs" />
     <Compile Include="Config\NamespaceUtils.cs" />
     <Compile Include="Config\RedisChannelParser.cs" />
     <Compile Include="Config\RedisConnectionParser.cs" />
