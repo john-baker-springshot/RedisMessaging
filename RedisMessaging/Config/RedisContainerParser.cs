@@ -64,28 +64,6 @@ namespace RedisMessaging.Config
 
       var parentId = ResolveId(element, builder.ObjectDefinition, parserContext);
       NamespaceUtils.SetCollectionPropertyIfElementDefined(element, parserContext, builder, nameof(RedisContainer.Channels), nameof(RedisChannel.Container), parentId);
-      //{
-      //  //Assign the parent container to this automatically.
-      //  foreach (IObjectDefinition objectDefinition in channelDefsList)
-      //  {
-      //    objectDefinition.PropertyValues.Add(nameof(RedisChannel.Container), new RuntimeObjectReference(ResolveId(element, builder.ObjectDefinition, parserContext)));
-      //  }
-      //}
-
-
-      //var channelDefs = new ManagedList();
-
-      //var childNodes = element.ChildNodes;
-      //foreach (XmlNode child in childNodes.Cast<XmlNode>()
-      //  .Where(child => child.NodeType == XmlNodeType.Element && ChannelElement.Equals(child.LocalName)))
-      //{
-      //  var channelParser = NamespaceParserRegistry.GetParser(child.NamespaceURI);
-      //  var channelDefinition = channelParser.ParseElement((XmlElement) child, parserContext);
-      //  channelDefs.Add(channelDefinition);
-      //}
-
-      //builder.AddPropertyValue(nameof(RedisContainer.Channels), channelDefs);
-      //ParseChannel((XmlElement)child, element, parserContext, builder);
     }
 
     #endregion
