@@ -2,11 +2,9 @@
 using System.Data.SqlClient;
 using MessageQueue.Contracts;
 using NUnit.Framework;
-using RedisMessaging.Config;
 using RedisMessaging.Errors;
 using RedisMessaging.Tests.UtilTests;
 using Spring.Objects.Factory;
-using Spring.Objects.Factory.Xml;
 
 namespace RedisMessaging.Tests.ParserTests
 {
@@ -14,12 +12,6 @@ namespace RedisMessaging.Tests.ParserTests
   public class RedisErrorAdviceParserTests
   {
     private readonly string ConfigConventionPrefix = "ErrorAdvice";
-
-    [OneTimeSetUp]
-    public void Setup()
-    {
-      NamespaceParserRegistry.RegisterParser(typeof(RedisNamespaceHandler));
-    }
 
     [Test]
     public void TestTimedRetryAdvice()

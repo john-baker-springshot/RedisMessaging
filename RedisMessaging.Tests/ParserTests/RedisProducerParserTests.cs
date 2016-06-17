@@ -1,9 +1,7 @@
 ﻿using NUnit.Framework;
-using RedisMessaging.Config;
 using RedisMessaging.Producer;
 using RedisMessaging.Tests.UtilTests;
 using Spring.Objects.Factory;
-using Spring.Objects.Factory.Xml;
 
 namespace RedisMessaging.Tests.ParserTests
 {
@@ -11,13 +9,6 @@ namespace RedisMessaging.Tests.ParserTests
   public class RedisProducerParserTests
   {
     private readonly string ConfigConventionPrefix = "Producer";
-
-    [OneTimeSetUp]
-    public void Setup()
-    {
-      NamespaceParserRegistry.RegisterParser(typeof(RedisNamespaceHandler));
-    }
-
 
     [Test]
     public void TestWithAttributeRefs()

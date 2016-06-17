@@ -1,8 +1,6 @@
 ﻿using NUnit.Framework;
-using RedisMessaging.Config;
 using RedisMessaging.Tests.UtilTests;
 using Spring.Objects.Factory;
-using Spring.Objects.Factory.Xml;
 
 namespace RedisMessaging.Tests.ParserTests
 {
@@ -10,12 +8,6 @@ namespace RedisMessaging.Tests.ParserTests
   public class RedisQueueParserTests
   {
     private readonly string ConfigConventionPrefix = "Queue";
-
-    [OneTimeSetUp]
-    public void Setup()
-    {
-      NamespaceParserRegistry.RegisterParser(typeof(RedisNamespaceHandler));
-    }
 
     [Test]
     [TestCase(1, "MyTestQ", 1000)]

@@ -1,29 +1,13 @@
-﻿using System;
-using Common.Logging;
-using NUnit.Framework;
-using NUnit.Framework.Internal;
-using RedisMessaging.Config;
+﻿using NUnit.Framework;
 using RedisMessaging.Tests.UtilTests;
-using Spring.Core.IO;
 using Spring.Objects.Factory;
-using Spring.Objects.Factory.Xml;
 
 namespace RedisMessaging.Tests.ParserTests
 {
   [TestFixture]
   public class RedisConnectionParserTests
   {
-/*
-    private static readonly ILog Logger = LogManager.GetLogger<RedisConnectionParserTests>();
-*/
     private readonly string ConfigConventionPrefix = "Connection";
-
-    [OneTimeSetUp]
-    public void Setup()
-    {
-      NamespaceParserRegistry.RegisterParser(typeof(RedisNamespaceHandler));
-    }
-
 
     [Test]
     public void TestWithConnectionString()

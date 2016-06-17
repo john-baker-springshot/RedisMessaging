@@ -1,10 +1,7 @@
-﻿using System;
-using MessageQueue.Contracts;
+﻿using MessageQueue.Contracts;
 using NUnit.Framework;
-using RedisMessaging.Config;
 using RedisMessaging.Tests.UtilTests;
 using Spring.Objects.Factory;
-using Spring.Objects.Factory.Xml;
 
 namespace RedisMessaging.Tests.ParserTests
 {
@@ -12,12 +9,6 @@ namespace RedisMessaging.Tests.ParserTests
   public class TypeMapperParsetTests
   {
     private readonly string ConfgiConventionPrefix = "TypeMapper";
-
-    [OneTimeSetUp]
-    public void Setup()
-    {
-      NamespaceParserRegistry.RegisterParser(typeof(RedisNamespaceHandler));
-    }
 
     [Test]
     public void TestTypeMapperWithValidConfig()

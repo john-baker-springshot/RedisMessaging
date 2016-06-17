@@ -9,6 +9,8 @@ namespace RedisMessaging.Tests.UtilTests
   {
     public static XmlObjectFactory LoadConfig(string configConventionPrefix, int configId)
     {
+      NamespaceParserRegistry.RegisterParser(typeof(RedisNamespaceHandler));
+
       var resourceName = $"assembly://RedisMessaging.Tests/RedisMessaging.Tests.Configs.{configConventionPrefix}/{configConventionPrefix}-{configId}.config";
 
       var resource = new AssemblyResource(resourceName);

@@ -1,8 +1,6 @@
 ﻿using NUnit.Framework;
-using RedisMessaging.Config;
 using RedisMessaging.Tests.UtilTests;
 using Spring.Objects.Factory;
-using Spring.Objects.Factory.Xml;
 
 namespace RedisMessaging.Tests.ParserTests
 {
@@ -10,12 +8,6 @@ namespace RedisMessaging.Tests.ParserTests
   public class RedisMessageConverterParserTests
   {
     private readonly string ConfigConventionPrefix = "MessageConverter";
-
-    [OneTimeSetUp]
-    public void Setup()
-    {
-      NamespaceParserRegistry.RegisterParser(typeof(RedisNamespaceHandler));
-    }
 
     [Test]
     public void TestWithTypeMapperAsAttributeReference()

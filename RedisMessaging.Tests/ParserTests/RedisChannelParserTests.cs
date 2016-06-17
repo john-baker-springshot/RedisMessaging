@@ -1,11 +1,9 @@
 ﻿using System.Linq;
 using NUnit.Framework;
-using RedisMessaging.Config;
 using RedisMessaging.Errors;
 using RedisMessaging.Tests.UtilTests;
 using RedisMessaging.Util;
 using Spring.Objects.Factory;
-using Spring.Objects.Factory.Xml;
 
 namespace RedisMessaging.Tests.ParserTests
 {
@@ -13,13 +11,6 @@ namespace RedisMessaging.Tests.ParserTests
   public class RedisChannelParserTests
   {
     private readonly string ConfigConventionPrefix = "Channel";
-
-    [OneTimeSetUp]
-    public void Setup()
-    {
-      NamespaceParserRegistry.RegisterParser(typeof(RedisNamespaceHandler));
-    }
-
 
     [Test]
     public void TestWithInlineConfig()
