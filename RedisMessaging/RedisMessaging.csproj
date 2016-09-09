@@ -62,6 +62,9 @@
   <ItemGroup>
     <Compile Include="BasicMessage.cs" />
     <Compile Include="Config\ErrorHandlerObjectParser.cs" />
+    <Compile Include="Config\NamespaceParser.cs" />
+    <Compile Include="Config\NamespaceParserSectionHandler.cs" />
+    <Compile Include="Config\NamespaceParserSupport.cs" />
     <Compile Include="Config\NamespaceUtils.cs" />
     <Compile Include="Config\RedisChannelParser.cs" />
     <Compile Include="Config\RedisConnectionParser.cs" />
@@ -85,6 +88,7 @@
     <Compile Include="Producer\RedisProducer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RedisQueueSentinel.cs" />
+    <Compile Include="Util\INamespaceParser.cs" />
     <Compile Include="Util\ReflectionHelper.cs" />
     <Compile Include="Util\ServiceLocator.cs" />
     <Compile Include="Util\StringExtensions.cs" />

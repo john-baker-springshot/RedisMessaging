@@ -1,8 +1,7 @@
-﻿using Spring.Objects.Factory.Xml;
-
+﻿
 namespace RedisMessaging.Config
 {
-  [NamespaceParser(Namespace = "http://www.springframework.net/schema/redis", 
+  [Config.NamespaceParser(Namespace = "http://www.springframework.net/schema/redis", 
     SchemaLocationAssemblyHint = typeof(RedisNamespaceHandler),
     SchemaLocation = "/RedisMessaging.Config/spring-redis-1.0.xsd")]
   public class RedisNamespaceHandler : NamespaceParserSupport
