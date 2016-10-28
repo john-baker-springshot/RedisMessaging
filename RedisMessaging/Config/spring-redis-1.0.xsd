@@ -30,6 +30,13 @@
         </xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
+    <xsd:attribute name="connectionStringName" type="xsd:string" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[ The name of the ConnectionString app.config setting to connect to Redis server(s). For formatting information please refer to the StachExchange.Redis project on github. ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
     <xsd:attribute name="connectionString" type="xsd:string" use="optional">
       <xsd:annotation>
         <xsd:documentation>

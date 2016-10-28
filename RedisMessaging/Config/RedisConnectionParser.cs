@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Xml;
@@ -12,6 +13,8 @@ namespace RedisMessaging.Config
   public class RedisConnectionParser : AbstractSingleObjectDefinitionParser
   {
     private static readonly string ConnectionStringAttribute = "connectionString";
+
+    private static readonly string ConnectionStringNameAttribute = "connectionStringName";
 
     private static readonly string Endpoints = "endpoints";
 
@@ -120,6 +123,26 @@ namespace RedisMessaging.Config
     /// .</param>
     protected override void DoParse(XmlElement element, ParserContext parserContext, ObjectDefinitionBuilder builder)
     {
+      //this should take precedence over ConnectionString
+      if (element.HasAttribute(ConnectionStringNameAttribute))
+      {
+        if (element.Attributes.Cast<XmlAttribute>().Any(a => a.Name != ConnectionStringNameAttribute && a.Name != "id"))
+        {
+          parserContext.ReaderContext.ReportFatalException(element, "If the connectionStringName attribute is used, then other connection attributes should not be specified");
+        }
+        else
+        {
+          var value = element.GetAttribute(ConnectionStringNameAttribute);
+          var conString = ConfigurationManager.ConnectionStrings[value].ConnectionString;
+          if (!String.IsNullOrEmpty(conString))
+          {
+            builder.AddConstructorArg(new TypedStringValue(conString));
+            return;
+          }
+        }
+        
+      }
+
       if (element.HasAttribute(ConnectionStringAttribute))
       {
         if (element.Attributes.Cast<XmlAttribute>().Any(a => a.Name != ConnectionStringAttribute && a.Name != "id"))

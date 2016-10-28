@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Configuration;
+using NUnit.Framework;
 using RedisMessaging.Tests.UtilTests;
 using Spring.Objects.Factory;
 
@@ -63,5 +64,27 @@ namespace RedisMessaging.Tests.ParserTests
         var objectFactory = ParserTestsHelper.LoadConfig(ConfigConventionPrefix, 3);
       });
     }
+
+    [Test]
+    public void TestWithConnectionStringName()
+    {
+      var objectFactory = ParserTestsHelper.LoadConfig(ConfigConventionPrefix, 4);
+
+      var redisConnection = objectFactory.GetObject<RedisConnection>("strongConnection");
+
+      Assert.NotNull(redisConnection);
+
+      Assert.That(redisConnection.Config.ToString(), Is.EqualTo(ConfigurationManager.ConnectionStrings["RedisConnection"].ConnectionString));
+    }
+
+    [Test]
+    public void TestWithConnectionStringAndConnectionStringName()
+    {
+      Assert.Throws<ObjectDefinitionStoreException>(() =>
+      {
+        var objectFactory = ParserTestsHelper.LoadConfig(ConfigConventionPrefix, 5);
+      });
+    }
+
   }
 }
